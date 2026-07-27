@@ -25,6 +25,7 @@ from datetime import date
 from typing import Any
 
 ABSCHNITTE = (
+    ("kontext", "Einsatzkontext"),
     ("anwendungsbereich", "Anwendungsbereich"),
     ("rolle", "Ihre Rolle"),
     ("verbote", "Verbotene Praktiken"),
@@ -44,6 +45,7 @@ class Frage:
     hinweis: str | None = None
     ausnahmen: str | None = None
     optional: bool = False
+    optionen: list[dict] | None = None
 
 
 @dataclass
@@ -57,6 +59,8 @@ class Ergebnis:
     ausserhalb_anwendungsbereich: bool = False
     ausschlussgrund: str | None = None
     ausschluss_fundstelle: str | None = None
+    kontexte: list[str] = field(default_factory=list)
+    uebersprungene_regeln: list[str] = field(default_factory=list)
 
 
 class Wizard:
@@ -65,6 +69,35 @@ class Wizard:
         self.ist_behoerde = ist_behoerde
 
     # -- Fragenkatalog -------------------------------------------------------
+
+    def _fragen_kontext(self) -> list[Frage]:
+        ek = self.rw.einsatzkontexte
+        if not ek:
+            return []
+        return [
+            Frage(
+                schluessel="kontext",
+                text="In welchen Bereichen wird das System eingesetzt?",
+                abschnitt="kontext",
+                typ="mehrfachauswahl",
+                hinweis=ek.get("hinweis"),
+                optionen=ek.get("definitionen", []),
+            )
+        ]
+
+    def _kontexte_aus(self, antworten: dict[str, Any]) -> list[str]:
+        roh = antworten.get("kontext")
+        if isinstance(roh, str):
+            return [roh]
+        return list(roh or [])
+
+    def _regel_im_kontext(self, regel_id: str, kontexte: list[str]) -> bool:
+        """Regeln ohne Zuordnung werden immer gestellt."""
+        zuordnung = self.rw.einsatzkontexte.get("zuordnung", {})
+        noetig = zuordnung.get(regel_id)
+        if not noetig:
+            return True
+        return bool(set(noetig) & set(kontexte))
 
     def _fragen_anwendungsbereich(self) -> list[Frage]:
         fragen = []
@@ -94,7 +127,9 @@ class Wizard:
             )
         return fragen
 
-    def _regelfragen(self, abschnitt: str, rolle: str) -> list[Frage]:
+    def _regelfragen(
+        self, abschnitt: str, rolle: str, kontexte: list[str]
+    ) -> list[Frage]:
         klassen = {
             "verbote": {"verboten"},
             "hochrisiko": {"hochrisiko"},
@@ -108,6 +143,9 @@ class Wizard:
 
             rollen = regel.get("nur_bei_rolle")
             if rollen and rolle not in rollen and rolle != "beides":
+                continue
+
+            if not self._regel_im_kontext(regel["id"], kontexte):
                 continue
 
             fragen.append(
@@ -136,7 +174,7 @@ class Wizard:
 
         # Sperrflag des Ausnahmefilters mit abfragen - es entscheidet, ob die
         # Ausnahme nach Art. 6 Abs. 3 ueberhaupt geprueft werden darf.
-        if abschnitt == "hochrisiko":
+        if abschnitt == "hochrisiko" and fragen:
             sperr = self.rw.ausnahmefilter.get("gilt_nicht_bei")
             if sperr:
                 fragen.append(
@@ -211,17 +249,24 @@ class Wizard:
 
     def alle_fragen(self, antworten: dict[str, Any]) -> list[Frage]:
         """Der vollstaendige Fragebogen im aktuellen Antwortstand."""
-        fragen = list(self._fragen_anwendungsbereich())
+        fragen = list(self._fragen_kontext())
+
+        # Ohne Kontextauswahl steht der weitere Ablauf noch nicht fest.
+        if "kontext" not in antworten:
+            return fragen
+
+        fragen += self._fragen_anwendungsbereich()
 
         if self._ausschluss(antworten):
             return fragen
 
         fragen += self._fragen_rolle()
         rolle = self._rolle_aus(antworten)
+        kontexte = self._kontexte_aus(antworten)
 
-        fragen += self._regelfragen("verbote", rolle)
-        fragen += self._regelfragen("hochrisiko", rolle)
-        fragen += self._regelfragen("transparenz", rolle)
+        fragen += self._regelfragen("verbote", rolle, kontexte)
+        fragen += self._regelfragen("hochrisiko", rolle, kontexte)
+        fragen += self._regelfragen("transparenz", rolle, kontexte)
 
         if self._hochrisiko_moeglich(antworten):
             fragen += self._fragen_bestand()
@@ -307,6 +352,12 @@ class Wizard:
             return ergebnis
 
         ergebnis.rolle = self._rolle_aus(antworten)
+        ergebnis.kontexte = self._kontexte_aus(antworten)
+        ergebnis.uebersprungene_regeln = [
+            r["id"]
+            for r in self.rw.regeln
+            if not self._regel_im_kontext(r["id"], ergebnis.kontexte)
+        ]
 
         for schluessel, wert in antworten.items():
             if schluessel.startswith("flag:"):

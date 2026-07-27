@@ -12,7 +12,7 @@
 # =============================================================================
 
 meta:
-  regelwerk_version: "0.2.0-entwurf"
+  regelwerk_version: "0.3.0-entwurf"
   rechtsstand: "2026-07-27"
   abgeglichen_am: "2026-07-27"
   abgeglichen_gegen: "Verordnung (EU) 2024/1689, amtlicher deutscher Text, CELEX 32024R1689"
@@ -40,6 +40,15 @@ meta:
         Ausnahmefilter nach Art. 6 Abs. 3, Bestandsschutz nach Art. 111,
         Anwendungsbereichsausnahmen, Betreiberpflichten nach Art. 26,
         Grundrechte-Folgenabschaetzung nach Art. 27.
+    - datum: "2026-07-27"
+      version: "0.3.0-entwurf"
+      aenderung: >-
+        Abschnitt einsatzkontexte ergaenzt: elf Kontexte und die Zuordnung der
+        24 Regeln dazu. Keine inhaltliche Aenderung an Regeln, Fundstellen oder
+        Einstufungslogik - der Vorfilter steuert ausschliesslich, welche Fragen
+        gestellt werden. Der gewaehlte Kontext ist im Nachweis-Dossier
+        auszuweisen, damit nachvollziehbar bleibt, warum eine Regel nicht
+        geprueft wurde.
 
 # -----------------------------------------------------------------------------
 # LESARTEN
@@ -299,6 +308,105 @@ risikoklassen:
     bezeichnung: "Minimales Risiko"
     farbe: "gruen"
     aussage: "Keine besonderen Pflichten aus der KI-VO. Art. 4 gilt trotzdem."
+
+# -----------------------------------------------------------------------------
+# EINSATZKONTEXTE - Vorfilter
+# -----------------------------------------------------------------------------
+# Eine Mehrfachauswahl zu Beginn der Erfassung blendet Regelgruppen aus, die
+# fuer das jeweilige System nicht einschlaegig sein koennen. Ein Textassistent
+# im Marketing bekommt so keine Fragen zu Kreditwuerdigkeit oder Notruf-Triage.
+#
+# WICHTIG fuer die Nachweisqualitaet: Eine ausgeblendete Frage ist keine
+# unbeantwortete Frage. Im Dossier wird der gewaehlte Einsatzkontext
+# ausgewiesen, und daraus ergibt sich nachvollziehbar, warum eine Regel nicht
+# geprueft wurde. Wer den Kontext falsch angibt, bekommt eine falsche
+# Einstufung - deshalb ist die Auswahl im Dossier sichtbar zu dokumentieren.
+#
+# Regeln ohne Zuordnung werden IMMER gestellt.
+# -----------------------------------------------------------------------------
+
+einsatzkontexte:
+  hinweis: >-
+    Mehrfachauswahl. Im Zweifel lieber einen Kontext zu viel als zu wenig
+    auswaehlen - die Auswahl steuert nur, welche Fragen gestellt werden, nicht
+    das Ergebnis.
+
+  definitionen:
+    - id: interne_verwaltung
+      label: "Interne Verwaltung und Buero"
+      beschreibung: >-
+        Dokumente, Recherche, Uebersetzungen, Protokolle, interne Ablaeufe ohne
+        Bezug zu Personalentscheidungen.
+    - id: personal
+      label: "Personal und Beschaeftigte"
+      beschreibung: >-
+        Bewerbung, Auswahl, Beurteilung, Aufgabenzuweisung, Ueberwachung von
+        Leistung oder Verhalten.
+    - id: kundenkontakt
+      label: "Direkter Kontakt mit Kunden oder Oeffentlichkeit"
+      beschreibung: "Chatbots, Beratung, Service, Ansprache von Interessenten."
+    - id: inhalte
+      label: "Erzeugen oder Bearbeiten von Inhalten"
+      beschreibung: "Texte, Bilder, Audio, Video - auch zur Veroeffentlichung."
+    - id: biometrie
+      label: "Koerperbezogene Daten"
+      beschreibung: >-
+        Gesicht, Stimme, Fingerabdruck, Gangbild, Emotionen - egal ob zur
+        Erkennung, Zuordnung oder Auswertung.
+    - id: produkt
+      label: "Bestandteil eines Produkts oder einer Maschine"
+      beschreibung: >-
+        Das System steckt in einem Erzeugnis, das Sie herstellen oder in
+        Verkehr bringen.
+    - id: finanzen_versicherung
+      label: "Bonitaet, Kredit oder Versicherung"
+      beschreibung: "Kreditwuerdigkeit, Risikobewertung, Preisbildung."
+    - id: bildung
+      label: "Aus- und Weiterbildung"
+      beschreibung: "Zugang, Bewertung von Lernergebnissen, Pruefungsaufsicht."
+    - id: oeffentliche_aufgaben
+      label: "Oeffentliche Aufgaben und Notdienste"
+      beschreibung: >-
+        Behoerdliche Leistungen, Sozialleistungen, Not- und Rettungsdienste,
+        Triage.
+    - id: infrastruktur
+      label: "Versorgung und Verkehr"
+      beschreibung: >-
+        Wasser, Gas, Waerme, Strom, Strassenverkehr, kritische digitale
+        Infrastruktur.
+    - id: recht
+      label: "Rechtsanwendung"
+      beschreibung: "Rechtspflege, Schlichtung, alternative Streitbeilegung."
+
+  # Regel-ID -> Kontexte, in denen die Frage gestellt wird.
+  # Fehlt eine Regel-ID in dieser Tabelle, wird sie immer gestellt.
+  zuordnung:
+    V-01: [personal, bildung]
+    V-02: [biometrie]
+    V-03: [personal, kundenkontakt, oeffentliche_aufgaben, finanzen_versicherung]
+    V-04: [biometrie]
+    V-05: [kundenkontakt, inhalte]
+    V-06: [kundenkontakt, inhalte]
+    P-01: [produkt]
+    H-01: [personal]
+    H-02: [personal]
+    H-03: [finanzen_versicherung]
+    H-04: [finanzen_versicherung]
+    H-05: [bildung]
+    H-06: [infrastruktur, produkt]
+    H-07: [biometrie]
+    H-08: [biometrie]
+    H-09: [biometrie, kundenkontakt]
+    H-10: [oeffentliche_aufgaben]
+    H-11: [oeffentliche_aufgaben]
+    H-12: [recht]
+    T-01: [kundenkontakt]
+    T-02: [inhalte]
+    T-03: [inhalte]
+    T-04: [biometrie, kundenkontakt]
+    T-05: [inhalte]
+
+  geprueft: false
 
 # -----------------------------------------------------------------------------
 # PRUEFREGELN

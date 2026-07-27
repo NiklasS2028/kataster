@@ -96,6 +96,7 @@ class Regelwerk:
         self.ausnahmefilter: dict[str, Any] = daten.get("ausnahmefilter_anhang_iii", {})
         self.bestandsschutz: list[dict] = daten.get("bestandsschutz", [])
         self.anwendungsbereich: list[dict] = daten.get("anwendungsbereich_ausnahmen", [])
+        self.einsatzkontexte: dict[str, Any] = daten.get("einsatzkontexte", {})
         self.schulungsbausteine: list[dict] = daten.get("schulungsbausteine", [])
         self.quellen: list[dict] = daten.get("quellen", [])
 
