@@ -1,0 +1,5 @@
+{% macro marke(klasse, bezeichnung) %}
+<span class="marke marke--{{ klasse }}">
+  <span class="signatur signatur--{{ klasse }}" aria-hidden="true"></span>{{ bezeichnung }}
+</span>
+{% endmacro %}

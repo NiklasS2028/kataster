@@ -1,0 +1,61 @@
+{% extends "basis.html" %}
+{% from "_marke.html" import marke %}
+{% block titel %}Ergebnis &middot; {{ system.name }}{% endblock %}
+
+{% block inhalt %}
+<main class="blatt blatt--einspaltig" style="max-width:760px">
+  <div>
+    <p class="rubrik">{{ system.name }}</p>
+
+    {% if ergebnis.ausserhalb_anwendungsbereich %}
+      <h1>Außerhalb des Anwendungsbereichs</h1>
+      <p class="vorspann">Nach Ihren Angaben fällt dieses System nicht unter die
+        KI-Verordnung. Es bleibt im Verzeichnis, damit der Befund dokumentiert ist.</p>
+      <p class="fundstelle">{{ ergebnis.ausschluss_fundstelle }}</p>
+    {% else %}
+      <h1>{{ klassennamen[vorschau.klasse] }}</h1>
+      <p class="vorspann">{{ regelwerk.klassentext(vorschau.klasse) }}</p>
+
+      <div class="feld">
+        <h2>Was zu diesem Ergebnis geführt hat</h2>
+        {% if vorschau.treffer %}
+        <ul style="margin:0; padding-left:1.1rem">
+          {% for t in vorschau.treffer %}
+          <li style="margin-bottom:0.7rem">
+            {{ marke(t.klasse, klassennamen[t.klasse]) }}
+            <span class="fundstelle">{{ t.fundstelle }}</span><br>
+            {{ t.frage }}
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>Keine der geprüften Regeln trifft zu. Die Pflicht zur KI-Kompetenz
+           nach Art. 4 gilt trotzdem.</p>
+        {% endif %}
+      </div>
+
+      {% if vorschau.bestandsschutz_hinweis %}
+      <p class="hinweis hinweis--ausnahme">{{ vorschau.bestandsschutz_hinweis }}</p>
+      {% endif %}
+      {% if vorschau.ausnahmefilter_gesperrt_durch_profiling %}
+      <p class="hinweis hinweis--sperre">Weil das System ein Profiling vornimmt,
+        ist die Ausnahme nach Art. 6 Abs. 3 ausgeschlossen.</p>
+      {% elif vorschau.ausnahmefilter_moeglich %}
+      <p class="hinweis hinweis--ausnahme">Für dieses System kommt die Ausnahme
+        nach Art. 6 Abs. 3 in Betracht. Sie muss begründet und dokumentiert werden.</p>
+      {% endif %}
+
+      {% if ergebnis.uebersprungene_regeln %}
+      <p class="hinweis">Nicht geprüft wurden {{ ergebnis.uebersprungene_regeln|length }}
+        Regeln, die außerhalb der gewählten Einsatzbereiche liegen
+        ({{ ergebnis.kontexte|join(', ') }}). Der Umfang wird im Nachweis ausgewiesen.</p>
+      {% endif %}
+    {% endif %}
+
+    <form method="post" style="margin-top:1.6rem">
+      <button type="submit" class="knopf">Ergebnis übernehmen</button>
+      <a class="knopf knopf--leise" href="{{ url_for('wizard.frage', system_id=system.id) }}">Antworten ändern</a>
+    </form>
+  </div>
+</main>
+{% endblock %}

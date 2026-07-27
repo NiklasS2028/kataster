@@ -1,0 +1,483 @@
+/* --------------------------------------------------------------------------
+   Schriften - lokal gebuendelt, kein CDN.
+   Ein Werkzeug, das damit wirbt, dass keine Daten den Rechner verlassen, darf
+   beim Seitenaufbau keine Anfrage an einen Fremdserver schicken. Bezogen ueber
+   npm (@fontsource), Lizenzen liegen unter static/schriften/.
+   -------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Barlow Semi Condensed";
+  src: url("schriften/barlow-semi-condensed-latin-400-normal.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Barlow Semi Condensed";
+  src: url("schriften/barlow-semi-condensed-latin-600-normal.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Barlow Semi Condensed";
+  src: url("schriften/barlow-semi-condensed-latin-700-normal.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("schriften/source-serif-4-latin-400-normal.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("schriften/source-serif-4-latin-600-normal.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("schriften/jetbrains-mono-latin-400-normal.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+
+/* ==========================================================================
+   Kataster - Stilsystem
+   --------------------------------------------------------------------------
+   Formensprache der deutschen Liegenschaftskarte: Tusche auf Papier,
+   laufende Nummern, Schraffuren statt reiner Farbflaechen, Kartenkopf.
+
+   Schraffuren sind kein Schmuck. Farbe allein unterscheidet die vier
+   Risikoklassen fuer Farbfehlsichtige nicht zuverlaessig - das Muster tut es.
+   ========================================================================== */
+
+:root {
+  /* Papier und Tusche */
+  --grund:        #FBFAF7;
+  --grund-tief:   #F2F0EA;
+  --tusche:       #1B1D1A;
+  --tusche-leis:  #5A5E57;
+  --flur:         #E4DFD1;
+  --flur-tief:    #CFC7B4;
+
+  /* Risikoklassen - Kartenfarben, keine Ampel */
+  --riss:         #B3312A;   /* verboten     - Korrekturrot */
+  --ocker:        #A2721F;   /* hochrisiko   - Gebaeudeocker */
+  --vermessung:   #45677A;   /* transparenz  - Vermessungsblau */
+  --vegetation:   #5F7156;   /* minimal      - Vegetationsgruen */
+
+  --riss-hell:       #F6E9E7;
+  --ocker-hell:      #F7EFDE;
+  --vermessung-hell: #E7EEF2;
+  --vegetation-hell: #EBEFE8;
+
+  --schrift-technisch: "Barlow Semi Condensed", "Archivo Narrow",
+                       "Helvetica Neue", Arial, sans-serif;
+  --schrift-text:      "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --schrift-daten:     "JetBrains Mono", ui-monospace, "SFMono-Regular",
+                       Consolas, monospace;
+
+  --rand: 1px solid var(--flur-tief);
+  --rand-stark: 1.5px solid var(--tusche);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--grund);
+  color: var(--tusche);
+  font-family: var(--schrift-text);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* -- Kartenkopf ---------------------------------------------------------- */
+
+.kartenkopf {
+  border-bottom: var(--rand-stark);
+  background: var(--grund);
+  padding: 1.1rem 2rem 0.9rem;
+  display: flex;
+  align-items: baseline;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.kartenkopf__marke {
+  font-family: var(--schrift-technisch);
+  font-weight: 700;
+  font-size: 1.45rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--tusche);
+}
+
+.kartenkopf__stand {
+  margin-left: auto;
+  font-family: var(--schrift-daten);
+  font-size: 0.72rem;
+  color: var(--tusche-leis);
+  text-align: right;
+  line-height: 1.5;
+}
+
+.kartenkopf nav {
+  display: flex;
+  gap: 1.4rem;
+  font-family: var(--schrift-technisch);
+  font-size: 0.82rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.kartenkopf nav a {
+  color: var(--tusche-leis);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+}
+.kartenkopf nav a:hover,
+.kartenkopf nav a[aria-current="page"] {
+  color: var(--tusche);
+  border-bottom-color: var(--tusche);
+}
+
+/* -- Grundriss ----------------------------------------------------------- */
+
+.blatt {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 208px minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.blatt--einspaltig { grid-template-columns: minmax(0, 1fr); }
+
+/* -- Legende (Signatur) -------------------------------------------------- */
+
+.legende {
+  border: var(--rand);
+  background: var(--grund-tief);
+  padding: 1rem;
+  position: sticky;
+  top: 1.5rem;
+}
+
+.legende__titel,
+.rubrik {
+  font-family: var(--schrift-technisch);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tusche-leis);
+  margin: 0 0 0.7rem;
+}
+
+.legende ul { list-style: none; margin: 0; padding: 0; }
+.legende li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--schrift-technisch);
+  font-size: 0.85rem;
+  padding: 0.3rem 0;
+}
+.legende li span:last-child { flex: 1; }
+.legende li b {
+  font-family: var(--schrift-daten);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--tusche-leis);
+}
+
+/* Schraffuren: je Klasse ein eigener Winkel und eine eigene Dichte. */
+.signatur {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--tusche);
+  flex: 0 0 auto;
+  display: inline-block;
+}
+.signatur--verboten {
+  background-color: var(--riss-hell);
+  background-image: repeating-linear-gradient(45deg,
+    var(--riss) 0 1.5px, transparent 1.5px 5px),
+    repeating-linear-gradient(-45deg,
+    var(--riss) 0 1.5px, transparent 1.5px 5px);
+}
+.signatur--hochrisiko {
+  background-color: var(--ocker-hell);
+  background-image: repeating-linear-gradient(45deg,
+    var(--ocker) 0 1.5px, transparent 1.5px 5px);
+}
+.signatur--transparenz {
+  background-color: var(--vermessung-hell);
+  background-image: repeating-linear-gradient(0deg,
+    var(--vermessung) 0 1px, transparent 1px 6px);
+}
+.signatur--minimal {
+  background-color: var(--vegetation-hell);
+  background-image: radial-gradient(var(--vegetation) 0.9px, transparent 1px);
+  background-size: 6px 6px;
+}
+
+/* -- Bestandsverzeichnis ------------------------------------------------- */
+
+.verzeichnis {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--schrift-technisch);
+  font-size: 0.94rem;
+}
+
+.verzeichnis caption {
+  text-align: left;
+  font-family: var(--schrift-technisch);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tusche-leis);
+  padding-bottom: 0.6rem;
+}
+
+.verzeichnis th {
+  text-align: left;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tusche-leis);
+  border-bottom: var(--rand-stark);
+  padding: 0.4rem 0.7rem 0.4rem 0;
+}
+
+.verzeichnis td {
+  border-bottom: var(--rand);
+  padding: 0.72rem 0.7rem 0.72rem 0;
+  vertical-align: baseline;
+}
+
+.verzeichnis tbody tr:hover { background: var(--grund-tief); }
+
+.lfd {
+  font-family: var(--schrift-daten);
+  font-size: 0.78rem;
+  color: var(--tusche-leis);
+  width: 3.2rem;
+}
+
+.verzeichnis a {
+  color: var(--tusche);
+  text-decoration: none;
+  border-bottom: 1px solid var(--flur-tief);
+  font-weight: 600;
+}
+.verzeichnis a:hover { border-bottom-color: var(--tusche); }
+
+.zweck {
+  display: block;
+  font-family: var(--schrift-text);
+  font-size: 0.85rem;
+  color: var(--tusche-leis);
+  font-weight: 400;
+}
+
+.zahl { font-variant-numeric: tabular-nums; text-align: right; }
+
+/* -- Einstufungsmarke ---------------------------------------------------- */
+
+.marke {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--schrift-technisch);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.16rem 0.5rem 0.16rem 0.3rem;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.marke .signatur { width: 13px; height: 13px; }
+.marke--verboten    { color: var(--riss); }
+.marke--hochrisiko  { color: var(--ocker); }
+.marke--transparenz { color: var(--vermessung); }
+.marke--minimal     { color: var(--vegetation); }
+.marke--offen       { color: var(--tusche-leis); border-style: dashed; }
+
+/* -- Flaechen und Formulare ---------------------------------------------- */
+
+.feld { border: var(--rand); background: var(--grund-tief); padding: 1.4rem 1.6rem; }
+.feld + .feld { margin-top: 1.2rem; }
+
+h1 {
+  font-family: var(--schrift-technisch);
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  margin: 0 0 0.35rem;
+}
+h2 {
+  font-family: var(--schrift-technisch);
+  font-size: 1.12rem;
+  font-weight: 700;
+  margin: 0 0 0.8rem;
+}
+.vorspann { color: var(--tusche-leis); margin: 0 0 1.6rem; max-width: 62ch; }
+
+label {
+  display: block;
+  font-family: var(--schrift-technisch);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tusche-leis);
+  margin-bottom: 0.28rem;
+}
+
+input[type="text"], input[type="date"], input[type="number"],
+textarea, select {
+  width: 100%;
+  font-family: var(--schrift-technisch);
+  font-size: 0.98rem;
+  color: var(--tusche);
+  background: var(--grund);
+  border: var(--rand);
+  border-bottom: var(--rand-stark);
+  border-radius: 0;
+  padding: 0.52rem 0.6rem;
+}
+input:focus, textarea:focus, select:focus {
+  outline: 2px solid var(--vermessung);
+  outline-offset: 1px;
+}
+
+.zeile { margin-bottom: 1.05rem; }
+.paar { display: grid; grid-template-columns: 1fr 1fr; gap: 1.05rem; }
+
+.knopf {
+  display: inline-block;
+  font-family: var(--schrift-technisch);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.58rem 1.25rem;
+  border: var(--rand-stark);
+  background: var(--tusche);
+  color: var(--grund);
+  cursor: pointer;
+  text-decoration: none;
+}
+.knopf:hover { background: var(--tusche-leis); border-color: var(--tusche-leis); }
+.knopf--leise { background: transparent; color: var(--tusche); }
+.knopf--leise:hover { background: var(--flur); color: var(--tusche); }
+
+/* -- Wizard -------------------------------------------------------------- */
+
+.laufleiste { display: flex; gap: 2px; margin-bottom: 1.8rem; }
+.laufleiste__stueck { flex: 1; }
+.laufleiste__balken {
+  height: 5px;
+  background: var(--flur);
+  border: 1px solid var(--flur-tief);
+}
+.laufleiste__stueck[data-stand="fertig"] .laufleiste__balken {
+  background: var(--tusche); border-color: var(--tusche);
+}
+.laufleiste__stueck[data-stand="laeuft"] .laufleiste__balken {
+  background: var(--ocker); border-color: var(--ocker);
+}
+.laufleiste__marke {
+  font-family: var(--schrift-technisch);
+  font-size: 0.62rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--tusche-leis);
+  margin-top: 0.35rem;
+  display: block;
+}
+
+.frage { font-size: 1.28rem; line-height: 1.45; margin: 0 0 1.3rem; max-width: 54ch; }
+
+.wahl { display: flex; gap: 0.8rem; margin: 1.5rem 0; }
+.wahl button { min-width: 8rem; }
+
+.mehrfach { display: grid; gap: 0.55rem; margin: 1.4rem 0; }
+.mehrfach label {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  border: var(--rand);
+  background: var(--grund);
+  padding: 0.7rem 0.85rem;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--tusche);
+  cursor: pointer;
+}
+.mehrfach label:hover { border-color: var(--tusche); }
+.mehrfach input { margin-top: 0.28rem; accent-color: var(--tusche); }
+.mehrfach small {
+  display: block;
+  font-family: var(--schrift-text);
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--tusche-leis);
+}
+
+/* -- Erlaeuterungen ------------------------------------------------------ */
+
+.fundstelle {
+  font-family: var(--schrift-daten);
+  font-size: 0.74rem;
+  color: var(--tusche-leis);
+}
+
+.hinweis {
+  border-left: 3px solid var(--flur-tief);
+  padding: 0.15rem 0 0.15rem 0.9rem;
+  margin: 1rem 0;
+  font-size: 0.92rem;
+  color: var(--tusche-leis);
+  max-width: 62ch;
+}
+.hinweis--ausnahme { border-left-color: var(--ocker); }
+.hinweis--sperre   { border-left-color: var(--riss); }
+
+.fussnote {
+  border-top: var(--rand);
+  margin-top: 2.5rem;
+  padding: 1rem 2rem 2.5rem;
+  max-width: 1180px;
+  margin-inline: auto;
+  font-size: 0.82rem;
+  color: var(--tusche-leis);
+}
+.fussnote strong { color: var(--tusche); }
+
+.leer {
+  border: 1px dashed var(--flur-tief);
+  padding: 2rem 2rem 2.2rem;
+  max-width: 46rem;
+}
+.leer h1 { font-size: 1.35rem; margin-bottom: 0.5rem; }
+.leer p { color: var(--tusche-leis); max-width: 52ch; margin: 0 0 1.5rem; font-size: 0.96rem; }
+
+@media (max-width: 860px) {
+  .blatt { grid-template-columns: minmax(0, 1fr); padding: 1.25rem; }
+  .legende { position: static; }
+  .paar { grid-template-columns: 1fr; }
+  .kartenkopf { padding: 1rem 1.25rem; gap: 1rem; }
+  .kartenkopf__stand { margin-left: 0; text-align: left; width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

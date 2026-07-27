@@ -1,0 +1,59 @@
+{% extends "basis.html" %}
+{% block titel %}System erfassen &middot; Kataster{% endblock %}
+
+{% block inhalt %}
+<main class="blatt blatt--einspaltig" style="max-width:720px">
+  <div>
+    <h1>System erfassen</h1>
+    <p class="vorspann">Zuerst die Stammdaten. Die Einstufung folgt im nächsten
+      Schritt über einen geführten Fragebogen.</p>
+
+    {% if fehler %}<div class="hinweis hinweis--sperre">{{ fehler }}</div>{% endif %}
+
+    <form method="post" class="feld">
+      <div class="zeile">
+        <label for="name">Name des Systems</label>
+        <input type="text" id="name" name="name" required autofocus
+               value="{{ werte.get('name', '') }}" placeholder="z. B. ChatGPT Team">
+      </div>
+      <div class="paar">
+        <div class="zeile">
+          <label for="anbieter">Anbieter</label>
+          <input type="text" id="anbieter" name="anbieter"
+                 value="{{ werte.get('anbieter', '') }}" placeholder="z. B. OpenAI">
+        </div>
+        <div class="zeile">
+          <label for="abteilung">Bereich</label>
+          <input type="text" id="abteilung" name="abteilung"
+                 value="{{ werte.get('abteilung', '') }}" placeholder="z. B. Vertrieb">
+        </div>
+      </div>
+      <div class="zeile">
+        <label for="zweck">Wofür wird es genutzt?</label>
+        <textarea id="zweck" name="zweck" rows="2"
+                  placeholder="Kurz und konkret, etwa: Angebotstexte entwerfen">{{ werte.get('zweck', '') }}</textarea>
+      </div>
+      <div class="paar">
+        <div class="zeile">
+          <label for="verantwortlich">Verantwortlich</label>
+          <input type="text" id="verantwortlich" name="verantwortlich"
+                 value="{{ werte.get('verantwortlich', '') }}" placeholder="Name, keine Abteilung">
+        </div>
+        <div class="zeile">
+          <label for="kosten_monat_eur">Kosten je Monat (€)</label>
+          <input type="text" id="kosten_monat_eur" name="kosten_monat_eur"
+                 value="{{ werte.get('kosten_monat_eur', '') }}" placeholder="24,90">
+        </div>
+      </div>
+      <div class="zeile">
+        <label for="quelle">Woher stammt der Eintrag?</label>
+        <select id="quelle" name="quelle">
+          <option value="offiziell">Offiziell eingeführt</option>
+          <option value="schatten_gemeldet">Aus einer Umfrage gemeldet</option>
+        </select>
+      </div>
+      <button type="submit" class="knopf">Weiter zur Einstufung</button>
+    </form>
+  </div>
+</main>
+{% endblock %}

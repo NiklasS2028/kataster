@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block titel %}Kataster{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='kataster.css') }}">
+</head>
+<body>
+
+<header class="kartenkopf">
+  <a class="kartenkopf__marke" href="{{ url_for('inventar.liste') }}">Kataster</a>
+  <nav>
+    <a href="{{ url_for('inventar.liste') }}"
+       {% if request.endpoint == 'inventar.liste' %}aria-current="page"{% endif %}>Verzeichnis</a>
+    <a href="{{ url_for('inventar.neu') }}"
+       {% if request.endpoint == 'inventar.neu' %}aria-current="page"{% endif %}>System erfassen</a>
+  </nav>
+  <div class="kartenkopf__stand">
+    Rechtsstand {{ rechtsstand }}<br>
+    Regelwerk {{ regelwerk_version }} &middot; {{ pruefstand }} verifiziert
+  </div>
+</header>
+
+{% block inhalt %}{% endblock %}
+
+<footer class="fussnote">
+  <strong>Kein Rechtsrat.</strong> Kataster ist ein Werkzeug zur strukturierten
+  Selbsteinschätzung und Dokumentation. Es trifft keine rechtliche Bewertung und
+  ersetzt keine Beratung. Verbindlich sind allein die im Amtsblatt der
+  Europäischen Union veröffentlichten Texte (Art. 297 AEUV).
+  {% if not regelwerk_ausspielbar %}
+  <br><br>
+  Dieses Regelwerk ist ein Entwurf: {{ pruefstand }} Regeln sind gegen den
+  amtlichen Text verifiziert. Ergebnisse sind bis zur vollständigen
+  Verifikation nicht als Nachweis geeignet.
+  {% endif %}
+</footer>
+
+</body>
+</html>

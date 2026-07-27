@@ -1,0 +1,54 @@
+{% extends "basis.html" %}
+{% from "_marke.html" import marke %}
+{% block titel %}Verzeichnis &middot; Kataster{% endblock %}
+
+{% block inhalt %}
+<main class="blatt">
+  {% include "_legende.html" %}
+
+  <div>
+    {% if systeme %}
+    <table class="verzeichnis">
+      <caption>Bestandsverzeichnis &middot; {{ kennzahlen.systeme_gesamt }} Einträge
+        &middot; {{ '%.2f'|format(kennzahlen.kosten_jahr_eur) }} € im Jahr</caption>
+      <thead>
+        <tr>
+          <th scope="col">Lfd.</th>
+          <th scope="col">System</th>
+          <th scope="col">Bereich</th>
+          <th scope="col">Einstufung</th>
+          <th scope="col" class="zahl">€ / Monat</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in systeme %}
+        <tr>
+          <td class="lfd">{{ '%03d'|format(loop.index) }}</td>
+          <td>
+            <a href="{{ url_for('inventar.detail', system_id=s.id) }}">{{ s.name }}</a>
+            {% if s.zweck %}<span class="zweck">{{ s.zweck }}</span>{% endif %}
+          </td>
+          <td>{{ s.abteilung or '—' }}</td>
+          <td>
+            {% if s.einstufung %}
+              {{ marke(s.einstufung.klasse, klassennamen[s.einstufung.klasse]) }}
+            {% else %}
+              <span class="marke marke--offen">Nicht erfasst</span>
+            {% endif %}
+          </td>
+          <td class="zahl">{{ '%.2f'|format(s.kosten_monat_eur) if s.kosten_monat_eur else '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="leer">
+      <h1>Das Verzeichnis ist leer</h1>
+      <p>Beginnen Sie mit dem System, das bei Ihnen am häufigsten genutzt wird.
+         Meist ist das ein Textassistent oder ein Übersetzungsdienst.</p>
+      <a class="knopf" href="{{ url_for('inventar.neu') }}">Erstes System erfassen</a>
+    </div>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}

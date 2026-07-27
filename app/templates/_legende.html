@@ -1,0 +1,19 @@
+<aside class="legende">
+  <p class="legende__titel">Legende</p>
+  <ul>
+    {% for schluessel, eintrag in regelwerk.risikoklassen.items()|sort(attribute='1.rang', reverse=true) %}
+    <li>
+      <span class="signatur signatur--{{ schluessel }}" aria-hidden="true"></span>
+      <span>{{ eintrag.bezeichnung }}</span>
+      <b>{{ kennzahlen.nach_klasse.get(schluessel, 0) }}</b>
+    </li>
+    {% endfor %}
+    {% if kennzahlen.ohne_einstufung %}
+    <li>
+      <span class="signatur" style="border-style:dashed" aria-hidden="true"></span>
+      <span>Nicht erfasst</span>
+      <b>{{ kennzahlen.ohne_einstufung }}</b>
+    </li>
+    {% endif %}
+  </ul>
+</aside>

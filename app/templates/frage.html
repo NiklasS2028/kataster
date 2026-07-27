@@ -1,0 +1,64 @@
+{% extends "basis.html" %}
+{% block titel %}{{ system.name }} einstufen &middot; Kataster{% endblock %}
+
+{% block inhalt %}
+<main class="blatt blatt--einspaltig" style="max-width:760px">
+  <div>
+    <p class="rubrik">{{ system.name }} &middot; Frage {{ beantwortet + 1 }} von {{ gesamt }}</p>
+
+    <div class="laufleiste">
+      {% for a in abschnitte %}
+      <div class="laufleiste__stueck"
+           data-stand="{% if a.abgeschlossen %}fertig{% elif a.beantwortet %}laeuft{% else %}offen{% endif %}">
+        <div class="laufleiste__balken"></div>
+        <span class="laufleiste__marke">{{ a.titel }}</span>
+      </div>
+      {% endfor %}
+    </div>
+
+    <form method="post" class="feld">
+      <input type="hidden" name="schluessel" value="{{ frage.schluessel }}">
+      <input type="hidden" name="typ" value="{{ frage.typ }}">
+
+      <p class="frage">{{ frage.text }}</p>
+
+      {% if frage.typ == 'mehrfachauswahl' %}
+        <div class="mehrfach">
+          {% for o in frage.optionen %}
+          <label>
+            <input type="checkbox" name="wert" value="{{ o.id }}">
+            <span>{{ o.label }}<small>{{ o.beschreibung }}</small></span>
+          </label>
+          {% endfor %}
+        </div>
+        <button type="submit" class="knopf">Weiter</button>
+
+      {% elif frage.typ == 'datum' %}
+        <div class="zeile" style="max-width:16rem">
+          <label for="wert">Datum der Inbetriebnahme</label>
+          <input type="date" id="wert" name="wert">
+        </div>
+        <button type="submit" class="knopf">Weiter</button>
+        <button type="submit" class="knopf knopf--leise" name="wert" value="">Weiß ich nicht</button>
+
+      {% else %}
+        <div class="wahl">
+          <button type="submit" class="knopf" name="wert" value="ja">Ja</button>
+          <button type="submit" class="knopf knopf--leise" name="wert" value="nein">Nein</button>
+        </div>
+      {% endif %}
+
+      {% if frage.hinweis %}<p class="hinweis">{{ frage.hinweis }}</p>{% endif %}
+      {% if frage.ausnahmen %}
+      <p class="hinweis hinweis--ausnahme"><strong>Ausnahme:</strong> {{ frage.ausnahmen }}</p>
+      {% endif %}
+      {% if frage.fundstelle %}<p class="fundstelle">{{ frage.fundstelle }}</p>{% endif %}
+    </form>
+
+    <form method="post" action="{{ url_for('wizard.zuruecksetzen', system_id=system.id) }}"
+          style="margin-top:1.2rem">
+      <button type="submit" class="knopf knopf--leise">Von vorn beginnen</button>
+    </form>
+  </div>
+</main>
+{% endblock %}
