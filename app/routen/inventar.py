@@ -6,8 +6,10 @@ from __future__ import annotations
 
 from datetime import date
 
+from pathlib import Path
+
 from flask import (Blueprint, abort, current_app, redirect,
-                   render_template, request, url_for)
+                   render_template, request, send_from_directory, url_for)
 
 blueprint = Blueprint("inventar", __name__)
 
@@ -122,3 +124,29 @@ def neu_bewerten(system_id: int):
         abort(404)
     einstufung_neu_berechnen(system_id)
     return redirect(url_for("inventar.detail", system_id=system_id))
+
+
+@blueprint.route("/nachweise")
+def nachweise():
+    db = _db()
+    return render_template(
+        "nachweise.html",
+        nachweise=db.nachweise_auflisten(),
+        kennzahlen=db.kennzahlen(),
+        organisation=db.organisation_lesen(),
+    )
+
+
+@blueprint.route("/nachweise/erzeugen", methods=["POST"])
+def nachweise_erzeugen():
+    from ..export import erzeuge_alle
+    wurzel = Path(current_app.config["DATENBANK_PFAD"]).parent
+    erzeuge_alle(_db(), current_app.regelwerk, wurzel)
+    return redirect(url_for("inventar.nachweise"))
+
+
+@blueprint.route("/exporte/<path:dateiname>")
+def export_datei(dateiname: str):
+    from ..export import EXPORTORDNER
+    wurzel = Path(current_app.config["DATENBANK_PFAD"]).parent / EXPORTORDNER
+    return send_from_directory(wurzel, dateiname)

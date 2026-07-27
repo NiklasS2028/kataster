@@ -1,1 +1,2 @@
 {"start": "2026-07-27T17:06:50", "ende": "2026-07-27T17:30:39", "minuten": 23.8, "beschreibung": "Fundstellen gegen EUR-Lex pruefen", "phase": "regelwerk", "notiz": "24 Regeln, Abgleich gegen Normtext abgeschlossen"}
+{"start": "2026-07-27T17:31:49", "ende": "2026-07-27T18:12:53", "minuten": 41.1, "beschreibung": "Datenmodell und regelwerk.py", "phase": "backend", "notiz": "Weboberflaeche steht, Schriften lokal"}

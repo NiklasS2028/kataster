@@ -1,0 +1,44 @@
+{% extends "basis.html" %}
+{% block titel %}Nachweise &middot; Kataster{% endblock %}
+
+{% block inhalt %}
+<main class="blatt blatt--einspaltig" style="max-width:860px">
+  <div>
+    <h1>Nachweise</h1>
+    <p class="vorspann">Vier Dokumente aus dem aktuellen Bestand: das
+      Bestandsverzeichnis als Tabelle, ein Entwurf der KI-Richtlinie, die
+      Schulungsmatrix und das Nachweis-Dossier. Alle Dateien entstehen im Ordner
+      <code>exporte/</code> und verlassen den Rechner nicht.</p>
+
+    <form method="post" action="{{ url_for('inventar.nachweise_erzeugen') }}">
+      <button type="submit" class="knopf">Nachweise jetzt erzeugen</button>
+    </form>
+
+    {% if nachweise %}
+    <table class="verzeichnis" style="margin-top:2rem">
+      <caption>Erzeugte Dokumente</caption>
+      <thead>
+        <tr><th>Lfd.</th><th>Dokument</th><th>Erzeugt</th><th>Regelwerk</th><th>Prüfsumme</th></tr>
+      </thead>
+      <tbody>
+        {% for n in nachweise %}
+        <tr>
+          <td class="lfd">{{ '%03d'|format(nachweise|length - loop.index0) }}</td>
+          <td><a href="{{ url_for('inventar.export_datei', dateiname=n.dateiname) }}">{{ n.dateiname }}</a></td>
+          <td class="fundstelle">{{ n.erzeugt_am.replace('T', ' ') }}</td>
+          <td class="fundstelle">{{ n.regelwerk_version }}</td>
+          <td class="fundstelle">{{ n.hash_sha256[:16] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <p class="hinweis">Das Dossier öffnet sich im Browser. Über Strg+P und
+      „Als PDF speichern“ entsteht daraus ein Dokument zum Ablegen oder
+      Weitergeben. Die Prüfsumme bezieht sich auf die erzeugte HTML-Datei.</p>
+    {% else %}
+    <p class="hinweis" style="margin-top:2rem">Noch keine Nachweise erzeugt.</p>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}
