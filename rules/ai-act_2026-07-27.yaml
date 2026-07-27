@@ -4,15 +4,18 @@
 # Dieses Regelwerk ist die einzige Stelle, an der Rechtsinhalte stehen.
 # Der Anwendungscode kennt keine Paragraphen - er wertet nur diese Datei aus.
 #
-# WICHTIG: Jede Regel traegt ein Feld "geprueft". Solange dort "false" steht,
-# wurde die Fundstelle noch NICHT gegen den amtlichen Text auf EUR-Lex
-# verifiziert. Vor einem oeffentlichen Release muessen alle Regeln, die
-# ausgeliefert werden, auf "true" stehen - mit Datum und Pruefer.
+# ZUM FELD "geprueft":
+# Alle Eintraege wurden gegen den amtlichen Text der Verordnung (EU) 2024/1689
+# abgeglichen (Feld "abgeglichen_am"). Das Feld "geprueft" setzt derjenige auf
+# true, der den Wortlaut selbst am amtlichen Text nachgelesen hat - mit Datum
+# und Namen. Solange dort false steht, darf die Regel nicht ausgeliefert werden.
 # =============================================================================
 
 meta:
-  regelwerk_version: "0.1.0-entwurf"
+  regelwerk_version: "0.2.0-entwurf"
   rechtsstand: "2026-07-27"
+  abgeglichen_am: "2026-07-27"
+  abgeglichen_gegen: "Verordnung (EU) 2024/1689, amtlicher deutscher Text, CELEX 32024R1689"
   sprache: "de"
   autor: "Niklas Steinhauser"
   lizenz_regelwerk: "CC-BY-4.0"
@@ -25,14 +28,21 @@ meta:
     - datum: "2026-07-27"
       version: "0.1.0-entwurf"
       aenderung: "Ersterstellung. Fundstellen durchgaengig ungeprueft."
+    - datum: "2026-07-27"
+      version: "0.2.0-entwurf"
+      aenderung: >-
+        Abgleich gegen den amtlichen Text. Alle 14 Fundstellen der Erstfassung
+        bestaetigt. Korrigiert: V-01 (Bildungseinrichtungen ergaenzt), V-02
+        (sexuelle Ausrichtung und Ausnahme ergaenzt), H-06 (Waerme und kritische
+        digitale Infrastruktur ergaenzt), T-01 (als Anbieterpflicht praezisiert),
+        R-02/R-03 (an Art. 25 Abs. 1 angeglichen). Neu: Anhang-I-Pfad nach
+        Art. 6 Abs. 1, Anhang III Nr. 1, Nr. 5 lit. a und d, Nr. 8 lit. a,
+        Ausnahmefilter nach Art. 6 Abs. 3, Bestandsschutz nach Art. 111,
+        Anwendungsbereichsausnahmen, Betreiberpflichten nach Art. 26,
+        Grundrechte-Folgenabschaetzung nach Art. 27.
 
 # -----------------------------------------------------------------------------
 # LESARTEN
-# -----------------------------------------------------------------------------
-# Kataster zeigt zwei Rechtsstaende nebeneinander. Der Nutzer schaltet um.
-# Grund: Der Digital Omnibus on AI wurde vom Gesetzgeber final angenommen,
-# die Veroeffentlichung im Amtsblatt stand zum Rechtsstand dieser Datei aus.
-# Bis zur Veroeffentlichung gilt formal die Originalfassung.
 # -----------------------------------------------------------------------------
 
 lesarten:
@@ -41,6 +51,7 @@ lesarten:
     rechtsakt: "Verordnung (EU) 2024/1689"
     celex: "32024R1689"
     inkrafttreten: "2024-08-01"
+    geltungsbeginn_allgemein: "2026-08-02"
     status: "in Kraft"
     geprueft: false
 
@@ -54,6 +65,51 @@ lesarten:
     amtsblatt: null            # <-- NACHTRAGEN, sobald veroeffentlicht
     inkrafttreten: "dritter Tag nach Veroeffentlichung im Amtsblatt"
     status: "angenommen, Veroeffentlichung im Amtsblatt zum Rechtsstand ausstehend"
+    hinweis: >-
+      Der Omnibus-Text lag beim Abgleich nicht im Amtsblatt vor. Alle
+      Omnibus-Angaben in dieser Datei stammen aus Sekundaerquellen und sind
+      gesondert zu verifizieren, sobald der Aenderungsrechtsakt vorliegt.
+    geprueft: false
+
+# -----------------------------------------------------------------------------
+# ANWENDUNGSBEREICH - Ausschlussgruende
+# -----------------------------------------------------------------------------
+# Vorgeschaltete Filter. Greift einer, endet die Pruefung fuer dieses System.
+# -----------------------------------------------------------------------------
+
+anwendungsbereich_ausnahmen:
+  - id: A-01
+    frage: >-
+      Wird das System ausschliesslich im Rahmen einer persoenlichen, nicht
+      beruflichen Taetigkeit verwendet?
+    folge: "ausserhalb des Anwendungsbereichs"
+    fundstelle: "Art. 2 Abs. 10 KI-VO"
+    geprueft: false
+
+  - id: A-02
+    frage: >-
+      Wird das System eigens und ausschliesslich fuer wissenschaftliche
+      Forschung und Entwicklung entwickelt und betrieben?
+    folge: "ausserhalb des Anwendungsbereichs"
+    fundstelle: "Art. 2 Abs. 6 KI-VO"
+    geprueft: false
+
+  - id: A-03
+    frage: >-
+      Handelt es sich um Forschungs-, Test- oder Entwicklungstaetigkeit vor
+      dem Inverkehrbringen oder der Inbetriebnahme?
+    folge: "ausserhalb des Anwendungsbereichs"
+    hinweis: "Tests unter Realbedingungen sind von dieser Ausnahme ausgenommen."
+    fundstelle: "Art. 2 Abs. 8 KI-VO"
+    geprueft: false
+
+  - id: A-04
+    frage: >-
+      Wird das System unter einer freien und quelloffenen Lizenz bereitgestellt?
+    folge: "ausserhalb des Anwendungsbereichs, ABER nur wenn es weder Hochrisiko
+      ist noch unter Art. 5 oder Art. 50 faellt"
+    fundstelle: "Art. 2 Abs. 12 KI-VO"
+    bedingt: true
     geprueft: false
 
 # -----------------------------------------------------------------------------
@@ -66,21 +122,29 @@ fristen:
     original: "2025-02-02"
     omnibus: "2025-02-02"
     veraendert: false
+    fundstelle: "Art. 113 Abs. 3 lit. a KI-VO"
     geprueft: false
 
   - id: F-02
-    gegenstand: "Pflichten fuer KI-Modelle mit allgemeinem Verwendungszweck (GPAI)"
+    gegenstand: >-
+      Pflichten fuer KI-Modelle mit allgemeinem Verwendungszweck (Kapitel V),
+      Governance (Kapitel VII), Sanktionen (Kapitel XII), notifizierte Stellen
     original: "2025-08-02"
     omnibus: "2025-08-02"
     veraendert: false
+    hinweis: "Art. 101 (Geldbussen fuer GPAI-Anbieter) ist ausgenommen."
+    fundstelle: "Art. 113 Abs. 3 lit. b KI-VO"
     geprueft: false
 
   - id: F-03
-    gegenstand: "Start der nationalen Marktueberwachung in Deutschland"
+    gegenstand: "Allgemeiner Geltungsbeginn der Verordnung"
     original: "2026-08-02"
     omnibus: "2026-08-02"
     veraendert: false
-    hinweis: "Startet nach beiden Lesarten unveraendert."
+    hinweis: >-
+      Ab hier gelten Kapitel IX (Marktueberwachung) und damit die Aufsicht
+      durch die nationalen Marktueberwachungsbehoerden.
+    fundstelle: "Art. 113 Abs. 2 KI-VO"
     geprueft: false
 
   - id: F-04
@@ -88,21 +152,25 @@ fristen:
     original: "2026-08-02"
     omnibus: "2026-08-02"
     veraendert: false
+    fundstelle: "Art. 113 Abs. 2 KI-VO"
     geprueft: false
 
   - id: F-05
-    gegenstand: "Hochrisiko-Systeme nach Anhang III (eigenstaendige Systeme)"
+    gegenstand: "Hochrisiko-Systeme nach Anhang III (Art. 6 Abs. 2)"
     original: "2026-08-02"
     omnibus: "2027-12-02"
     veraendert: true
-    hinweis: "Verschiebung um 16 Monate."
+    hinweis: "Verschiebung um 16 Monate. Omnibus-Angabe unverifiziert."
+    fundstelle: "Art. 113 Abs. 2 KI-VO"
     geprueft: false
 
   - id: F-06
-    gegenstand: "Hochrisiko-Systeme nach Anhang I (produkteingebettet)"
+    gegenstand: "Hochrisiko-Systeme nach Anhang I (Art. 6 Abs. 1)"
     original: "2027-08-02"
     omnibus: "2028-08-02"
     veraendert: true
+    hinweis: "Omnibus-Angabe unverifiziert."
+    fundstelle: "Art. 113 Abs. 3 lit. c KI-VO"
     geprueft: false
 
   - id: F-07
@@ -112,49 +180,99 @@ fristen:
     veraendert: true
     hinweis: >-
       Der Omnibus fuehrt zwei zusaetzliche verbotene Praktiken in Art. 5 ein.
-      Der genaue Wortlaut ist gegen den Amtsblatt-Text zu verifizieren, bevor
-      hieraus Pruefregeln abgeleitet werden. In der Berichterstattung wurde ein
-      Verbot sogenannter Nudifier-Anwendungen genannt.
+      Wortlaut liegt nicht vor. Keine Pruefregeln ableiten, bevor der
+      Amtsblatt-Text vorliegt.
     geprueft: false
     offen: true
 
 # -----------------------------------------------------------------------------
+# BESTANDSSCHUTZ
+# -----------------------------------------------------------------------------
+# Praktisch der wichtigste Filter fuer Bestandssysteme im Mittelstand.
+# -----------------------------------------------------------------------------
+
+bestandsschutz:
+  - id: B-01
+    gegenstand: "Hochrisiko-KI-Systeme, die vor dem allgemeinen Geltungsbeginn in Verkehr gebracht oder in Betrieb genommen wurden"
+    regel: >-
+      Die Verordnung gilt fuer solche Systeme nur dann, wenn sie ab dem
+      2. August 2026 in ihrer Konzeption erheblich veraendert wurden.
+    frage: "Wurde das System vor dem 2. August 2026 in Betrieb genommen?"
+    folgefrage: "Wurde es seitdem in seiner Konzeption erheblich veraendert?"
+    fundstelle: "Art. 111 Abs. 2 KI-VO"
+    ausnahme: >-
+      Fuer Hochrisiko-Systeme, die bestimmungsgemaess von Behoerden verwendet
+      werden, gilt die Frist 2. August 2030 - unabhaengig von Veraenderungen.
+    hinweis: >-
+      Erhebliche Veraenderung ist hier gleichbedeutend mit der wesentlichen
+      Veraenderung nach Art. 3 Nr. 23.
+    geprueft: false
+
+  - id: B-02
+    gegenstand: "KI-Modelle mit allgemeinem Verwendungszweck, die vor dem 2. August 2025 in Verkehr gebracht wurden"
+    regel: "Erfuellung der Pflichten bis zum 2. August 2027."
+    fundstelle: "Art. 111 Abs. 3 KI-VO"
+    geprueft: false
+
+# -----------------------------------------------------------------------------
 # ROLLENBESTIMMUNG
 # -----------------------------------------------------------------------------
-# Die meisten KMU sind Betreiber. Die Rolle kann aber kippen - das ist der
-# haeufigste Denkfehler und deshalb ein eigener Schritt im Wizard.
+# Angeglichen an Art. 3 Nr. 3 und 4 sowie Art. 25 Abs. 1.
 # -----------------------------------------------------------------------------
 
 rollenbestimmung:
+  fundstelle: "Art. 3 Nr. 3 und Nr. 4, Art. 25 Abs. 1 KI-VO"
   geprueft: false
   fragen:
     - id: R-01
-      text: "Setzen Sie das System im Rahmen Ihrer beruflichen Taetigkeit ein?"
+      text: >-
+        Verwenden Sie das System in eigener Verantwortung im Rahmen einer
+        beruflichen Taetigkeit?
       wenn_ja: "betreiber"
+      fundstelle: "Art. 3 Nr. 4 KI-VO"
 
     - id: R-02
       text: >-
-        Stellen Sie das System unter Ihrem eigenen Namen oder Ihrer eigenen
-        Marke bereit - etwa als Funktion in Ihrem Produkt oder auf Ihrer Website?
+        Versehen Sie ein bereits in Verkehr gebrachtes System mit Ihrem eigenen
+        Namen oder Ihrer eigenen Handelsmarke?
       wenn_ja: "anbieter"
+      fundstelle: "Art. 25 Abs. 1 lit. a KI-VO"
+      hinweis: >-
+        Greift unbeschadet vertraglicher Vereinbarungen, die eine andere
+        Aufteilung der Pflichten vorsehen.
 
     - id: R-03
       text: >-
-        Haben Sie ein bestehendes KI-System wesentlich veraendert oder seinen
-        Zweckbestimmung so geaendert, dass es zu einem anderen Anwendungsfall
-        dient?
+        Nehmen Sie an einem bereits in Verkehr gebrachten Hochrisiko-System eine
+        wesentliche Veraenderung vor, sodass es weiterhin Hochrisiko bleibt?
       wenn_ja: "anbieter"
-      hinweis: >-
-        Wesentliche Veraenderung kann die Anbieterrolle ausloesen. Das betrifft
-        auch Faelle, in denen ein zugekauftes Modell umfangreich angepasst wird.
+      fundstelle: "Art. 25 Abs. 1 lit. b KI-VO"
+
+    - id: R-04
+      text: >-
+        Veraendern Sie die Zweckbestimmung eines nicht als Hochrisiko
+        eingestuften Systems so, dass es dadurch zu einem Hochrisiko-System wird?
+      wenn_ja: "anbieter"
+      fundstelle: "Art. 25 Abs. 1 lit. c KI-VO"
+
+    - id: R-05
+      text: >-
+        Bringen Sie das System zusammen mit einem eigenen Produkt unter Ihrem
+        Namen in Verkehr oder nehmen es unter Ihrem Namen in Betrieb?
+      wenn_ja: "anbieter"
+      fundstelle: "Art. 25 Abs. 3 KI-VO"
 
   rollen:
     betreiber:
       bezeichnung: "Betreiber (Deployer)"
       typisch_fuer: "Unternehmen, das ChatGPT, Copilot o. ae. im Alltag nutzt"
+      pflichtenverweis: "Art. 26 KI-VO (nur bei Hochrisiko-Systemen)"
     anbieter:
       bezeichnung: "Anbieter (Provider)"
-      hinweis: "Deutlich weitergehende Pflichten als die Betreiberrolle."
+      hinweis: >-
+        Deutlich weitergehende Pflichten. Der urspruengliche Anbieter gilt dann
+        nicht mehr als Anbieter dieses Systems (Art. 25 Abs. 2).
+      pflichtenverweis: "Art. 16 KI-VO (bei Hochrisiko-Systemen)"
 
 # -----------------------------------------------------------------------------
 # RISIKOKLASSEN
@@ -185,40 +303,44 @@ risikoklassen:
 # -----------------------------------------------------------------------------
 # PRUEFREGELN
 # -----------------------------------------------------------------------------
-# Jede Regel: Frage an den Nutzer -> Risikoklasse -> Fundstelle.
-# Das Feld "trifft_zu_wenn" ist der Flag-Name, den das Datenmodell speichert.
-# -----------------------------------------------------------------------------
 
 regeln:
 
-  # --- Art. 5: verbotene Praktiken -------------------------------------------
+  # --- Art. 5 Abs. 1: verbotene Praktiken -----------------------------------
 
   - id: V-01
     frage: >-
-      Wird das System eingesetzt, um Emotionen von Beschaeftigten am
-      Arbeitsplatz abzuleiten?
-    trifft_zu_wenn: emotionserkennung_arbeitsplatz
+      Wird das System eingesetzt, um Emotionen von Personen am Arbeitsplatz
+      oder in Bildungseinrichtungen abzuleiten?
+    trifft_zu_wenn: emotionserkennung_arbeit_bildung
     klasse: verboten
     fundstelle: "Art. 5 Abs. 1 lit. f KI-VO"
     ausnahmen: >-
-      Eng begrenzte Ausnahmen aus medizinischen Gruenden oder aus Gruenden der
-      Sicherheit. Ausnahme im Einzelfall juristisch pruefen lassen.
+      Gilt nicht, wenn die Verwendung aus medizinischen Gruenden oder
+      Sicherheitsgruenden eingefuehrt oder in Verkehr gebracht werden soll.
     geprueft: false
 
   - id: V-02
     frage: >-
-      Werden mit dem System biometrische Daten ausgewertet, um daraus Rueckschluesse
-      auf ethnische Herkunft, politische Meinung, Gewerkschaftszugehoerigkeit,
-      religioese Ueberzeugung oder das Sexualleben zu ziehen?
+      Werden Personen anhand ihrer biometrischen Daten kategorisiert, um daraus
+      Rasse, politische Einstellungen, Gewerkschaftszugehoerigkeit, religioese
+      oder weltanschauliche Ueberzeugungen, das Sexualleben oder die sexuelle
+      Ausrichtung abzuleiten?
     trifft_zu_wenn: biometrische_kategorisierung_sensibel
     klasse: verboten
     fundstelle: "Art. 5 Abs. 1 lit. g KI-VO"
+    ausnahmen: >-
+      Gilt nicht fuer die Kennzeichnung oder Filterung rechtmaessig erworbener
+      biometrischer Datensaetze oder die Kategorisierung biometrischer Daten im
+      Bereich der Strafverfolgung.
     geprueft: false
 
   - id: V-03
     frage: >-
-      Bewertet das System Personen anhand ihres sozialen Verhaltens und fuehrt
-      diese Bewertung zu Benachteiligungen in unzusammenhaengenden Kontexten?
+      Werden Personen ueber einen Zeitraum anhand ihres sozialen Verhaltens oder
+      persoenlicher Eigenschaften bewertet, und fuehrt diese Bewertung zu
+      Benachteiligung in unzusammenhaengenden Kontexten oder zu unverhaeltnis-
+      maessiger Schlechterstellung?
     trifft_zu_wenn: social_scoring
     klasse: verboten
     fundstelle: "Art. 5 Abs. 1 lit. c KI-VO"
@@ -226,19 +348,126 @@ regeln:
 
   - id: V-04
     frage: >-
-      Werden Gesichtsbilder ungezielt aus dem Internet oder aus Videoaufnahmen
-      ausgelesen, um Gesichtserkennungsdatenbanken aufzubauen oder zu erweitern?
+      Werden Gesichtsbilder ungezielt aus dem Internet oder aus
+      Ueberwachungsaufnahmen ausgelesen, um Gesichtserkennungsdatenbanken zu
+      erstellen oder zu erweitern?
     trifft_zu_wenn: gesichtsbilder_scraping
     klasse: verboten
     fundstelle: "Art. 5 Abs. 1 lit. e KI-VO"
     geprueft: false
 
-  # --- Anhang III: Hochrisiko (KMU-relevante Kategorien) ---------------------
+  - id: V-05
+    frage: >-
+      Nutzt das System unterschwellige, manipulative oder taeuschende Techniken,
+      um das Verhalten von Personen wesentlich zu veraendern, sodass ihnen oder
+      anderen erheblicher Schaden zugefuegt wird?
+    trifft_zu_wenn: manipulative_techniken
+    klasse: verboten
+    fundstelle: "Art. 5 Abs. 1 lit. a KI-VO"
+    geprueft: false
+
+  - id: V-06
+    frage: >-
+      Nutzt das System eine Schutzbeduerftigkeit aufgrund von Alter, Behinderung
+      oder einer bestimmten sozialen oder wirtschaftlichen Situation aus, um
+      Verhalten wesentlich zu veraendern und dadurch erheblichen Schaden
+      zuzufuegen?
+    trifft_zu_wenn: ausnutzung_vulnerabilitaet
+    klasse: verboten
+    fundstelle: "Art. 5 Abs. 1 lit. b KI-VO"
+    geprueft: false
+
+  # --- Art. 6 Abs. 1: Hochrisiko ueber Anhang I -----------------------------
+  # Der praktisch wichtigste Pfad fuer produzierende Unternehmen.
+
+  - id: P-01
+    frage: >-
+      Ist das KI-System ein Sicherheitsbauteil eines Produkts, das unter die
+      Harmonisierungsrechtsvorschriften aus Anhang I faellt (u. a. Maschinen,
+      Spielzeug, Aufzuege, Druckgeraete, Funkanlagen, Seilbahnen, persoenliche
+      Schutzausruestung, Medizinprodukte, In-vitro-Diagnostika, Fahrzeuge,
+      Luftfahrzeuge) - oder ist es selbst ein solches Produkt?
+    trifft_zu_wenn: anhang_i_sicherheitsbauteil
+    zusatzbedingung:
+      frage: >-
+        Muss dieses Produkt nach den genannten Vorschriften einer
+        Konformitaetsbewertung durch eine dritte Stelle unterzogen werden?
+      trifft_zu_wenn: anhang_i_dritte_konformitaetsbewertung
+    klasse: hochrisiko
+    fundstelle: "Art. 6 Abs. 1 KI-VO i. V. m. Anhang I"
+    frist_ref: F-06
+    hinweis: >-
+      Beide Bedingungen muessen kumulativ erfuellt sein. Der Ausnahmefilter des
+      Art. 6 Abs. 3 gilt fuer diesen Pfad NICHT - er bezieht sich nur auf
+      Anhang III.
+    geprueft: false
+
+  # --- Anhang III Nr. 1: Biometrie (soweit nicht verboten) ------------------
+
+  - id: H-07
+    frage: >-
+      Dient das System der biometrischen Fernidentifizierung von Personen?
+    trifft_zu_wenn: biometrische_fernidentifizierung
+    klasse: hochrisiko
+    fundstelle: "Anhang III Nr. 1 lit. a KI-VO"
+    frist_ref: F-05
+    ausnahmen: >-
+      Nicht erfasst sind Systeme zur biometrischen Verifizierung, deren einziger
+      Zweck darin besteht, zu bestaetigen, dass eine Person die ist, fuer die
+      sie sich ausgibt (z. B. Entsperren eines Geraets, Zugang zu einem Dienst).
+    geprueft: false
+
+  - id: H-08
+    frage: >-
+      Dient das System der biometrischen Kategorisierung nach sensiblen oder
+      geschuetzten Attributen, ohne unter das Verbot des Art. 5 zu fallen?
+    trifft_zu_wenn: biometrische_kategorisierung_hochrisiko
+    klasse: hochrisiko
+    fundstelle: "Anhang III Nr. 1 lit. b KI-VO"
+    frist_ref: F-05
+    geprueft: false
+
+  - id: H-09
+    frage: >-
+      Dient das System der Emotionserkennung ausserhalb von Arbeitsplatz und
+      Bildungseinrichtungen, etwa im Kundenkontakt?
+    trifft_zu_wenn: emotionserkennung_sonstige
+    klasse: hochrisiko
+    fundstelle: "Anhang III Nr. 1 lit. c KI-VO"
+    frist_ref: F-05
+    hinweis: >-
+      Loest zusaetzlich die Transparenzpflicht T-04 nach Art. 50 Abs. 3 aus.
+    geprueft: false
+
+  # --- Anhang III Nr. 2 bis 5: uebrige Hochrisikobereiche -------------------
+
+  - id: H-06
+    frage: >-
+      Wird das System als Sicherheitsbauteil im Rahmen der Verwaltung oder des
+      Betriebs kritischer digitaler Infrastruktur, des Strassenverkehrs oder der
+      Wasser-, Gas-, Waerme- oder Stromversorgung eingesetzt?
+    trifft_zu_wenn: kritische_infrastruktur
+    klasse: hochrisiko
+    fundstelle: "Anhang III Nr. 2 KI-VO"
+    frist_ref: F-05
+    geprueft: false
+
+  - id: H-05
+    frage: >-
+      Steuert das System den Zugang oder die Zulassung zu Bildungseinrichtungen,
+      bewertet es Lernergebnisse, bewertet es das angemessene Bildungsniveau
+      einer Person oder ueberwacht es verbotenes Verhalten bei Pruefungen?
+    trifft_zu_wenn: bildung_bewertung
+    klasse: hochrisiko
+    fundstelle: "Anhang III Nr. 3 KI-VO"
+    frist_ref: F-05
+    geprueft: false
 
   - id: H-01
     frage: >-
-      Unterstuetzt oder trifft das System Entscheidungen bei Einstellung,
-      Bewerberauswahl oder Vorauswahl von Bewerbungen?
+      Wird das System fuer die Einstellung oder Auswahl von Personen eingesetzt,
+      insbesondere um gezielte Stellenanzeigen zu schalten, Bewerbungen zu
+      sichten oder zu filtern oder Bewerber zu bewerten?
     trifft_zu_wenn: personalauswahl
     klasse: hochrisiko
     fundstelle: "Anhang III Nr. 4 lit. a KI-VO"
@@ -247,113 +476,213 @@ regeln:
 
   - id: H-02
     frage: >-
-      Wird das System fuer Befoerderungs- oder Kuendigungsentscheidungen, die
-      Zuweisung von Aufgaben oder die Ueberwachung und Bewertung von Leistung
-      und Verhalten Beschaeftigter eingesetzt?
+      Wird das System fuer Entscheidungen ueber Arbeitsbedingungen, Befoerderung
+      oder Kuendigung, fuer die Zuweisung von Aufgaben anhand individuellen
+      Verhaltens oder persoenlicher Merkmale, oder fuer die Beobachtung und
+      Bewertung von Leistung und Verhalten Beschaeftigter eingesetzt?
     trifft_zu_wenn: leistungsbewertung
     klasse: hochrisiko
     fundstelle: "Anhang III Nr. 4 lit. b KI-VO"
     frist_ref: F-05
     geprueft: false
 
+  - id: H-10
+    frage: >-
+      Wird das System von einer Behoerde oder in deren Namen verwendet, um ueber
+      Anspruch, Gewaehrung, Einschraenkung, Widerruf oder Rueckforderung
+      grundlegender oeffentlicher Unterstuetzungsleistungen zu entscheiden?
+    trifft_zu_wenn: oeffentliche_leistungen
+    klasse: hochrisiko
+    fundstelle: "Anhang III Nr. 5 lit. a KI-VO"
+    frist_ref: F-05
+    geprueft: false
+
   - id: H-03
     frage: >-
-      Bewertet das System die Kreditwuerdigkeit natuerlicher Personen oder
-      erstellt es deren Bonitaetsbewertung?
+      Dient das System der Kreditwuerdigkeitspruefung oder Bonitaetsbewertung
+      natuerlicher Personen?
     trifft_zu_wenn: kreditwuerdigkeit
     klasse: hochrisiko
     fundstelle: "Anhang III Nr. 5 lit. b KI-VO"
     frist_ref: F-05
     ausnahmen: "Systeme zur Aufdeckung von Finanzbetrug sind ausgenommen."
+    loest_aus: [Q-04]
     geprueft: false
 
   - id: H-04
     frage: >-
-      Dient das System der Risikobewertung oder Preisbildung bei Lebens- oder
-      Krankenversicherungen fuer natuerliche Personen?
+      Dient das System der Risikobewertung oder Preisbildung in Bezug auf
+      natuerliche Personen bei Lebens- oder Krankenversicherungen?
     trifft_zu_wenn: versicherung_risikobewertung
     klasse: hochrisiko
     fundstelle: "Anhang III Nr. 5 lit. c KI-VO"
     frist_ref: F-05
+    loest_aus: [Q-04]
     geprueft: false
 
-  - id: H-05
+  - id: H-11
     frage: >-
-      Steuert das System den Zugang zu Bildungseinrichtungen, bewertet
-      Lernergebnisse oder ueberwacht Pruefungen?
-    trifft_zu_wenn: bildung_bewertung
+      Dient das System der Bewertung und Klassifizierung von Notrufen, der
+      Entsendung oder Priorisierung von Not- und Rettungsdiensten oder der Triage
+      von Patienten in der Notfallversorgung?
+    trifft_zu_wenn: notruf_triage
     klasse: hochrisiko
-    fundstelle: "Anhang III Nr. 3 KI-VO"
+    fundstelle: "Anhang III Nr. 5 lit. d KI-VO"
     frist_ref: F-05
     geprueft: false
 
-  - id: H-06
+  - id: H-12
     frage: >-
-      Wird das System als Sicherheitsbauteil beim Betrieb kritischer
-      Infrastruktur eingesetzt (z. B. Wasser, Gas, Strom, Verkehr)?
-    trifft_zu_wenn: kritische_infrastruktur
+      Wird das System eingesetzt, um bei der Ermittlung und Auslegung von
+      Sachverhalten und Rechtsvorschriften zu unterstuetzen - etwa im Rahmen
+      alternativer Streitbeilegung mit Rechtswirkung fuer die Parteien?
+    trifft_zu_wenn: rechtspflege_streitbeilegung
     klasse: hochrisiko
-    fundstelle: "Anhang III Nr. 2 KI-VO"
+    fundstelle: "Anhang III Nr. 8 lit. a KI-VO"
     frist_ref: F-05
+    hinweis: >-
+      Betrifft Justizbehoerden sowie Stellen fuer alternative Streitbeilegung.
+      Reine Verwaltungstaetigkeiten wie Anonymisierung sind nicht erfasst.
     geprueft: false
 
-  # --- Art. 50: Transparenzpflichten -----------------------------------------
+  # --- Art. 50: Transparenzpflichten ----------------------------------------
+  # Rolle beachten: Abs. 1 und 2 sind Anbieterpflichten, Abs. 3 und 4
+  # Betreiberpflichten.
 
   - id: T-01
     frage: >-
-      Interagiert das System direkt mit Menschen, etwa als Chatbot im
-      Kundenservice oder auf Ihrer Website?
+      Ist das System fuer die direkte Interaktion mit natuerlichen Personen
+      bestimmt, etwa als Chatbot?
     trifft_zu_wenn: direkte_interaktion
+    nur_bei_rolle: [anbieter]
     klasse: transparenz
     fundstelle: "Art. 50 Abs. 1 KI-VO"
     massnahme: >-
-      Die betroffene Person muss erkennen koennen, dass sie mit einem
-      KI-System kommuniziert - es sei denn, das ist aus dem Kontext
-      offensichtlich.
-    frist_ref: F-04
-    geprueft: false
-
-  - id: T-02
-    frage: >-
-      Erzeugen oder bearbeiten Sie mit dem System Bild-, Audio- oder
-      Videoinhalte, die real wirken (Deepfakes)?
-    trifft_zu_wenn: deepfake
-    klasse: transparenz
-    fundstelle: "Art. 50 Abs. 4 KI-VO"
-    massnahme: "Offenlegung, dass die Inhalte kuenstlich erzeugt oder manipuliert wurden."
-    frist_ref: F-04
-    geprueft: false
-
-  - id: T-03
-    frage: >-
-      Veroeffentlichen Sie KI-erzeugte Texte, um die Oeffentlichkeit ueber
-      Angelegenheiten von oeffentlichem Interesse zu informieren?
-    trifft_zu_wenn: ki_texte_oeffentlich
-    klasse: transparenz
-    fundstelle: "Art. 50 Abs. 4 KI-VO"
+      Das System ist so zu konzipieren, dass die betroffene Person darueber
+      informiert wird, dass sie mit einem KI-System interagiert.
     ausnahmen: >-
-      Entfaellt, wenn die Inhalte einer menschlichen Pruefung unterzogen wurden
-      und eine natuerliche oder juristische Person die redaktionelle
-      Verantwortung traegt.
+      Entfaellt, wenn dies aus Sicht einer angemessen informierten, aufmerksamen
+      und verstaendigen Person aufgrund der Umstaende offensichtlich ist.
     frist_ref: F-04
+    hinweis: >-
+      ANBIETERPFLICHT. Ein reiner Betreiber eines zugekauften Chatbots ist nicht
+      Adressat. Er kann aber ueber R-02 zum Anbieter werden.
+    geprueft: false
+
+  - id: T-05
+    frage: >-
+      Erzeugt das System synthetische Audio-, Bild-, Video- oder Textinhalte?
+    trifft_zu_wenn: synthetische_inhalte
+    nur_bei_rolle: [anbieter]
+    klasse: transparenz
+    fundstelle: "Art. 50 Abs. 2 KI-VO"
+    massnahme: >-
+      Die Ausgaben sind in einem maschinenlesbaren Format zu kennzeichnen und
+      als kuenstlich erzeugt oder manipuliert erkennbar zu machen.
+    ausnahmen: >-
+      Entfaellt, soweit das System eine unterstuetzende Funktion fuer die
+      Standardbearbeitung ausfuehrt oder die Eingabedaten bzw. deren Semantik
+      nicht wesentlich veraendert.
+    frist_ref: F-04
+    hinweis: "ANBIETERPFLICHT."
     geprueft: false
 
   - id: T-04
     frage: >-
-      Setzen Sie ein System zur Emotionserkennung oder biometrischen
-      Kategorisierung ein (ausserhalb der verbotenen Faelle)?
+      Setzen Sie ein Emotionserkennungssystem oder ein System zur biometrischen
+      Kategorisierung ein?
     trifft_zu_wenn: emotionserkennung_sonstige
+    nur_bei_rolle: [betreiber, anbieter]
     klasse: transparenz
     fundstelle: "Art. 50 Abs. 3 KI-VO"
-    massnahme: "Die betroffenen Personen sind ueber den Einsatz zu informieren."
+    massnahme: >-
+      Die betroffenen Personen sind ueber den Betrieb des Systems zu informieren.
+      Personenbezogene Daten sind nach DSGVO zu verarbeiten.
     frist_ref: F-04
+    hinweis: "BETREIBERPFLICHT."
+    geprueft: false
+
+  - id: T-02
+    frage: >-
+      Erzeugen oder manipulieren Sie mit dem System Bild-, Ton- oder
+      Videoinhalte, die wirklichen Personen, Orten oder Ereignissen aehneln und
+      faelschlicherweise echt erscheinen wuerden (Deepfake)?
+    trifft_zu_wenn: deepfake
+    nur_bei_rolle: [betreiber, anbieter]
+    klasse: transparenz
+    fundstelle: "Art. 50 Abs. 4 Unterabs. 1 KI-VO"
+    massnahme: "Offenlegung, dass die Inhalte kuenstlich erzeugt oder manipuliert wurden."
+    ausnahmen: >-
+      Bei offensichtlich kuenstlerischen, kreativen, satirischen oder fiktionalen
+      Werken beschraenkt sich die Pflicht auf eine geeignete Offenlegung, die
+      die Darstellung oder den Genuss des Werks nicht beeintraechtigt.
+    frist_ref: F-04
+    hinweis: "BETREIBERPFLICHT."
+    geprueft: false
+
+  - id: T-03
+    frage: >-
+      Veroeffentlichen Sie KI-erzeugte oder KI-manipulierte Texte, um die
+      Oeffentlichkeit ueber Angelegenheiten von oeffentlichem Interesse zu
+      informieren?
+    trifft_zu_wenn: ki_texte_oeffentlich
+    nur_bei_rolle: [betreiber, anbieter]
+    klasse: transparenz
+    fundstelle: "Art. 50 Abs. 4 Unterabs. 2 KI-VO"
+    ausnahmen: >-
+      Entfaellt, wenn die Inhalte einer menschlichen Ueberpruefung oder
+      redaktionellen Kontrolle unterzogen wurden und eine natuerliche oder
+      juristische Person die redaktionelle Verantwortung traegt.
+    frist_ref: F-04
+    hinweis: "BETREIBERPFLICHT."
     geprueft: false
 
 # -----------------------------------------------------------------------------
-# QUERSCHNITTSPFLICHTEN
+# AUSNAHMEFILTER NACH ART. 6 ABS. 3
 # -----------------------------------------------------------------------------
-# Gelten unabhaengig von der Risikoklasse und sind deshalb keine Pruefregeln,
-# sondern feste Bestandteile jedes Nachweis-Dossiers.
+# Ein in Anhang III gelistetes System ist ausnahmsweise NICHT hochriskant, wenn
+# es kein erhebliches Risiko birgt und eine der vier Bedingungen erfuellt.
+# Diese Bewertung ist zu dokumentieren (Art. 6 Abs. 4) - genau das ist ein
+# Kernanwendungsfall des Nachweis-Dossiers.
+#
+# WICHTIG: Der Filter greift NIE, wenn das System Profiling natuerlicher
+# Personen vornimmt. Er gilt ausserdem nur fuer Anhang III, nicht fuer P-01.
+# -----------------------------------------------------------------------------
+
+ausnahmefilter_anhang_iii:
+  fundstelle: "Art. 6 Abs. 3 und 4 KI-VO"
+  gilt_nicht_bei: profiling
+  sperrhinweis: >-
+    Nimmt das System Profiling im Sinne von Art. 4 Nr. 4 DSGVO vor, bleibt es
+    in jedem Fall hochriskant. Der Filter darf dann nicht angewendet werden.
+  bedingungen:
+    - id: E-01
+      text: "Das System fuehrt eine eng gefasste Verfahrensaufgabe durch."
+      fundstelle: "Art. 6 Abs. 3 lit. a KI-VO"
+    - id: E-02
+      text: "Das System verbessert das Ergebnis einer zuvor abgeschlossenen menschlichen Taetigkeit."
+      fundstelle: "Art. 6 Abs. 3 lit. b KI-VO"
+    - id: E-03
+      text: >-
+        Das System erkennt Entscheidungsmuster oder Abweichungen davon und soll
+        eine zuvor abgeschlossene menschliche Bewertung nicht ohne angemessene
+        menschliche Ueberpruefung ersetzen oder beeinflussen.
+      fundstelle: "Art. 6 Abs. 3 lit. c KI-VO"
+    - id: E-04
+      text: "Das System fuehrt eine vorbereitende Aufgabe fuer eine Bewertung durch."
+      fundstelle: "Art. 6 Abs. 3 lit. d KI-VO"
+  folgepflichten:
+    - "Die Bewertung ist vor Inverkehrbringen oder Inbetriebnahme zu dokumentieren."
+    - "Registrierungspflicht in der EU-Datenbank nach Art. 49 Abs. 2."
+    - "Vorlage der Bewertungsdokumentation auf Verlangen der zustaendigen Behoerde."
+  hinweis_kataster: >-
+    Kataster wendet diesen Filter NICHT automatisch an. Er wird als
+    dokumentierte Entscheidung des Nutzers erfasst, mit Begruendungsfeld, und
+    im Dossier als solche ausgewiesen.
+  geprueft: false
+
+# -----------------------------------------------------------------------------
+# QUERSCHNITTSPFLICHTEN
 # -----------------------------------------------------------------------------
 
 querschnittspflichten:
@@ -362,18 +691,22 @@ querschnittspflichten:
     gegenstand: "KI-Kompetenz der Beschaeftigten"
     fundstelle: "Art. 4 KI-VO"
     gilt_seit: "2025-02-02"
+    gilt_fuer: [anbieter, betreiber]
     lesart_original: >-
-      Anbieter und Betreiber ergreifen Massnahmen, um nach besten Kraeften ein
-      ausreichendes Mass an KI-Kompetenz ihres Personals sicherzustellen.
+      Anbieter und Betreiber ergreifen Massnahmen, um nach besten Kraeften
+      sicherzustellen, dass ihr Personal und andere Personen, die in ihrem
+      Auftrag mit Betrieb und Nutzung von KI-Systemen befasst sind, ueber ein
+      ausreichendes Mass an KI-Kompetenz verfuegen. Zu beruecksichtigen sind
+      technische Kenntnisse, Erfahrung, Ausbildung und Schulung sowie der
+      Einsatzkontext und die betroffenen Personengruppen.
     lesart_omnibus: >-
       Die Formulierung wird abgeschwaecht; die Foerderung von KI-Kompetenz wird
-      staerker als Aufgabe von Kommission und Mitgliedstaaten ausgestaltet. Die
-      Verantwortung der Unternehmen entfaellt dadurch nicht vollstaendig.
+      staerker als Aufgabe von Kommission und Mitgliedstaaten ausgestaltet.
+      Unverifiziert.
     hinweis_praxis: >-
-      Unabhaengig von der Lesart bleiben andere Rechtsgruenden unberuehrt:
-      DSGVO Art. 32, die Sorgfaltspflicht der Geschaeftsleitung und die
-      Produkthaftung. Rollenspezifische Schulung, schriftliche Richtlinie und
-      dokumentierter Nachweis bleiben der sinnvolle Standard.
+      Unabhaengig von der Lesart bleiben andere Rechtsgruende unberuehrt:
+      DSGVO Art. 32, Sorgfaltspflicht der Geschaeftsleitung, Produkthaftung.
+      Art. 4 enthaelt keine eigene Bussgeldnorm.
     geprueft: false
 
   - id: Q-02
@@ -382,20 +715,90 @@ querschnittspflichten:
     stufen:
       - verstoss: "Verbotene Praktiken nach Art. 5"
         maximum: "35 Mio. EUR oder 7 % des weltweiten Jahresumsatzes"
-      - verstoss: "Sonstige Anbieter- und Betreiberpflichten"
+        fundstelle: "Art. 99 Abs. 3"
+      - verstoss: >-
+          Pflichten der Anbieter (Art. 16), Bevollmaechtigten (Art. 22),
+          Einfuehrer (Art. 23), Haendler (Art. 24), Betreiber (Art. 26),
+          notifizierten Stellen sowie Transparenzpflichten (Art. 50)
         maximum: "15 Mio. EUR oder 3 % des weltweiten Jahresumsatzes"
-      - verstoss: "Falsche Angaben gegenueber Behoerden"
+        fundstelle: "Art. 99 Abs. 4"
+      - verstoss: "Falsche, unvollstaendige oder irrefuehrende Angaben gegenueber Behoerden"
         maximum: "7,5 Mio. EUR oder 1 % des weltweiten Jahresumsatzes"
-    kmu_regel: "Bei KMU gilt jeweils der niedrigere der beiden Werte als Obergrenze."
-    hinweis: "Art. 4 enthaelt keine eigene Bussgeldnorm."
+        fundstelle: "Art. 99 Abs. 5"
+    kmu_regel: >-
+      Bei KMU einschliesslich Start-ups gilt jeweils der niedrigere der beiden
+      Werte als Obergrenze.
+    kmu_fundstelle: "Art. 99 Abs. 6 KI-VO"
+    geprueft: false
+
+  - id: Q-03
+    gegenstand: "Betreiberpflichten bei Hochrisiko-Systemen"
+    fundstelle: "Art. 26 KI-VO"
+    gilt_fuer: [betreiber]
+    nur_bei_klasse: [hochrisiko]
+    kernpflichten:
+      - text: "Verwendung entsprechend der Betriebsanleitung, abgesichert durch technische und organisatorische Massnahmen."
+        fundstelle: "Art. 26 Abs. 1"
+      - text: "Menschliche Aufsicht durch Personen mit erforderlicher Kompetenz, Ausbildung und Befugnis."
+        fundstelle: "Art. 26 Abs. 2"
+      - text: "Sicherstellen, dass die Eingabedaten der Zweckbestimmung entsprechen und ausreichend repraesentativ sind, soweit sie der eigenen Kontrolle unterliegen."
+        fundstelle: "Art. 26 Abs. 4"
+      - text: "Ueberwachung des Betriebs, Meldung von Risiken und schwerwiegenden Vorfaellen an Anbieter und Marktueberwachungsbehoerde."
+        fundstelle: "Art. 26 Abs. 5"
+      - text: "Aufbewahrung der automatisch erzeugten Protokolle, mindestens sechs Monate."
+        fundstelle: "Art. 26 Abs. 6"
+      - text: >-
+          ARBEITGEBER: Vor Inbetriebnahme oder Verwendung am Arbeitsplatz sind
+          Arbeitnehmervertreter und betroffene Beschaeftigte darueber zu
+          informieren, dass sie der Verwendung unterliegen werden.
+        fundstelle: "Art. 26 Abs. 7"
+        praxishinweis: "Beruehrt Mitbestimmung. Fruehzeitig mit dem Betriebsrat klaeren."
+      - text: >-
+          Betroffene natuerliche Personen sind zu informieren, wenn ein
+          Anhang-III-Hochrisikosystem Entscheidungen ueber sie trifft oder
+          solche Entscheidungen unterstuetzt.
+        fundstelle: "Art. 26 Abs. 11"
+    geprueft: false
+
+  - id: Q-04
+    gegenstand: "Grundrechte-Folgenabschaetzung"
+    fundstelle: "Art. 27 KI-VO"
+    ausgeloest_durch:
+      - "Betreiber ist Einrichtung des oeffentlichen Rechts"
+      - "Betreiber ist private Einrichtung, die oeffentliche Dienste erbringt"
+      - "System faellt unter Anhang III Nr. 5 lit. b (Kreditwuerdigkeit)"
+      - "System faellt unter Anhang III Nr. 5 lit. c (Lebens-/Krankenversicherung)"
+    zeitpunkt: "vor der ersten Inbetriebnahme"
+    inhalt:
+      - "Beschreibung der Verfahren, in denen das System eingesetzt wird"
+      - "Zeitraum und Haeufigkeit der Verwendung"
+      - "Betroffene Personenkategorien und Gruppen"
+      - "Spezifische Schadensrisiken fuer diese Gruppen"
+      - "Umsetzung der menschlichen Aufsicht"
+      - "Massnahmen bei Eintritt der Risiken, einschliesslich Beschwerdemechanismen"
+    folgepflicht: >-
+      Ergebnisse sind der Marktueberwachungsbehoerde mitzuteilen. Eine bereits
+      durchgefuehrte Datenschutz-Folgenabschaetzung nach Art. 35 DSGVO wird
+      ergaenzt, nicht ersetzt.
+    ausnahme: >-
+      Gilt nicht fuer Hochrisiko-Systeme aus Anhang III Nr. 2
+      (kritische Infrastruktur).
+    geprueft: false
+
+  - id: Q-05
+    gegenstand: "Recht betroffener Personen auf Erlaeuterung"
+    fundstelle: "Art. 86 KI-VO"
+    inhalt: >-
+      Personen, die von einer auf einem Anhang-III-Hochrisikosystem beruhenden
+      Entscheidung mit rechtlicher oder aehnlich erheblicher Wirkung betroffen
+      sind, koennen vom Betreiber eine klare und aussagekraeftige Erlaeuterung
+      zur Rolle des Systems im Entscheidungsprozess und zu den wichtigsten
+      Elementen der Entscheidung verlangen.
+    ausnahme: "Gilt nicht fuer Systeme nach Anhang III Nr. 2."
     geprueft: false
 
 # -----------------------------------------------------------------------------
 # SCHULUNGSMATRIX
-# -----------------------------------------------------------------------------
-# Grundlage fuer den Export "rollenspezifische Schulungsmatrix". Ein einziges
-# generisches E-Learning fuer alle gilt zunehmend als nicht ausreichend, weil
-# die Verordnung eine Zuschneidung auf Vorkenntnisse und Einsatzkontext verlangt.
 # -----------------------------------------------------------------------------
 
 schulungsbausteine:
@@ -420,6 +823,10 @@ schulungsbausteine:
   - id: S-07
     baustein: "Meldewege bei auffaelligen Ergebnissen und Vorfaellen"
     zielgruppen: [alle]
+  - id: S-08
+    baustein: "Automatisierungsbias: Wann man dem System nicht folgen darf"
+    zielgruppen: [alle_mit_hochrisikosystem]
+    fundstelle: "Art. 14 Abs. 4 lit. b KI-VO"
 
 # -----------------------------------------------------------------------------
 # QUELLEN
@@ -429,11 +836,19 @@ quellen:
   - kuerzel: "KI-VO"
     titel: "Verordnung (EU) 2024/1689"
     celex: "32024R1689"
-    fundort: "EUR-Lex"
+    fundort: "https://eur-lex.europa.eu/eli/reg/2024/1689/oj?locale=de"
   - kuerzel: "Omnibus"
     titel: "Digital Omnibus on AI, Verfahren 2025/0359(COD)"
     vorschlag: "COM(2025)837"
     fundort: "EUR-Lex / EP Legislative Train"
+    status: "Amtsblatt-Fundstelle nachzutragen"
+  - kuerzel: "Kommissionsleitlinien"
+    titel: >-
+      Leitlinien zur praktischen Umsetzung des Art. 6 mit Liste praktischer
+      Beispiele fuer hochriskante und nicht hochriskante Anwendungsfaelle
+    frist: "2026-02-02"
+    fundstelle: "Art. 6 Abs. 5 KI-VO"
+    hinweis: "Pruefen, ob veroeffentlicht - waere die beste Quelle fuer den Ausnahmefilter."
   - kuerzel: "BNetzA"
     titel: "Hinweispapier der Bundesnetzagentur zur KI-Kompetenz"
     datum: "2025-06"
