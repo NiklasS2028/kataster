@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.sqlite
+*.db
+instance/
+.env
+exporte/
+.pytest_cache/
+Thumbs.db
+.zeit/laufend.json
