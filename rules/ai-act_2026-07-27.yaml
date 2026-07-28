@@ -12,7 +12,7 @@
 # =============================================================================
 
 meta:
-  regelwerk_version: "0.4.1-entwurf"
+  regelwerk_version: "1.0.0"
   rechtsstand: "2026-07-27"
   abgeglichen_am: "2026-07-27"
   abgeglichen_gegen: "Verordnung (EU) 2024/1689, amtlicher deutscher Text, CELEX 32024R1689"
@@ -25,6 +25,16 @@ meta:
     Authentisch sind ausschliesslich die im Amtsblatt der Europaeischen Union
     veroeffentlichten Texte (Art. 297 AEUV).
   aenderungshistorie:
+    - datum: "2026-07-28"
+      version: "1.0.0"
+      aenderung: >-
+        Freigabe. Alle 25 Regeln sind gegen den amtlichen Text der
+        Verordnung (EU) 2024/1689 verifiziert, geprueft von Niklas Steinhauser. Der
+        Entwurfszusatz entfaellt. Offen bleibt allein die Omnibus-Lesart:
+        Der Aenderungsrechtsakt lag zum Rechtsstand nicht im Amtsblatt
+        vor, das Feld lesarten.omnibus.amtsblatt ist weiterhin null. Wer
+        diese Lesart nutzt, muss sie zuvor gegen den veroeffentlichten
+        Text pruefen.
     - datum: "2026-07-27"
       version: "0.1.0-entwurf"
       aenderung: "Ersterstellung. Fundstellen durchgaengig ungeprueft."
