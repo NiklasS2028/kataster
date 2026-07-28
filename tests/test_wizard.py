@@ -101,3 +101,31 @@ def test_fortschritt_zaehlt_richtig(wizard):
     antworten, gestellt = _durchlaufen(wizard, ["personal"], ja=["rolle:R-01"])
     beantwortet, gesamt = wizard.fortschritt(antworten)
     assert beantwortet == gesamt == gestellt
+
+
+def test_generatives_werkzeug_ist_kein_verbot(wizard, regelwerk):
+    """Ein Bildgenerator im Marketing loest V-07 und V-08 nicht aus.
+
+    Nach Art. 5 Abs. 1a lit. b ist fuer Betreiber nur die zweckgerichtete
+    Verwendung verboten. Ohne diese Eingrenzung wuerde jeder Betrieb mit
+    einem generativen Werkzeug als verbotene Praktik gemeldet.
+    """
+    antworten, _ = _durchlaufen(wizard, ["inhalte"], ja=["rolle:R-01"])
+    ergebnis = wizard.auswerten(antworten)
+    einstufung = regelwerk.einstufen(ergebnis.flags, rolle=ergebnis.rolle)
+    ids = {t.regel_id for t in einstufung.treffer}
+    assert "V-07" not in ids
+    assert "V-08" not in ids
+    assert einstufung.klasse != "verboten"
+
+
+def test_zweckgerichtete_verwendung_loest_verbot_aus(wizard, regelwerk):
+    """Wird das System gezielt dafuer eingesetzt, greift V-07."""
+    antworten, _ = _durchlaufen(
+        wizard, ["inhalte"],
+        ja=["rolle:R-01", "flag:intimdarstellung_ohne_zustimmung"])
+    ergebnis = wizard.auswerten(antworten)
+    einstufung = regelwerk.einstufen(ergebnis.flags, rolle=ergebnis.rolle)
+    assert "V-07" in {t.regel_id for t in einstufung.treffer}
+    assert einstufung.klasse == "verboten"
+
