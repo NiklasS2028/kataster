@@ -200,7 +200,9 @@ fristen:
     omnibus: "2025-02-02"
     veraendert: false
     fundstelle: "Art. 113 Abs. 3 lit. a KI-VO"
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: F-02
     gegenstand: >-
@@ -211,7 +213,9 @@ fristen:
     veraendert: false
     hinweis: "Art. 101 (Geldbussen fuer GPAI-Anbieter) ist ausgenommen."
     fundstelle: "Art. 113 Abs. 3 lit. b KI-VO"
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: F-03
     gegenstand: "Allgemeiner Geltungsbeginn der Verordnung"
@@ -222,7 +226,9 @@ fristen:
       Ab hier gelten Kapitel IX (Marktueberwachung) und damit die Aufsicht
       durch die nationalen Marktueberwachungsbehoerden.
     fundstelle: "Art. 113 Abs. 2 KI-VO"
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: F-04
     gegenstand: "Transparenzpflichten (Art. 50)"
@@ -230,7 +236,9 @@ fristen:
     omnibus: "2026-08-02"
     veraendert: false
     fundstelle: "Art. 113 Abs. 2 KI-VO"
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: F-05
     gegenstand: "Hochrisiko-Systeme nach Anhang III (Art. 6 Abs. 2)"
@@ -239,16 +247,20 @@ fristen:
     veraendert: true
     hinweis: "Verschiebung um 16 Monate. Omnibus-Angabe unverifiziert."
     fundstelle: "Art. 113 Abs. 3 lit. c Ziff. i KI-VO"
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: F-06
     gegenstand: "Hochrisiko-Systeme nach Anhang I (Art. 6 Abs. 1)"
-    original: "2026-08-02"
+    original: "2027-08-02"
     omnibus: "2028-08-02"
     veraendert: true
     hinweis: "Omnibus-Angabe unverifiziert."
     fundstelle: "Art. 113 Abs. 3 lit. c Ziff. ii KI-VO"
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: F-07
     gegenstand: "Neu eingefuehrte verbotene Praktiken (Art. 5 Abs. 1 lit. ba und bb)"
@@ -260,7 +272,40 @@ fristen:
       Unterabsatz 1 lit. ba und bb sowie Art. 5 Abs. 1a und 1b. Diese
       Tatbestaende gelten spaeter als die uebrigen Verbote nach F-01.
     fundstelle: "Art. 113 Abs. 3 lit. a KI-VO"
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
+
+  - id: F-08
+    gegenstand: "Art. 6 Abs. 5 (von der Verschiebung ausgenommen)"
+    original: "2026-08-02"
+    omnibus: "2026-08-02"
+    veraendert: false
+    hinweis: >-
+      Art. 113 Abs. 3 lit. c nimmt Art. 6 Abs. 5 ausdruecklich von der
+      Verschiebung aus. Eine pauschale Regel "Kapitel III Abschnitte 1 bis 3
+      verschieben sich" waere insoweit unzutreffend.
+    fundstelle: "Art. 113 Abs. 3 lit. c KI-VO, Einleitung"
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
+
+  - id: F-09
+    gegenstand: >-
+      Markierungspflicht nach Art. 50 Abs. 2 fuer generative Bestandssysteme
+    original: null
+    omnibus: "2026-12-02"
+    veraendert: true
+    hinweis: >-
+      Eingefuegt durch Verordnung (EU) 2026/1744. Betrifft ausschliesslich
+      ANBIETER von KI-Systemen, die synthetische Audio-, Bild-, Video- oder
+      Textinhalte erzeugen und vor dem 2. August 2026 in Verkehr gebracht
+      wurden. Die Betreiberpflichten nach Art. 50 Abs. 4 bleiben unveraendert
+      bei F-04.
+    fundstelle: "Art. 111 Abs. 4 KI-VO"
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
 # -----------------------------------------------------------------------------
 # BESTANDSSCHUTZ
@@ -290,7 +335,9 @@ bestandsschutz:
       desselben Modells vor dem Stichtag rechtmaessig in Verkehr gebracht
       wurde; weitere Einheiten geniessen dann dieselbe Uebergangsfrist,
       solange die Gestaltung unveraendert bleibt.
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: B-02
     gegenstand: "KI-Modelle mit allgemeinem Verwendungszweck, die vor dem 2. August 2025 in Verkehr gebracht wurden"
