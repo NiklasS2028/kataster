@@ -15,6 +15,8 @@
        {% if request.endpoint == 'inventar.liste' %}aria-current="page"{% endif %}>Verzeichnis</a>
     <a href="{{ url_for('inventar.neu') }}"
        {% if request.endpoint == 'inventar.neu' %}aria-current="page"{% endif %}>System erfassen</a>
+    <a href="{{ url_for('schatten.uebersicht') }}"
+       {% if request.blueprint == 'schatten' %}aria-current="page"{% endif %}>Umfrage</a>
     <a href="{{ url_for('organisation.bearbeiten') }}"
        {% if request.endpoint == 'organisation.bearbeiten' %}aria-current="page"{% endif %}>Unternehmen</a>
     <a href="{{ url_for('inventar.nachweise') }}"

@@ -1,0 +1,113 @@
+{% extends "basis.html" %}
+{% from "_marke.html" import marke %}
+{% block titel %}Nicht erfasste Nutzung &middot; Kataster{% endblock %}
+
+{% block inhalt %}
+<main class="blatt blatt--einspaltig" style="max-width:860px">
+  <div>
+    <h1>Nicht erfasste Nutzung</h1>
+    <p class="vorspann">Ein Verzeichnis, das nur die offiziell eingeführten Systeme
+      kennt, ist unvollständig — und im Ernstfall schlimmer als keines, weil es
+      Vollständigkeit vortäuscht. Eine anonyme Umfrage ist der einzige Weg, das
+      zu ändern.</p>
+
+    <div class="feld">
+      <h2>1. Fragebogen erzeugen</h2>
+      <p>Ein einseitiger, anonymer Bogen zum Ausdrucken oder Versenden. Er sagt
+         den Beschäftigten ausdrücklich zu, dass eine Nennung folgenlos bleibt.
+         Ohne diese Zusage antwortet niemand ehrlich.</p>
+      <form method="post" action="{{ url_for('schatten.fragebogen') }}">
+        <button type="submit" class="knopf knopf--leise">Fragebogen erzeugen</button>
+      </form>
+      {% if request.args.get('erzeugt') %}
+      <p class="hinweis">Erzeugt: <code>exporte/umfrage-fragebogen.html</code> und
+        <code>exporte/umfrage-vorlage.csv</code></p>
+      {% endif %}
+    </div>
+
+    <div class="feld">
+      <h2>2. Rückmeldungen einlesen</h2>
+      <p>Aus einer Tabelle oder einem Formulardienst. Vier Spalten:
+         Werkzeug, Wofür, Wie oft, Bereich. Kopfzeile darf, muss aber nicht.</p>
+      <form method="post" action="{{ url_for('schatten.einlesen') }}"
+            enctype="multipart/form-data">
+        <div class="zeile">
+          <label for="rohdaten">Einfügen</label>
+          <textarea id="rohdaten" name="rohdaten" rows="6"
+                    placeholder="ChatGPT;Texte formulieren;täglich;Vertrieb"></textarea>
+        </div>
+        <div class="zeile">
+          <label for="datei">…oder Datei wählen</label>
+          <input type="file" id="datei" name="datei" accept=".csv,.txt">
+        </div>
+        <button type="submit" class="knopf">Einlesen und ansehen</button>
+      </form>
+    </div>
+
+    {% if vorschau %}
+    <div class="feld">
+      <h2>3. Prüfen und übernehmen</h2>
+      <p class="hinweis">Gebündelt nach Werkzeug. Groß- und Kleinschreibung,
+        Leerzeichen, Bindestriche und Punkte werden beim Zusammenfassen
+        ignoriert — „ChatGPT“, „chat gpt“ und „Chat-GPT“ gelten als dasselbe.
+        Ziffern nicht: „Claude“ und „Claude 3“ bleiben getrennt. Prüfen Sie die
+        Liste trotzdem; nicht alles, was genannt wird, ist ein KI-System.</p>
+
+      <form method="post" action="{{ url_for('schatten.uebernehmen') }}">
+        <table class="verzeichnis">
+          <thead>
+            <tr><th></th><th>Werkzeug</th><th>Nennungen</th><th>Wofür</th><th>Bereich</th></tr>
+          </thead>
+          <tbody>
+            {% for e in vorschau %}
+            <tr>
+              <td>
+                {% if e.bereits_erfasst %}
+                  <span class="fundstelle">erfasst</span>
+                {% else %}
+                  <input type="checkbox" name="werkzeug" value="{{ e.werkzeug }}" checked>
+                {% endif %}
+              </td>
+              <td><strong>{{ e.werkzeug }}</strong>
+                {% if e.varianten %}<span class="zweck">auch genannt als: {{ e.varianten|join(', ') }}</span>{% endif %}
+              </td>
+              <td class="zahl">{{ e.nennungen }}</td>
+              <td><span class="zweck">{{ e.zwecke|join('; ') or '—' }}</span></td>
+              <td><span class="zweck">{{ e.bereiche|join('; ') or '—' }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <button type="submit" class="knopf">Ausgewählte übernehmen</button>
+      </form>
+      <form method="post" action="{{ url_for('schatten.verwerfen') }}" style="margin-top:0.8rem">
+        <button type="submit" class="knopf knopf--leise">Verwerfen</button>
+      </form>
+    </div>
+    {% endif %}
+
+    {% if gemeldet %}
+    <table class="verzeichnis" style="margin-top:2rem">
+      <caption>Aus Umfragen übernommen &middot; {{ gemeldet|length }} Einträge</caption>
+      <thead>
+        <tr><th>Lfd.</th><th>System</th><th>Status</th><th>Einstufung</th></tr>
+      </thead>
+      <tbody>
+        {% for s in gemeldet %}
+        <tr>
+          <td class="lfd">{{ '%03d'|format(loop.index) }}</td>
+          <td><a href="{{ url_for('inventar.detail', system_id=s.id) }}">{{ s.name }}</a>
+            {% if s.zweck %}<span class="zweck">{{ s.zweck }}</span>{% endif %}</td>
+          <td>{{ s.status }}</td>
+          <td>
+            {% if s.einstufung %}{{ marke(s.einstufung.klasse, klassennamen[s.einstufung.klasse]) }}
+            {% else %}<span class="marke marke--offen">Nicht erfasst</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+</main>
+{% endblock %}
