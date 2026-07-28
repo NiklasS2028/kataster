@@ -1,10 +1,12 @@
 """
 export/schulungsmatrix.py - Wer braucht welche Schulungsinhalte.
 
-Ein einheitliches Kurzvideo fuer alle genuegt nicht: Die Verordnung verlangt,
-technische Kenntnisse, Erfahrung und Einsatzkontext zu beruecksichtigen
-(Art. 4 KI-VO). Die Matrix leitet die Inhalte deshalb aus dem ab, was im
-Unternehmen tatsaechlich eingesetzt wird.
+Art. 4 KI-VO i. d. F. der VO (EU) 2026/1744 verlangt Massnahmen, die
+technische Kenntnisse, Erfahrung, Aus- und Fortbildung, Einsatzkontext und die
+betroffenen Personengruppen beruecksichtigen, ohne fuer irgendeine Person ein
+bestimmtes Kompetenzniveau zu garantieren (Abs. 1 Satz 2). Die Matrix leitet
+die Inhalte aus dem ab, was im Unternehmen tatsaechlich eingesetzt wird, und
+dokumentiert die ergriffenen Massnahmen.
 """
 
 from __future__ import annotations
@@ -50,10 +52,14 @@ def matrix_text(organisation, systeme, regelwerk, zeitpunkt: datetime) -> str:
     t.append("# Schulungsmatrix KI-Kompetenz\n")
     t.append(f"**{name}**\n")
     t.append(f"Stand: {zeitpunkt:%d.%m.%Y}  ")
-    t.append(f"Grundlage: Art. 4 KI-VO, Regelwerk {regelwerk.version}\n")
-    t.append("> Abgeleitet aus den tatsächlich erfassten Systemen. Ein einheitlicher")
-    t.append("> Kurs für alle genügt nicht: Die Inhalte sind auf Vorkenntnisse und")
-    t.append("> Einsatzkontext zuzuschneiden.\n")
+    t.append(f"Grundlage: Art. 4 KI-VO i. d. F. der VO (EU) 2026/1744, "
+             f"Regelwerk {regelwerk.version}\n")
+    t.append("> Art. 4 verlangt Maßnahmen, die Vorkenntnisse, Aus- und Fortbildung,")
+    t.append("> Einsatzkontext und die betroffenen Personengruppen berücksichtigen.")
+    t.append("> Ein bestimmtes Niveau an KI-Kompetenz muss nach Art. 4 Abs. 1 Satz 2")
+    t.append("> für keine Person garantiert werden. Diese Matrix leitet die Inhalte")
+    t.append("> aus den tatsächlich erfassten Systemen ab und dokumentiert die")
+    t.append("> ergriffenen Maßnahmen, nicht ein erreichtes Kompetenzniveau.\n")
 
     t.append("## Bausteine\n")
     t.append("| Nr. | Inhalt | Für wen |")
@@ -89,15 +95,17 @@ def matrix_text(organisation, systeme, regelwerk, zeitpunkt: datetime) -> str:
                 t.append(f"- {b['id']} — {b['baustein']}")
             t.append("")
 
-    t.append("## Nachweis der Teilnahme\n")
-    t.append("Für jede durchgeführte Einweisung ist festzuhalten: Datum, Inhalte,")
-    t.append("Dauer, teilnehmende Personen und die Form der Lernkontrolle. Ohne")
-    t.append("diese Angaben lässt sich die Durchführung später nicht belegen.\n")
-    t.append("| Datum | Baustein | Teilnehmende | Dauer | Lernkontrolle | Durchgeführt von |")
-    t.append("|---|---|---|---|---|---|")
-    t.append("|  |  |  |  |  |  |")
-    t.append("|  |  |  |  |  |  |")
-    t.append("|  |  |  |  |  |  |\n")
+    t.append("## Ergriffene Maßnahmen\n")
+    t.append("Art. 4 verlangt ergriffene Maßnahmen, kein garantiertes Niveau. Für")
+    t.append("jede Maßnahme ist festzuhalten, worauf sie zugeschnitten war, damit die")
+    t.append("Berücksichtigung von Vorkenntnissen und Einsatzkontext nach Art. 4")
+    t.append("Abs. 1 belegt ist. Ohne diese Angaben lässt sich die Durchführung")
+    t.append("später nicht nachweisen.\n")
+    t.append("| Maßnahme | Datum | Teilnehmerkreis | Zuschnitt (Vorkenntnisse, Einsatzkontext) | Nachweis |")
+    t.append("|---|---|---|---|---|")
+    t.append("|  |  |  |  |  |")
+    t.append("|  |  |  |  |  |")
+    t.append("|  |  |  |  |  |\n")
 
     t.append("## Wiederholung\n")
     t.append("Die Einweisung ist zu wiederholen, wenn ein neues System eingeführt")

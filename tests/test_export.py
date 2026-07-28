@@ -112,6 +112,42 @@ def test_schulungsmatrix_ordnet_bereiche_zu(datenbank, regelwerk, arbeitsordner)
     assert "S-04" in inhalt
 
 
+def test_schulungsmatrix_zeigt_massnahmen_statt_niveau(datenbank, regelwerk,
+                                                       arbeitsordner):
+    """Art. 4 i. d. F. VO (EU) 2026/1744: dokumentiert werden ergriffene
+    Massnahmen, kein garantiertes Kompetenzniveau (Art. 4 Abs. 1 Satz 2)."""
+    _erzeugen(datenbank, regelwerk, arbeitsordner)
+    inhalt = (arbeitsordner / "exporte" / "schulungsmatrix.md").read_text(
+        encoding="utf-8")
+
+    # Die Massnahmen-Tabelle traegt die geforderten Spalten, inkl. Zuschnitt.
+    assert "## Ergriffene Maßnahmen" in inhalt
+    assert "| Maßnahme | Datum | Teilnehmerkreis |" in inhalt
+    assert "Zuschnitt" in inhalt
+
+    # Keine Tabellenueberschrift behauptet ein Niveau-Feld. Geprueft werden die
+    # Markdown-Kopfzeilen (beginnen mit "|", ohne die Trennzeile).
+    kopfzeilen = [z for z in inhalt.splitlines()
+                  if z.lstrip().startswith("|") and "---" not in z]
+    for zeile in kopfzeilen:
+        assert "niveau" not in zeile.lower()
+
+    # Der Test zielt auf die Behauptung, nicht auf das Wort. "Niveau" darf im
+    # Fliesstext stehen, aber nur verneinend, weil Art. 4 Abs. 1 Satz 2 genau
+    # das klarstellt. Also muss zu jeder Fundstelle eine Verneinung im Umfeld
+    # liegen. Ein reiner Substring-Ausschluss wuerde das zutreffende Zitat
+    # verbieten.
+    flach = " ".join(inhalt.split()).lower()
+    verneinungen = ("kein", "nicht")
+    stelle = flach.find("niveau")
+    assert stelle != -1, "Klarstellung aus Art. 4 Abs. 1 Satz 2 fehlt im Export"
+    while stelle != -1:
+        umfeld = flach[max(0, stelle - 80):stelle + 80]
+        assert any(v in umfeld for v in verneinungen), (
+            f"Niveau ohne Verneinung im Umfeld: ...{umfeld}...")
+        stelle = flach.find("niveau", stelle + 1)
+
+
 def test_csv_enthaelt_alle_systeme(datenbank, regelwerk, arbeitsordner):
     _erzeugen(datenbank, regelwerk, arbeitsordner)
     zeilen = (arbeitsordner / "exporte" / "inventar.csv").read_text(

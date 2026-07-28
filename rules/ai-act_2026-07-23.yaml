@@ -1184,13 +1184,27 @@ querschnittspflichten:
       technische Kenntnisse, Erfahrung, Ausbildung und Schulung sowie der
       Einsatzkontext und die betroffenen Personengruppen.
     lesart_omnibus: >-
-      Die Formulierung wird abgeschwaecht; die Foerderung von KI-Kompetenz wird
-      staerker als Aufgabe von Kommission und Mitgliedstaaten ausgestaltet.
-      Unverifiziert.
+      Art. 4 wird durch Art. 1 Nr. 5 der VO (EU) 2026/1744 neu gefasst. Aus der
+      Pflicht, ein ausreichendes Mass an KI-Kompetenz sicherzustellen, wird die
+      Pflicht, Massnahmen zu ergreifen, um die Entwicklung der KI-Kompetenz des
+      Personals und der im Auftrag taetigen Personen zu unterstuetzen. Zu
+      beruecksichtigen sind weiterhin technische Kenntnisse, Erfahrung, Aus- und
+      Fortbildung, Einsatzkontext und die betroffenen Personengruppen. Abs. 1
+      Satz 2 stellt ausdruecklich klar, dass fuer keine Person ein bestimmtes
+      Niveau an KI-Kompetenz garantiert werden muss. Abs. 2 und 3 richten sich
+      an Kommission, Mitgliedstaaten und KI-Gremium und begruenden keine
+      Unternehmenspflicht.
     hinweis_praxis: >-
       Unabhaengig von der Lesart bleiben andere Rechtsgruende unberuehrt:
       DSGVO Art. 32, Sorgfaltspflicht der Geschaeftsleitung, Produkthaftung.
-      Art. 4 enthaelt keine eigene Bussgeldnorm.
+      Art. 4 enthaelt keine eigene Bussgeldnorm. Zur Erfuellung veroeffentlicht
+      die Kommission praktische Beispiele auf der zentralen Informationsplattform
+      (Art. 4 Abs. 2 i. V. m. Art. 62 Abs. 3 lit. b), das KI-Gremium gibt
+      Empfehlungen (Art. 4 Abs. 3). Erwaegungsgrund 8 stuetzt die Lesart: Er
+      beschreibt den Uebergang von der Pflicht, die KI-Kompetenz des Personals
+      sicherzustellen, zur Pflicht, Massnahmen zu ihrer Foerderung zu ergreifen,
+      und begruendet ihn mit dem Befolgungsaufwand gerade fuer kleinere
+      Unternehmen.
     geprueft: false
 
   - id: Q-02
@@ -1433,6 +1447,13 @@ quellen:
     frist: "2026-02-02"
     fundstelle: "Art. 6 Abs. 5 KI-VO"
     hinweis: "Pruefen, ob veroeffentlicht - waere die beste Quelle fuer den Ausnahmefilter."
+  - kuerzel: "Informationsplattform Art. 4"
+    titel: >-
+      Praktische Beispiele der Kommission zur Erfuellung der Pflicht zur
+      KI-Kompetenz auf der zentralen Informationsplattform
+    fundstelle: "Art. 4 Abs. 2 i. V. m. Art. 62 Abs. 3 lit. b KI-VO i. d. F. der VO (EU) 2026/1744"
+    hinweis: "Pruefen, ob bereits veroeffentlicht. Waere die Referenzquelle fuer den Zuschnitt der Massnahmen."
+    geprueft: false
   - kuerzel: "BNetzA"
     titel: "Hinweispapier der Bundesnetzagentur zur KI-Kompetenz"
     datum: "2025-06"
