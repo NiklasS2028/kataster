@@ -447,8 +447,8 @@ regeln:
     frage: >-
       Werden Personen ueber einen Zeitraum anhand ihres sozialen Verhaltens oder
       persoenlicher Eigenschaften bewertet, und fuehrt diese Bewertung zu
-      Benachteiligung in unzusammenhaengenden Kontexten oder zu unverhaeltnis-
-      maessiger Schlechterstellung?
+      Benachteiligung in unzusammenhaengenden Kontexten oder zu
+      unverhaeltnismaessiger Schlechterstellung?
     trifft_zu_wenn: social_scoring
     klasse: verboten
     fundstelle: "Art. 5 Abs. 1 lit. c KI-VO"

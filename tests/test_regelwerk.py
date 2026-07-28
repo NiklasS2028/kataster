@@ -9,6 +9,7 @@ genau ein Test fehl - und zwar der mit dem passenden Namen.
 
 from __future__ import annotations
 
+import re
 from datetime import date
 
 import pytest
@@ -214,3 +215,25 @@ def test_unbekannte_rolle_wird_abgewiesen(regelwerk):
 def test_regelwerk_ist_erst_mit_verifikation_ausspielbar(regelwerk):
     geprueft, gesamt = regelwerk.pruefstand
     assert regelwerk.ausspielbar() == (geprueft == gesamt)
+
+
+def test_keine_zerbrochenen_woerter(regelwerk):
+    """Faltungsartefakte aus der YAML aufspueren.
+
+    Bei >- werden Zeilen mit einem Leerzeichen verbunden. Steht am Zeilenende
+    ein Trennstrich, entsteht mitten im Wort eine Luecke: "unverhaeltnis-
+    maessiger". Echte Ergaenzungsstriche im Deutschen stehen dagegen immer vor
+    einer Konjunktion oder einem Artikel - "Aus- und Weiterbildung",
+    "Lebens- oder Krankenversicherung". Danach wird unterschieden.
+    """
+    erlaubt = {"und", "oder", "bzw", "sowie", "beziehungsweise"}
+    fehler = []
+    for regel in regelwerk.regeln:
+        for feld in ("frage", "hinweis", "ausnahmen", "massnahme"):
+            text = regel.get(feld)
+            if not text:
+                continue
+            for treffer in re.finditer(r"\w+-\s+(\w+)", text):
+                if treffer.group(1).lower().rstrip(".,") not in erlaubt:
+                    fehler.append(f"{regel['id']}.{feld}: {treffer.group()!r}")
+    assert not fehler, "Zerbrochene Woerter:\n" + "\n".join(fehler)
