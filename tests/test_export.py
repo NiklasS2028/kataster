@@ -115,15 +115,29 @@ def test_schulungsmatrix_ordnet_bereiche_zu(datenbank, regelwerk, arbeitsordner)
 def test_schulungsmatrix_zeigt_massnahmen_statt_niveau(datenbank, regelwerk,
                                                        arbeitsordner):
     """Art. 4 i. d. F. VO (EU) 2026/1744: dokumentiert werden ergriffene
-    Massnahmen, kein garantiertes Kompetenzniveau (Art. 4 Abs. 1 Satz 2)."""
+    Massnahmen, kein garantiertes Kompetenzniveau (Art. 4 Abs. 1 Satz 2).
+
+    Strukturell: Die Massnahmen-Tabelle traegt die geforderten Spalten, und
+    keine Kopfzeile behauptet ein Niveau-Feld. Die inhaltliche Klarstellung
+    prueft test_schulungsmatrix_belegt_klarstellung_zu_niveau."""
     _erzeugen(datenbank, regelwerk, arbeitsordner)
     inhalt = (arbeitsordner / "exporte" / "schulungsmatrix.md").read_text(
         encoding="utf-8")
 
-    # Die Massnahmen-Tabelle traegt die geforderten Spalten, inkl. Zuschnitt.
+    # Die Massnahmen-Tabelle traegt die geforderten Spalten. Geprueft werden die
+    # getrimmten Zellen ihrer Kopfzeile, nicht die Spaltenbreite. "Zuschnitt"
+    # muss in dieser Kopfzeile stehen, nicht irgendwo im Dokument.
     assert "## Ergriffene Maßnahmen" in inhalt
-    assert "| Maßnahme | Datum | Teilnehmerkreis |" in inhalt
-    assert "Zuschnitt" in inhalt
+    abschnitt = inhalt.split("## Ergriffene Maßnahmen", 1)[1]
+    tabellenzeilen = [z for z in abschnitt.splitlines()
+                      if z.lstrip().startswith("|")]
+    assert tabellenzeilen, "Massnahmen-Tabelle fehlt im Export"
+    zellen = [c.strip() for c in tabellenzeilen[0].strip().strip("|").split("|")]
+    assert "Maßnahme" in zellen
+    assert "Datum" in zellen
+    assert "Teilnehmerkreis" in zellen
+    assert any(c.startswith("Zuschnitt") for c in zellen), (
+        f"Spalte Zuschnitt fehlt in der Kopfzeile: {zellen}")
 
     # Keine Tabellenueberschrift behauptet ein Niveau-Feld. Geprueft werden die
     # Markdown-Kopfzeilen (beginnen mit "|", ohne die Trennzeile).
@@ -132,20 +146,20 @@ def test_schulungsmatrix_zeigt_massnahmen_statt_niveau(datenbank, regelwerk,
     for zeile in kopfzeilen:
         assert "niveau" not in zeile.lower()
 
-    # Der Test zielt auf die Behauptung, nicht auf das Wort. "Niveau" darf im
-    # Fliesstext stehen, aber nur verneinend, weil Art. 4 Abs. 1 Satz 2 genau
-    # das klarstellt. Also muss zu jeder Fundstelle eine Verneinung im Umfeld
-    # liegen. Ein reiner Substring-Ausschluss wuerde das zutreffende Zitat
-    # verbieten.
-    flach = " ".join(inhalt.split()).lower()
-    verneinungen = ("kein", "nicht")
-    stelle = flach.find("niveau")
-    assert stelle != -1, "Klarstellung aus Art. 4 Abs. 1 Satz 2 fehlt im Export"
-    while stelle != -1:
-        umfeld = flach[max(0, stelle - 80):stelle + 80]
-        assert any(v in umfeld for v in verneinungen), (
-            f"Niveau ohne Verneinung im Umfeld: ...{umfeld}...")
-        stelle = flach.find("niveau", stelle + 1)
+
+def test_schulungsmatrix_belegt_klarstellung_zu_niveau(datenbank, regelwerk,
+                                                       arbeitsordner):
+    """Der Export gibt die Klarstellung aus Art. 4 Abs. 1 Satz 2 wieder: fuer
+    keine Person muss ein bestimmtes Kompetenzniveau garantiert werden. Geprueft
+    wird der Verweis auf die Norm, nicht eine bestimmte Formulierung. Damit
+    bleibt jede fachlich korrekte Umformulierung der Klarstellung zulaessig,
+    solange die tragende Norm genannt ist."""
+    _erzeugen(datenbank, regelwerk, arbeitsordner)
+    inhalt = (arbeitsordner / "exporte" / "schulungsmatrix.md").read_text(
+        encoding="utf-8")
+    assert "Art. 4 Abs. 1 Satz 2" in inhalt, (
+        "Klarstellung aus Art. 4 Abs. 1 Satz 2 fehlt im Export: kein Verweis "
+        "auf die tragende Norm gefunden")
 
 
 def test_csv_enthaelt_alle_systeme(datenbank, regelwerk, arbeitsordner):

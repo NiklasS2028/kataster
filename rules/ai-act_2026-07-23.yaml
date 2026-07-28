@@ -1184,10 +1184,13 @@ querschnittspflichten:
       technische Kenntnisse, Erfahrung, Ausbildung und Schulung sowie der
       Einsatzkontext und die betroffenen Personengruppen.
     lesart_omnibus: >-
-      Art. 4 wird durch Art. 1 Nr. 5 der VO (EU) 2026/1744 neu gefasst. Aus der
-      Pflicht, ein ausreichendes Mass an KI-Kompetenz sicherzustellen, wird die
-      Pflicht, Massnahmen zu ergreifen, um die Entwicklung der KI-Kompetenz des
-      Personals und der im Auftrag taetigen Personen zu unterstuetzen. Zu
+      Art. 4 wird durch Art. 1 Nr. 5 der VO (EU) 2026/1744 neu gefasst. Die
+      Pflicht, Massnahmen zu ergreifen, bestand bereits; schon die
+      Ausgangsfassung verlangte, dass Anbieter und Betreiber Massnahmen
+      ergreifen. Geaendert hat sich das Ziel dieser Massnahmen: An die Stelle
+      des angestrebten Zustands, nach besten Kraeften sicherzustellen, dass die
+      betroffenen Personen ueber ein ausreichendes Mass an KI-Kompetenz
+      verfuegen, tritt die Unterstuetzung der Entwicklung dieser Kompetenz. Zu
       beruecksichtigen sind weiterhin technische Kenntnisse, Erfahrung, Aus- und
       Fortbildung, Einsatzkontext und die betroffenen Personengruppen. Abs. 1
       Satz 2 stellt ausdruecklich klar, dass fuer keine Person ein bestimmtes
@@ -1204,7 +1207,12 @@ querschnittspflichten:
       beschreibt den Uebergang von der Pflicht, die KI-Kompetenz des Personals
       sicherzustellen, zur Pflicht, Massnahmen zu ihrer Foerderung zu ergreifen,
       und begruendet ihn mit dem Befolgungsaufwand gerade fuer kleinere
-      Unternehmen.
+      Unternehmen. Diese Wiedergabe folgt dem Wortlaut von EG 8, der den
+      Uebergang verkuerzt darstellt: Er verkuerzt schon den alten Rechtsstand,
+      der bereits Massnahmen verlangte, und spricht von Foerderung, wo der
+      verfuegende Text die Entwicklung der KI-Kompetenz unterstuetzen laesst. Im
+      Zweifel ist der verfuegende Text von Art. 4 massgeblich, nicht die
+      verkuerzte Beschreibung des Erwaegungsgrundes.
     geprueft: false
 
   - id: Q-02
