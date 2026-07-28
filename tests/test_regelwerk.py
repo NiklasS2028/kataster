@@ -134,7 +134,33 @@ def test_anhang_i_braucht_beide_bedingungen(regelwerk):
         "anhang_i_dritte_konformitaetsbewertung": True,
     }, rolle="anbieter")
     assert beide.klasse == "hochrisiko"
+    assert "P-02" in beide.ausgeloest_durch
+
+
+def test_anhang_i_produkt_braucht_beide_bedingungen(regelwerk):
+    nur_eine = regelwerk.einstufen({"anhang_i_produkt": True},
+                                   rolle="anbieter")
+    assert nur_eine.klasse == "minimal"
+
+    beide = regelwerk.einstufen({
+        "anhang_i_produkt": True,
+        "anhang_i_dritte_konformitaetsbewertung": True,
+    }, rolle="anbieter")
+    assert beide.klasse == "hochrisiko"
     assert "P-01" in beide.ausgeloest_durch
+
+
+def test_leistungsoptimierung_ist_kein_sicherheitsbauteil(regelwerk):
+    # Art. 6 Abs. 1a: KI ausschliesslich zur Leistungsoptimierung in einer
+    # Maschine ist kein Sicherheitsbauteil. Die Abgrenzung trifft der Wizard
+    # ueber den Fragetext von P-02; hier wird nur abgesichert, dass ohne
+    # gesetztes Flag kein Anhang-I-Treffer entsteht.
+    e = regelwerk.einstufen({
+        "anhang_i_dritte_konformitaetsbewertung": True,
+    }, rolle="anbieter")
+    assert e.klasse == "minimal"
+    assert "P-01" not in e.ausgeloest_durch
+    assert "P-02" not in e.ausgeloest_durch
 
 
 def test_unbekanntes_flag_wird_gemeldet(regelwerk):

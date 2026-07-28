@@ -715,16 +715,19 @@ regeln:
 
   - id: P-01
     frage: >-
-      Ist das KI-System ein Sicherheitsbauteil eines Produkts, das unter die
-      Harmonisierungsrechtsvorschriften aus Anhang I faellt (u. a. Maschinen,
+      Ist das KI-System selbst ein Produkt, das unter die
+      Harmonisierungsrechtsvorschriften aus Anhang I faellt (u. a.
       Spielzeug, Aufzuege, Druckgeraete, Funkanlagen, Seilbahnen, persoenliche
       Schutzausruestung, Medizinprodukte, In-vitro-Diagnostika, Fahrzeuge,
-      Luftfahrzeuge) - oder ist es selbst ein solches Produkt?
-    trifft_zu_wenn: anhang_i_sicherheitsbauteil
+      Luftfahrzeuge)?
+    trifft_zu_wenn: anhang_i_produkt
     zusatzbedingung:
       frage: >-
         Muss dieses Produkt nach den genannten Vorschriften einer
-        Konformitaetsbewertung durch eine dritte Stelle unterzogen werden?
+        Konformitaetsbewertung durch eine dritte Stelle unterzogen werden, die
+        sich nicht ausschliesslich aus anderen Risiken als Risiken fuer
+        Gesundheit und Sicherheit ergibt (etwa Funkfrequenzen oder
+        elektromagnetische Interferenzen)?
       trifft_zu_wenn: anhang_i_dritte_konformitaetsbewertung
     klasse: hochrisiko
     fundstelle: "Art. 6 Abs. 1 KI-VO i. V. m. Anhang I"
@@ -732,7 +735,51 @@ regeln:
     hinweis: >-
       Beide Bedingungen muessen kumulativ erfuellt sein. Der Ausnahmefilter des
       Art. 6 Abs. 3 gilt fuer diesen Pfad NICHT - er bezieht sich nur auf
-      Anhang III.
+      Anhang III. Die Einschraenkung in der Zusatzfrage folgt aus Art. 6
+      Abs. 1c, der an Art. 6 Abs. 1 lit. b anknuepft und damit beide
+      Alternativen aus lit. a erfasst.
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
+
+  - id: P-02
+    frage: >-
+      Ist das KI-System ein Bestandteil eines Produkts, das unter Anhang I
+      faellt, und besteht seine Zweckbestimmung darin, Risiken fuer die
+      Gesundheit und Sicherheit von
+      Personen oder Eigentum abzuwenden oder zu mindern - oder wuerde sein
+      Ausfall oder seine Stoerung Gesundheit, Sicherheit oder Eigentum
+      gefaehrden?
+    trifft_zu_wenn: anhang_i_sicherheitsbauteil
+    zusatzbedingung:
+      frage: >-
+        Muss dieses Produkt nach den genannten Vorschriften einer
+        Konformitaetsbewertung durch eine dritte Stelle unterzogen werden, die
+        sich nicht ausschliesslich aus anderen Risiken als Risiken fuer
+        Gesundheit und Sicherheit ergibt (etwa Funkfrequenzen oder
+        elektromagnetische Interferenzen)?
+      trifft_zu_wenn: anhang_i_dritte_konformitaetsbewertung
+    klasse: hochrisiko
+    fundstelle: >-
+      Art. 6 Abs. 1 KI-VO i. V. m. Art. 3 Nr. 14 und Art. 6 Abs. 1a bis 1c
+    frist_ref: F-06
+    ausnahmen: >-
+      Nach Art. 6 Abs. 1a gelten KI-Systeme nicht als Sicherheitsbauteil, die
+      ausschliesslich fuer nicht sicherheitsrelevante Aspekte der
+      Nutzerunterstuetzung, Leistungsoptimierung, Leistungseffizienz,
+      Automatisierung, Benutzerfreundlichkeit oder Qualitaetskontrolle
+      verwendet werden. Unbeschadet dessen gilt nach Art. 6 Abs. 1b ein System
+      als Sicherheitsbauteil, wenn sein Ausfall oder seine Fehlfunktion
+      Gesundheit und Sicherheit gefaehrden wuerde.
+    anmerkung: >-
+      Erwaegungsgrund 7: die Zweckbestimmung wird vom Anbieter festgelegt. Die
+      blosse Tatsache, dass ein KI-System in ein Produkt integriert ist oder in
+      einem Produkt zum Einsatz kommt, das Harmonisierungsrechtsvorschriften
+      unterliegt, begruendet fuer sich noch keine Sicherheitsfunktion.
+    hinweis: >-
+      Nach Art. 43 Abs. 3 Unterabs. 3 sind Hersteller nicht schon deshalb zu
+      einer Konformitaetsbewertung durch Dritte verpflichtet, weil das Produkt
+      ein Hochrisiko-KI-System als Sicherheitsbauteil enthaelt.
     geprueft: true
     geprueft_am: "2026-07-28"
     geprueft_von: "Niklas Steinhauser"

@@ -344,8 +344,8 @@ class Regelwerk:
             return
 
         # Der Filter des Art. 6 Abs. 3 gilt nur fuer Anhang III, nicht fuer
-        # den Anhang-I-Pfad. Greift P-01, ist er ausgeschlossen.
-        if any(t.regel_id == "P-01" for t in einstufung.treffer):
+        # den Anhang-I-Pfad. Greift P-01 oder P-02, ist er ausgeschlossen.
+        if any(t.regel_id in ("P-01", "P-02") for t in einstufung.treffer):
             return
 
         sperr_flag = self.ausnahmefilter.get("gilt_nicht_bei")
