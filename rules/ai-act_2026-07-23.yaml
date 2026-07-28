@@ -1213,7 +1213,9 @@ querschnittspflichten:
       verfuegende Text die Entwicklung der KI-Kompetenz unterstuetzen laesst. Im
       Zweifel ist der verfuegende Text von Art. 4 massgeblich, nicht die
       verkuerzte Beschreibung des Erwaegungsgrundes.
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: Q-02
     gegenstand: "Bussgeldrahmen"
