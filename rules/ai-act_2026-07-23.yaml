@@ -238,29 +238,29 @@ fristen:
     omnibus: "2027-12-02"
     veraendert: true
     hinweis: "Verschiebung um 16 Monate. Omnibus-Angabe unverifiziert."
-    fundstelle: "Art. 113 Abs. 2 KI-VO"
+    fundstelle: "Art. 113 Abs. 3 lit. c Ziff. i KI-VO"
     geprueft: false
 
   - id: F-06
     gegenstand: "Hochrisiko-Systeme nach Anhang I (Art. 6 Abs. 1)"
-    original: "2027-08-02"
+    original: "2026-08-02"
     omnibus: "2028-08-02"
     veraendert: true
     hinweis: "Omnibus-Angabe unverifiziert."
-    fundstelle: "Art. 113 Abs. 3 lit. c KI-VO"
+    fundstelle: "Art. 113 Abs. 3 lit. c Ziff. ii KI-VO"
     geprueft: false
 
   - id: F-07
-    gegenstand: "Neu eingefuehrte verbotene Praktiken (Digital Omnibus)"
+    gegenstand: "Neu eingefuehrte verbotene Praktiken (Art. 5 Abs. 1 lit. ba und bb)"
     original: null
     omnibus: "2026-12-02"
     veraendert: true
     hinweis: >-
-      Der Omnibus fuehrt zwei zusaetzliche verbotene Praktiken in Art. 5 ein.
-      Wortlaut liegt nicht vor. Keine Pruefregeln ableiten, bevor der
-      Amtsblatt-Text vorliegt.
+      Eingefuegt durch Verordnung (EU) 2026/1744. Betrifft Art. 5 Abs. 1
+      Unterabsatz 1 lit. ba und bb sowie Art. 5 Abs. 1a und 1b. Diese
+      Tatbestaende gelten spaeter als die uebrigen Verbote nach F-01.
+    fundstelle: "Art. 113 Abs. 3 lit. a KI-VO"
     geprueft: false
-    offen: true
 
 # -----------------------------------------------------------------------------
 # BESTANDSSCHUTZ
@@ -272,9 +272,12 @@ bestandsschutz:
   - id: B-01
     gegenstand: "Hochrisiko-KI-Systeme, die vor dem allgemeinen Geltungsbeginn in Verkehr gebracht oder in Betrieb genommen wurden"
     regel: >-
-      Die Verordnung gilt fuer solche Systeme nur dann, wenn sie ab dem
-      2. August 2026 in ihrer Konzeption erheblich veraendert wurden.
-    frage: "Wurde das System vor dem 2. August 2026 in Betrieb genommen?"
+      Die Verordnung gilt fuer solche Systeme nur dann, wenn sie nach dem
+      Geltungsbeginn des Kapitels III in ihrer Konzeption erheblich veraendert
+      wurden. Der Stichtag ist nicht fest, sondern richtet sich nach
+      Art. 113: 2. Dezember 2027 fuer Systeme nach Anhang III (F-05),
+      2. August 2028 fuer Systeme nach Anhang I (F-06).
+    frage: "Wurde das System vor dem fuer seine Klasse geltenden Stichtag in Betrieb genommen?"
     folgefrage: "Wurde es seitdem in seiner Konzeption erheblich veraendert?"
     fundstelle: "Art. 111 Abs. 2 KI-VO"
     ausnahme: >-
@@ -282,7 +285,11 @@ bestandsschutz:
       werden, gilt die Frist 2. August 2030 - unabhaengig von Veraenderungen.
     hinweis: >-
       Erhebliche Veraenderung ist hier gleichbedeutend mit der wesentlichen
-      Veraenderung nach Art. 3 Nr. 23.
+      Veraenderung nach Art. 3 Nr. 23. Nach Erwaegungsgrund 39 der Verordnung
+      (EU) 2026/1744 genuegt es, dass eine einzelne Einheit derselben Art und
+      desselben Modells vor dem Stichtag rechtmaessig in Verkehr gebracht
+      wurde; weitere Einheiten geniessen dann dieselbe Uebergangsfrist,
+      solange die Gestaltung unveraendert bleibt.
     geprueft: false
 
   - id: B-02
