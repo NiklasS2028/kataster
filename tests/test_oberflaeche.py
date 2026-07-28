@@ -142,6 +142,27 @@ def test_status_wird_lesbar_ausgegeben(app, klient):
         assert "in Prüfung" in seite
 
 
+def test_groessenklasse_wird_gespeichert_und_vorbelegt(app, klient):
+    klient.post("/organisation/", data={
+        "name": "Mittelbau GmbH",
+        "groessenklasse": "kleines_midcap",
+        "hat_partner_oder_verbund": "on",
+    })
+    with app.app_context():
+        org = app.datenbank().organisation_lesen()
+    assert org["groessenklasse"] == "kleines_midcap"
+    assert org["hat_partner_oder_verbund"] == 1
+    seite = klient.get("/organisation/").get_data(as_text=True)
+    assert 'value="kleines_midcap" selected' in seite
+
+
+def test_unbekannte_groessenklasse_wird_verworfen(app, klient):
+    """Nur die drei definierten Klassen duerfen in die Datenbank gelangen."""
+    klient.post("/organisation/", data={"name": "X", "groessenklasse": "boese"})
+    with app.app_context():
+        assert app.datenbank().organisation_lesen()["groessenklasse"] is None
+
+
 def test_pflichtenhinweis_nur_bei_bestandsschutz(app, klient):
     """Ohne Altsysteme waere der Hinweis irrefuehrend."""
     klient.post("/system/neu", data={"name": "Neusystem"})

@@ -21,6 +21,11 @@ def bearbeiten():
     if request.method == "POST":
         f = request.form
         beschaeftigte = f.get("beschaeftigte", "").strip()
+        # Selbstauskunft, keine Berechnung. Unbekannte Werte werden zu None,
+        # damit nur die drei definierten Klassen in die Datenbank gelangen.
+        groesse = f.get("groessenklasse", "").strip()
+        if groesse not in ("kmu", "kleines_midcap", "gross"):
+            groesse = None
         db.organisation_speichern(
             name=f.get("name", "").strip() or None,
             rechtsform=f.get("rechtsform", "").strip() or None,
@@ -28,6 +33,8 @@ def bearbeiten():
             ansprechpartner=f.get("ansprechpartner", "").strip() or None,
             ist_behoerde=1 if f.get("ist_behoerde") else 0,
             erbringt_oeff_dienste=1 if f.get("erbringt_oeff_dienste") else 0,
+            groessenklasse=groesse,
+            hat_partner_oder_verbund=1 if f.get("hat_partner_oder_verbund") else 0,
         )
         return redirect(url_for("organisation.bearbeiten", gespeichert=1))
 

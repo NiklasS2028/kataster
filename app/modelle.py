@@ -22,7 +22,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterator
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 # Vokabular fuer das Feld datenkategorien. Bewusst hier und nicht im Regelwerk:
 # Das sind Begriffe der Erfassung, kein Rechtsinhalt.
@@ -59,6 +59,10 @@ CREATE TABLE IF NOT EXISTS organisation (
     ist_behoerde        INTEGER NOT NULL DEFAULT 0,
     erbringt_oeff_dienste INTEGER NOT NULL DEFAULT 0,
     ansprechpartner     TEXT,
+    -- Selbstauskunft nach Empfehlung 2003/361/EG bzw. (EU) 2025/1099.
+    -- Kataster berechnet die Klasse nicht, es uebernimmt die Angabe.
+    groessenklasse      TEXT,
+    hat_partner_oder_verbund INTEGER NOT NULL DEFAULT 0,
     geaendert_am        TEXT
 );
 
@@ -182,9 +186,33 @@ class Datenbank:
                     "INSERT INTO schema_info (version, angelegt_am) VALUES (?, ?)",
                     (SCHEMA_VERSION, _jetzt()),
                 )
+            else:
+                self._migrieren(con)
             con.execute(
                 "INSERT OR IGNORE INTO organisation (id, geaendert_am) VALUES (1, ?)",
                 (_jetzt(),),
+            )
+
+    def _migrieren(self, con: sqlite3.Connection) -> None:
+        """Hebt eine bestehende Datenbank auf SCHEMA_VERSION.
+
+        CREATE TABLE IF NOT EXISTS legt fehlende Tabellen an, ergaenzt aber
+        keine Spalten in bereits bestehenden. Neue Spalten muessen deshalb per
+        ALTER TABLE nachgezogen werden, sonst fehlen sie in Altbestaenden. Die
+        Version wird als neue Zeile fortgeschrieben, nicht ueberschrieben.
+        """
+        version = con.execute("SELECT MAX(version) FROM schema_info").fetchone()[0] or 0
+        if version < 2:
+            # v1 -> v2: Groessenklasse als Organisationsattribut (Phase 7).
+            con.execute("ALTER TABLE organisation ADD COLUMN groessenklasse TEXT")
+            con.execute(
+                "ALTER TABLE organisation "
+                "ADD COLUMN hat_partner_oder_verbund INTEGER NOT NULL DEFAULT 0"
+            )
+        if version < SCHEMA_VERSION:
+            con.execute(
+                "INSERT INTO schema_info (version, angelegt_am) VALUES (?, ?)",
+                (SCHEMA_VERSION, _jetzt()),
             )
 
     # -- Organisation --------------------------------------------------------
@@ -198,6 +226,7 @@ class Datenbank:
         erlaubt = {
             "name", "rechtsform", "beschaeftigte", "ist_behoerde",
             "erbringt_oeff_dienste", "ansprechpartner",
+            "groessenklasse", "hat_partner_oder_verbund",
         }
         daten = {k: v for k, v in felder.items() if k in erlaubt}
         if not daten:

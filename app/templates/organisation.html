@@ -36,6 +36,32 @@
                placeholder="Name, keine Abteilung">
       </div>
 
+      <div class="zeile" style="margin-top:1.4rem">
+        <label for="groessenklasse">Unternehmensgröße</label>
+        <select id="groessenklasse" name="groessenklasse">
+          <option value="" {{ 'selected' if not organisation.groessenklasse }}>Keine Angabe</option>
+          <option value="kmu" {{ 'selected' if organisation.groessenklasse == 'kmu' }}>Kleinst-, kleines oder mittleres Unternehmen (KMU)</option>
+          <option value="kleines_midcap" {{ 'selected' if organisation.groessenklasse == 'kleines_midcap' }}>Kleines Unternehmen mit mittlerer Kapitalisierung (kleines Midcap)</option>
+          <option value="gross" {{ 'selected' if organisation.groessenklasse == 'gross' }}>Weder KMU noch kleines Midcap</option>
+        </select>
+        <small>Selbstauskunft, keine Berechnung. Die Einstufung als KMU richtet sich
+          nach Beschäftigtenzahl, Jahresumsatz oder Bilanzsumme und den
+          Beteiligungsverhältnissen (Empfehlung 2003/361/EG). Ein kleines Midcap ist ein
+          größeres Unternehmen unterhalb der dort gezogenen Schwellen (Empfehlung (EU)
+          2025/1099). Kataster übernimmt Ihre Angabe. Für KMU und kleine Midcaps sieht
+          die Verordnung Erleichterungen vor.</small>
+      </div>
+
+      <div class="mehrfach" style="margin-top:1rem">
+        <label>
+          <input type="checkbox" name="hat_partner_oder_verbund" {{ 'checked' if organisation.hat_partner_oder_verbund }}>
+          <span>Es bestehen Partner- oder verbundene Unternehmen
+            <small>Das vereinfachte Qualitätsmanagement nach Art. 63 Abs. 1 steht nur
+            Unternehmen ohne Partner- oder verbundene Unternehmen offen. Diese Angabe
+            ist aus der Größenklasse nicht ableitbar.</small></span>
+        </label>
+      </div>
+
       <div class="mehrfach" style="margin-top:1.4rem">
         <label>
           <input type="checkbox" name="ist_behoerde" {{ 'checked' if organisation.ist_behoerde }}>

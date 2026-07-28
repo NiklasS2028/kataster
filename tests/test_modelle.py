@@ -2,7 +2,91 @@
 
 from __future__ import annotations
 
+import sqlite3
+
 import pytest
+
+
+# v1-Schema der organisation-Tabelle, wortgleich zum Stand vor Phase 7. Bewusst
+# als roher DDL-String und nicht ueber Datenbank(), damit die neuen Spalten
+# NICHT schon durch CREATE TABLE entstehen. Sonst liefe der ALTER-Pfad nie und
+# der Migrationstest waere aus dem falschen Grund gruen.
+_V1_SCHEMA = """
+CREATE TABLE schema_info (version INTEGER NOT NULL, angelegt_am TEXT NOT NULL);
+INSERT INTO schema_info (version, angelegt_am) VALUES (1, '2025-01-01T00:00:00');
+CREATE TABLE organisation (
+    id                  INTEGER PRIMARY KEY CHECK (id = 1),
+    name                TEXT,
+    rechtsform          TEXT,
+    beschaeftigte       INTEGER,
+    ist_behoerde        INTEGER NOT NULL DEFAULT 0,
+    erbringt_oeff_dienste INTEGER NOT NULL DEFAULT 0,
+    ansprechpartner     TEXT,
+    geaendert_am        TEXT
+);
+INSERT INTO organisation (id, name, beschaeftigte, geaendert_am)
+    VALUES (1, 'Bestandsbau GmbH', 12, '2025-01-01T00:00:00');
+"""
+
+
+def _v1_datenbank_anlegen(pfad):
+    con = sqlite3.connect(pfad)
+    con.executescript(_V1_SCHEMA)
+    con.commit()
+    con.close()
+
+
+def test_migration_v1_ergaenzt_organisationsspalten(tmp_path):
+    """Eine v1-DB ohne die neuen Spalten muss den ALTER-Pfad durchlaufen.
+
+    Gegenprobe: Kommentiert man in modelle._migrieren die beiden ALTER-Zeilen
+    aus, faellt dieser Test rot. Damit testet er den Migrationscode und nicht
+    nur das CREATE TABLE eines frischen Schemas."""
+    from app.modelle import Datenbank, SCHEMA_VERSION
+
+    pfad = tmp_path / "alt.sqlite"
+    _v1_datenbank_anlegen(pfad)
+
+    # Vor der Migration fehlen die Spalten wirklich.
+    con = sqlite3.connect(pfad)
+    spalten_vorher = {z[1] for z in con.execute("PRAGMA table_info(organisation)")}
+    con.close()
+    assert "groessenklasse" not in spalten_vorher
+    assert "hat_partner_oder_verbund" not in spalten_vorher
+
+    # Oeffnen fuehrt die Migration aus.
+    db = Datenbank(pfad)
+    with db.verbindung() as con:
+        spalten = {z[1] for z in con.execute("PRAGMA table_info(organisation)")}
+        version = con.execute("SELECT MAX(version) FROM schema_info").fetchone()[0]
+
+    assert "groessenklasse" in spalten
+    assert "hat_partner_oder_verbund" in spalten
+    assert version == SCHEMA_VERSION
+
+
+def test_migration_erhaelt_bestandsdaten(tmp_path):
+    """Die Migration darf vorhandene Angaben nicht verlieren; neue Spalten
+    starten leer bzw. mit ihrem Default."""
+    from app.modelle import Datenbank
+
+    pfad = tmp_path / "alt.sqlite"
+    _v1_datenbank_anlegen(pfad)
+    db = Datenbank(pfad)
+
+    org = db.organisation_lesen()
+    assert org["name"] == "Bestandsbau GmbH"
+    assert org["beschaeftigte"] == 12
+    assert org["groessenklasse"] is None
+    assert org["hat_partner_oder_verbund"] == 0
+
+
+def test_groessenklasse_und_verbund_werden_gespeichert(datenbank):
+    datenbank.organisation_speichern(
+        groessenklasse="kleines_midcap", hat_partner_oder_verbund=1)
+    org = datenbank.organisation_lesen()
+    assert org["groessenklasse"] == "kleines_midcap"
+    assert org["hat_partner_oder_verbund"] == 1
 
 
 def test_schema_wird_angelegt(datenbank):
