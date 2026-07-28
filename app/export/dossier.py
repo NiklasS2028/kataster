@@ -178,6 +178,8 @@ def dossier_html(organisation, systeme, kennzahlen, regelwerk,
             h.append("<p class='hinweis'>Keine der geprueften Regeln trifft zu.</p>")
 
         ergebnis = e["ergebnis"]
+        if ergebnis.get("abschnitt_b_hinweis"):
+            h.append(f"<p class='hinweis'>{escape(ergebnis['abschnitt_b_hinweis'])}</p>")
         if ergebnis.get("bestandsschutz_hinweis"):
             h.append(f"<p class='hinweis'>{escape(ergebnis['bestandsschutz_hinweis'])}</p>")
         if ergebnis.get("ausnahmefilter_gesperrt"):

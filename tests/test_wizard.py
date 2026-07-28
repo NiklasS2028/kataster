@@ -50,6 +50,33 @@ def test_alle_kontexte_stellen_alle_regelfragen(wizard, regelwerk):
     assert ergebnis.uebersprungene_regeln == []
 
 
+def test_abschnittsfrage_erscheint_nach_anhang_i_bejahung(wizard, regelwerk):
+    alle = [k["id"] for k in regelwerk.einsatzkontexte["definitionen"]]
+    antworten, _ = _durchlaufen(
+        wizard, alle,
+        ja=["rolle:R-01", "flag:anhang_i_sicherheitsbauteil"])
+    schluessel = [f.schluessel for f in wizard.alle_fragen(antworten)]
+    assert "flag:anhang_i_abschnitt_b" in schluessel
+    # Sie haengt an beiden Anhang-I-Fragen, nicht an ihrer Position.
+    assert schluessel.index("flag:anhang_i_abschnitt_b") > schluessel.index(
+        "flag:anhang_i_sicherheitsbauteil")
+
+
+def test_abschnittsfrage_erscheint_auch_bei_produkt(wizard, regelwerk):
+    alle = [k["id"] for k in regelwerk.einsatzkontexte["definitionen"]]
+    antworten, _ = _durchlaufen(
+        wizard, alle, ja=["rolle:R-01", "flag:anhang_i_produkt"])
+    schluessel = [f.schluessel for f in wizard.alle_fragen(antworten)]
+    assert "flag:anhang_i_abschnitt_b" in schluessel
+
+
+def test_abschnittsfrage_fehlt_ohne_anhang_i(wizard, regelwerk):
+    alle = [k["id"] for k in regelwerk.einsatzkontexte["definitionen"]]
+    antworten, _ = _durchlaufen(wizard, alle, ja=["rolle:R-01"])
+    schluessel = [f.schluessel for f in wizard.alle_fragen(antworten)]
+    assert "flag:anhang_i_abschnitt_b" not in schluessel
+
+
 def test_keine_doppelten_fragen(wizard, regelwerk):
     alle = [k["id"] for k in regelwerk.einsatzkontexte["definitionen"]]
     antworten, _ = _durchlaufen(wizard, alle, ja=["rolle:R-01"])

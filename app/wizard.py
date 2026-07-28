@@ -45,6 +45,11 @@ class Frage:
     hinweis: str | None = None
     ausnahmen: str | None = None
     optional: bool = False
+    # Explizite Abhaengigkeit statt Positionslogik: die Frage erscheint, wenn
+    # mindestens einer der genannten Schluessel bejaht wurde. Noetig, wenn eine
+    # Folgefrage an mehreren Vorfragen haengt oder nicht direkt hinter ihnen
+    # steht.
+    abhaengig_von: tuple[str, ...] = ()
     optionen: list[dict] | None = None
 
 
@@ -190,6 +195,38 @@ class Wizard:
                         hinweis=self.rw.ausnahmefilter.get("sperrhinweis"),
                     )
                 )
+
+        # Abschnitt A oder B? Entscheidet nicht ueber die Einstufung - beide
+        # Wege fuehren nach Art. 6 Abs. 1 zu hochrisiko -, sondern ueber das
+        # anwendbare Pflichtenregime (Art. 2 Abs. 2).
+        anhang_i_gefragt = any(
+            f.schluessel in ("flag:anhang_i_produkt",
+                             "flag:anhang_i_sicherheitsbauteil")
+            for f in fragen
+        )
+        if anhang_i_gefragt:
+            fragen.append(
+                Frage(
+                    schluessel="flag:anhang_i_abschnitt_b",
+                    text=(
+                        "Faellt das Produkt unter eine Vorschrift aus Anhang I "
+                        "Abschnitt B, also Maschinen, Kraftfahrzeuge, land- oder "
+                        "forstwirtschaftliche Fahrzeuge, zwei- bis vierraedrige "
+                        "Fahrzeuge, Schiffsausruestung, Eisenbahn oder "
+                        "Zivilluftfahrt?"
+                    ),
+                    abschnitt="hochrisiko",
+                    fundstelle="Anhang I Abschnitt B KI-VO",
+                    hinweis=(
+                        "Folgefrage. Nur relevant, wenn eine der beiden vorigen "
+                        "Fragen bejaht wurde. Maschinen stehen seit der VO (EU) "
+                        "2026/1744 in Abschnitt B."
+                    ),
+                    optional=True,
+                    abhaengig_von=("flag:anhang_i_produkt",
+                                   "flag:anhang_i_sicherheitsbauteil"),
+                )
+            )
         return fragen
 
     def _fragen_bestand(self) -> list[Frage]:
@@ -201,8 +238,11 @@ class Wizard:
                 typ="datum",
                 fundstelle="Art. 111 Abs. 2 KI-VO",
                 hinweis=(
-                    "Systeme, die vor dem allgemeinen Geltungsbeginn in Betrieb "
-                    "genommen wurden, koennen unter den Bestandsschutz fallen."
+                    "Systeme, die vor dem Geltungsbeginn des Kapitels III in "
+                    "Betrieb genommen wurden, koennen unter den Bestandsschutz "
+                    "fallen. Der Stichtag haengt von der Einstufung ab: "
+                    "2. Dezember 2027 fuer Anhang III, 2. August 2028 fuer "
+                    "Anhang I."
                 ),
                 optional=True,
             ),
@@ -292,6 +332,8 @@ class Wizard:
         """Folgefragen erscheinen nur, wenn die vorausgehende bejaht wurde."""
         if not frage.optional or frage.abschnitt == "bestand":
             return True
+        if frage.abhaengig_von:
+            return any(antworten.get(s) for s in frage.abhaengig_von)
         index = next(
             (i for i, f in enumerate(alle) if f.schluessel == frage.schluessel), None
         )

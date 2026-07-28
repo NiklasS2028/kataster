@@ -721,9 +721,11 @@ regeln:
   - id: P-01
     frage: >-
       Ist das KI-System selbst ein Produkt, das unter die
-      Harmonisierungsrechtsvorschriften aus Anhang I faellt (u. a.
-      Spielzeug, Aufzuege, Druckgeraete, Funkanlagen, Seilbahnen, persoenliche
-      Schutzausruestung, Medizinprodukte, In-vitro-Diagnostika, Fahrzeuge,
+      Harmonisierungsrechtsvorschriften aus Anhang I faellt (u. a. Maschinen,
+      Spielzeug, Sportboote, Aufzuege, Geraete fuer explosionsgefaehrdete
+      Bereiche, Funkanlagen, Druckgeraete, Seilbahnen, persoenliche
+      Schutzausruestung, Gasverbrauchseinrichtungen, Medizinprodukte,
+      In-vitro-Diagnostika, Fahrzeuge, Schiffsausruestung, Eisenbahn,
       Luftfahrzeuge)?
     trifft_zu_wenn: anhang_i_produkt
     zusatzbedingung:
@@ -749,8 +751,11 @@ regeln:
 
   - id: P-02
     frage: >-
-      Ist das KI-System ein Bestandteil eines Produkts, das unter Anhang I
-      faellt, und besteht seine Zweckbestimmung darin, Risiken fuer die
+      Ist das KI-System ein Bestandteil eines Produkts, das unter die
+      Harmonisierungsrechtsvorschriften aus Anhang I faellt (u. a. Maschinen,
+      Spielzeug, Aufzuege, Funkanlagen, Druckgeraete, Seilbahnen,
+      Medizinprodukte, Fahrzeuge, Luftfahrzeuge), und besteht seine
+      Zweckbestimmung darin, Risiken fuer die
       Gesundheit und Sicherheit von
       Personen oder Eigentum abzuwenden oder zu mindern - oder wuerde sein
       Ausfall oder seine Stoerung Gesundheit, Sicherheit oder Eigentum

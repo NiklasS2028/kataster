@@ -36,6 +36,10 @@
         </table>
         {% endif %}
 
+        {% if einstufung.ergebnis.abschnitt_b_hinweis %}
+        <p class="hinweis hinweis--ausnahme">{{ einstufung.ergebnis.abschnitt_b_hinweis }}</p>
+        {% endif %}
+
         {% if einstufung.ergebnis.bestandsschutz_hinweis %}
         <p class="hinweis hinweis--ausnahme">{{ einstufung.ergebnis.bestandsschutz_hinweis }}</p>
         {% endif %}

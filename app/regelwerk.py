@@ -59,6 +59,8 @@ class Einstufung:
     berechnet_am: str = ""
     bestandsschutz_greift: bool = False
     bestandsschutz_hinweis: str | None = None
+    abschnitt_b_greift: bool = False
+    abschnitt_b_hinweis: str | None = None
     ausnahmefilter_moeglich: bool = False
     ausnahmefilter_gesperrt_durch_profiling: bool = False
     warnungen: list[str] = field(default_factory=list)
@@ -95,6 +97,7 @@ class Regelwerk:
         self.rollenbestimmung: dict[str, Any] = daten.get("rollenbestimmung", {})
         self.ausnahmefilter: dict[str, Any] = daten.get("ausnahmefilter_anhang_iii", {})
         self.bestandsschutz: list[dict] = daten.get("bestandsschutz", [])
+        self.anhang_i: dict = daten.get("anhang_i", {})
         self.anwendungsbereich: list[dict] = daten.get("anwendungsbereich_ausnahmen", [])
         self.einsatzkontexte: dict[str, Any] = daten.get("einsatzkontexte", {})
         self.schulungsbausteine: list[dict] = daten.get("schulungsbausteine", [])
@@ -286,6 +289,7 @@ class Regelwerk:
             warnungen=warnungen,
         )
 
+        self._abschnitt_b_pruefen(einstufung, flags)
         self._bestandsschutz_pruefen(
             einstufung, in_betrieb_seit, wesentlich_veraendert, ist_behoerde, lesart
         )
@@ -304,6 +308,11 @@ class Regelwerk:
         lesart: str,
     ) -> None:
         if einstufung.klasse != "hochrisiko" or in_betrieb_seit is None:
+            return
+
+        # Fuer Abschnitt B gilt Kapitel III nicht, es gibt also keinen
+        # Geltungsbeginn, an den Art. 111 Abs. 2 anknuepfen koennte.
+        if einstufung.abschnitt_b_greift:
             return
 
         # Art. 111 Abs. 2 knuepft an den Geltungsbeginn des Kapitels III an,
@@ -348,6 +357,27 @@ class Regelwerk:
             "Veraenderung neu bewerten."
         )
 
+    def _abschnitt_b_pruefen(
+        self, einstufung: Einstufung, flags: dict[str, bool]
+    ) -> None:
+        if einstufung.klasse != "hochrisiko":
+            return
+        if not any(t.regel_id in ("P-01", "P-02") for t in einstufung.treffer):
+            return
+        if not flags.get("anhang_i_abschnitt_b", False):
+            return
+
+        abschnitt = (self.anhang_i or {}).get("abschnitt_b", {})
+        einstufung.abschnitt_b_greift = True
+        einstufung.abschnitt_b_hinweis = (
+            "Das Produkt faellt unter Anhang I Abschnitt B. Die Einstufung als "
+            "hochrisiko bleibt bestehen, das Pflichtenregime ist aber ein "
+            "anderes: " + abschnitt.get("rechtsfolge", "").strip() + " "
+            "Offen ist, ob und wie der Bestandsschutz nach Art. 111 Abs. 2 hier "
+            "greift - die Verordnung sagt dazu nichts ausdruecklich. Er wird "
+            "deshalb nicht berechnet."
+        )
+
     def _ausnahmefilter_pruefen(
         self, einstufung: Einstufung, flags: dict[str, bool]
     ) -> None:
@@ -386,6 +416,8 @@ class Regelwerk:
             "ausgeloest_durch": einstufung.ausgeloest_durch,
             "bestandsschutz_greift": einstufung.bestandsschutz_greift,
             "bestandsschutz_hinweis": einstufung.bestandsschutz_hinweis,
+            "abschnitt_b_greift": einstufung.abschnitt_b_greift,
+            "abschnitt_b_hinweis": einstufung.abschnitt_b_hinweis,
             "ausnahmefilter_moeglich": einstufung.ausnahmefilter_moeglich,
             "ausnahmefilter_gesperrt": einstufung.ausnahmefilter_gesperrt_durch_profiling,
             "warnungen": einstufung.warnungen,

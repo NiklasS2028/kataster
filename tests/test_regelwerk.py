@@ -198,6 +198,39 @@ def test_bestandsschutz_nur_bei_hochrisiko(regelwerk):
     assert not e.bestandsschutz_greift
 
 
+def test_abschnitt_b_aendert_pflichtenregime_nicht_die_klasse(regelwerk):
+    e = regelwerk.einstufen({
+        "anhang_i_sicherheitsbauteil": True,
+        "anhang_i_dritte_konformitaetsbewertung": True,
+        "anhang_i_abschnitt_b": True,
+    }, rolle="anbieter")
+    assert e.klasse == "hochrisiko"
+    assert e.abschnitt_b_greift
+    assert "Art. 60a" in e.abschnitt_b_hinweis
+
+
+def test_abschnitt_b_ohne_anhang_i_treffer_greift_nicht(regelwerk):
+    e = regelwerk.einstufen({
+        "personalauswahl": True,
+        "anhang_i_abschnitt_b": True,
+    }, rolle="anbieter")
+    assert e.klasse == "hochrisiko"
+    assert not e.abschnitt_b_greift
+
+
+def test_abschnitt_b_setzt_bestandsschutz_aus(regelwerk):
+    # Fuer Abschnitt B gilt Kapitel III nicht, Art. 111 Abs. 2 hat keinen
+    # Anknuepfungspunkt. Statt still Bestandsschutz zu gewaehren, wird er
+    # nicht berechnet.
+    e = regelwerk.einstufen({
+        "anhang_i_sicherheitsbauteil": True,
+        "anhang_i_dritte_konformitaetsbewertung": True,
+        "anhang_i_abschnitt_b": True,
+    }, rolle="anbieter", in_betrieb_seit=date(2024, 5, 1))
+    assert not e.bestandsschutz_greift
+    assert e.abschnitt_b_hinweis is not None
+
+
 def test_bestandsschutz_anhang_i_nutzt_spaeteren_stichtag(regelwerk):
     # Art. 111 Abs. 2 knuepft an den Geltungsbeginn des Kapitels III an.
     # Fuer Anhang I ist das F-06, nicht der allgemeine Geltungsbeginn F-03.
