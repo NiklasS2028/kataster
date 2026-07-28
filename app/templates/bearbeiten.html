@@ -114,7 +114,7 @@
           <div class="zeile">
             <label for="kosten_monat_eur">Kosten je Monat (€)</label>
             <input type="text" id="kosten_monat_eur" name="kosten_monat_eur"
-                   value="{{ '%.2f'|format(system.kosten_monat_eur)|replace('.', ',') if system.kosten_monat_eur else '' }}">
+                   value="{{ system.kosten_monat_eur|eur if system.kosten_monat_eur else '' }}">
           </div>
           <div class="zeile">
             <label for="kostenstelle">Kostenstelle</label>

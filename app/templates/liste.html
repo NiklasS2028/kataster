@@ -7,10 +7,11 @@
   {% include "_legende.html" %}
 
   <div>
+    {% if mit_bestandsschutz %}{% include "_pflichtenhinweis.html" %}{% endif %}
     {% if systeme %}
     <table class="verzeichnis">
       <caption>Bestandsverzeichnis &middot; {{ kennzahlen.systeme_gesamt }} Einträge
-        &middot; {{ '%.2f'|format(kennzahlen.kosten_jahr_eur) }} € im Jahr</caption>
+        &middot; {{ kennzahlen.kosten_jahr_eur|eur }} € im Jahr</caption>
       <thead>
         <tr>
           <th scope="col">Lfd.</th>
@@ -30,7 +31,7 @@
             {% if s.zweck %}<span class="zweck">{{ s.zweck }}</span>{% endif %}
           </td>
           <td>{{ s.abteilung or '—' }}</td>
-          <td>{{ {'in_pruefung':'in Prüfung','freigegeben':'freigegeben','geduldet':'geduldet','untersagt':'untersagt'}[s.status] }}</td>
+          <td>{{ s.status|statusname }}</td>
           <td>
             {% if s.einstufung %}
               {{ marke(s.einstufung.klasse, klassennamen[s.einstufung.klasse]) }}
@@ -38,7 +39,7 @@
               <span class="marke marke--offen">Nicht erfasst</span>
             {% endif %}
           </td>
-          <td class="zahl">{{ '%.2f'|format(s.kosten_monat_eur) if s.kosten_monat_eur else '—' }}</td>
+          <td class="zahl">{{ s.kosten_monat_eur|eur }}</td>
         </tr>
         {% endfor %}
       </tbody>

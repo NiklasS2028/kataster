@@ -53,6 +53,24 @@ def erzeuge_app(testkonfiguration: dict | None = None) -> Flask:
     app.register_blueprint(schatten.blueprint)
     app.register_blueprint(wizard_routen.blueprint)
 
+    @app.template_filter("eur")
+    def eur(wert) -> str:
+        """Deutsche Schreibweise: Punkt als Tausender-, Komma als Dezimaltrenner."""
+        if wert in (None, ""):
+            return "\u2014"
+        return f"{float(wert):,.2f}".replace(",", "\u00a0").replace(".", ",").replace("\u00a0", ".")
+
+    STATUS_NAMEN = {
+        "in_pruefung": "in Pr\u00fcfung",
+        "freigegeben": "freigegeben",
+        "geduldet": "geduldet",
+        "untersagt": "untersagt",
+    }
+
+    @app.template_filter("statusname")
+    def statusname(wert) -> str:
+        return STATUS_NAMEN.get(wert, wert)
+
     @app.context_processor
     def standardwerte():
         rw = app.regelwerk
@@ -66,6 +84,7 @@ def erzeuge_app(testkonfiguration: dict | None = None) -> Flask:
             "klassennamen": {
                 s: d.get("bezeichnung", s) for s, d in rw.risikoklassen.items()
             },
+            "statusnamen": STATUS_NAMEN,
         }
 
     @app.errorhandler(404)

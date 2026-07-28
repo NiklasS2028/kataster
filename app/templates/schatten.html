@@ -98,7 +98,7 @@
           <td class="lfd">{{ '%03d'|format(loop.index) }}</td>
           <td><a href="{{ url_for('inventar.detail', system_id=s.id) }}">{{ s.name }}</a>
             {% if s.zweck %}<span class="zweck">{{ s.zweck }}</span>{% endif %}</td>
-          <td>{{ s.status }}</td>
+          <td>{{ s.status|statusname }}</td>
           <td>
             {% if s.einstufung %}{{ marke(s.einstufung.klasse, klassennamen[s.einstufung.klasse]) }}
             {% else %}<span class="marke marke--offen">Nicht erfasst</span>{% endif %}

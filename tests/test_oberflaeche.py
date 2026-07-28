@@ -124,3 +124,35 @@ def test_nachweise_werden_erzeugt(app, klient, tmp_path):
     assert klient.get("/exporte/dossier.html").status_code == 200
     with app.app_context():
         assert len(app.datenbank().nachweise_auflisten()) == 4
+
+
+def test_zahlen_in_deutscher_schreibweise(app, klient):
+    klient.post("/system/neu", data={"name": "Teuer", "kosten_monat_eur": "1234,50"})
+    seite = klient.get("/").get_data(as_text=True)
+    assert "1.234,50" in seite
+    assert "1234.50" not in seite
+
+
+def test_status_wird_lesbar_ausgegeben(app, klient):
+    klient.post("/schatten/einlesen", data={"rohdaten": "DeepL;Uebersetzen;oft;IT"})
+    klient.post("/schatten/uebernehmen", data={"werkzeug": ["DeepL"]})
+    for pfad in ("/", "/schatten/"):
+        seite = klient.get(pfad).get_data(as_text=True)
+        assert "in_pruefung" not in seite, f"Rohwert sichtbar auf {pfad}"
+        assert "in Prüfung" in seite
+
+
+def test_pflichtenhinweis_nur_bei_bestandsschutz(app, klient):
+    """Ohne Altsysteme waere der Hinweis irrefuehrend."""
+    klient.post("/system/neu", data={"name": "Neusystem"})
+    assert "Was der Bestandsschutz nicht abdeckt" not in klient.get("/").get_data(as_text=True)
+
+    _wizard_durchklicken(klient, 1, ["personal"],
+                         ja=["rolle:R-01", "flag:personalauswahl"])
+    klient.post("/system/1/abschluss")
+    klient.post("/system/1/bearbeiten", data={
+        "name": "Neusystem", "status": "freigegeben", "in_betrieb_seit": "2024-05-01"})
+
+    seite = klient.get("/").get_data(as_text=True)
+    assert "Was der Bestandsschutz nicht abdeckt" in seite
+    assert "Art. 5" in seite and "Art. 50" in seite

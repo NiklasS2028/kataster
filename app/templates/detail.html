@@ -119,7 +119,7 @@
           <tr><td>Bereich</td><td>{{ system.abteilung or '—' }}</td></tr>
           <tr><td>Verantwortlich</td><td>{{ system.verantwortlich or '—' }}</td></tr>
           <tr><td>In Betrieb seit</td><td>{{ system.in_betrieb_seit or '—' }}</td></tr>
-          <tr><td>Kosten je Monat</td><td class="zahl">{{ '%.2f €'|format(system.kosten_monat_eur) if system.kosten_monat_eur else '—' }}</td></tr>
+          <tr><td>Kosten je Monat</td><td class="zahl">{{ system.kosten_monat_eur|eur }} €</td></tr>
           <tr><td>Herkunft des Eintrags</td><td>{{ 'Aus Umfrage gemeldet' if system.quelle == 'schatten_gemeldet' else 'Offiziell eingeführt' }}</td></tr>
           <tr><td>Datenkategorien</td><td>{{ system.datenkategorien|join(', ') if system.datenkategorien else '—' }}</td></tr>
           <tr><td>AV-Vertrag</td><td>{{ 'liegt vor' if system.av_vertrag else 'fehlt' }}</td></tr>

@@ -1,0 +1,27 @@
+{# Wird nur gezeigt, wenn mindestens ein System unter Bestandsschutz faellt.
+   Sonst entstuende der Eindruck, es sei nichts zu tun. #}
+<div class="feld" style="margin-bottom:1.6rem">
+  <h2>Was der Bestandsschutz nicht abdeckt</h2>
+  <p style="margin-top:0">{{ mit_bestandsschutz }} von {{ hochrisiko_gesamt }}
+    Hochrisiko-Systemen wurden vor dem 2. August 2026 in Betrieb genommen. Ihre
+    Hochrisiko-Pflichten ruhen nach Art. 111 Abs. 2 KI-VO — bis zur nächsten
+    wesentlichen Änderung. Das gilt aber nicht für alles:</p>
+
+  <table class="verzeichnis">
+    <thead><tr><th>Pflicht</th><th>Bestandsschutz</th><th>Fundstelle</th></tr></thead>
+    <tbody>
+      <tr><td>Verbotene Praktiken einstellen</td>
+          <td><strong>nein</strong> — gilt sofort, auch für Altsysteme</td>
+          <td class="fundstelle">Art. 5</td></tr>
+      <tr><td>KI-Kompetenz der Beschäftigten</td>
+          <td><strong>nein</strong> — gilt seit 2. Februar 2025</td>
+          <td class="fundstelle">Art. 4</td></tr>
+      <tr><td>Kennzeichnung und Information</td>
+          <td><strong>nein</strong> — ab 2. August 2026 für alle</td>
+          <td class="fundstelle">Art. 50</td></tr>
+      <tr><td>Pflichten für Hochrisiko-Systeme</td>
+          <td>ja — bis zur wesentlichen Änderung</td>
+          <td class="fundstelle">Art. 111 Abs. 2</td></tr>
+    </tbody>
+  </table>
+</div>

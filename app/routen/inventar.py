@@ -50,11 +50,19 @@ def liste():
     systeme = db.systeme_auflisten()
     for s in systeme:
         s["einstufung"] = db.einstufung_aktuell(s["id"])
+
+    hochrisiko = [s for s in systeme
+                  if (s["einstufung"] or {}).get("klasse") == "hochrisiko"]
+    mit_bestandsschutz = sum(
+        1 for s in hochrisiko if s["einstufung"]["bestandsschutz_greift"])
+
     return render_template(
         "liste.html",
         systeme=systeme,
         kennzahlen=db.kennzahlen(),
         organisation=db.organisation_lesen(),
+        hochrisiko_gesamt=len(hochrisiko),
+        mit_bestandsschutz=mit_bestandsschutz,
     )
 
 
