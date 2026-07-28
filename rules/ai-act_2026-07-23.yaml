@@ -638,6 +638,58 @@ regeln:
     geprueft_am: "2026-07-28"
     geprueft_von: "Niklas Steinhauser"
 
+  - id: V-07
+    frage: >-
+      Setzen Sie ein KI-System gezielt dafuer ein, realistische Bild-, Video-,
+      Ton- oder aehnliche Inhalte zu erzeugen oder zu manipulieren, in denen
+      intime Koerperteile einer bestimmbaren natuerlichen Person dargestellt
+      werden oder eine an eindeutig sexuellen Handlungen beteiligte
+      bestimmbare Person dargestellt wird - ohne dass die betreffende Person
+      dazu eine aus freien Stuecken erfolgende, spezifische, aufgeklaerte,
+      eindeutige und ausdrueckliche Zustimmung erteilt hat?
+    trifft_zu_wenn: intimdarstellung_ohne_zustimmung
+    klasse: verboten
+    fundstelle: "Art. 5 Abs. 1 Unterabsatz 1 lit. ba KI-VO"
+    frist_ref: F-07
+    ausnahmen: >-
+      Nicht erfasst ist eine Manipulation, die weder die Sichtbarkeit der
+      dargestellten intimen Koerperteile erhoeht noch die Art der
+      dargestellten eindeutig sexuellen Handlungen veraendert
+      (Art. 5 Abs. 1b KI-VO).
+    anmerkung: >-
+      Die Prueffrage ist auf die Betreiberperspektive zugeschnitten. Nach
+      Art. 5 Abs. 1a lit. b ist die VERWENDUNG nur verboten, wenn der
+      Betreiber das System zum Zwecke einer solchen Erzeugung oder
+      Manipulation einsetzt. Der blosse Einsatz eines generativen Systems,
+      das solche Inhalte technisch erzeugen koennte, loest das Verbot fuer
+      Betreiber nicht aus. Anbieter benoetigen eine gesonderte Pruefung nach
+      Art. 5 Abs. 1a lit. a (Zweckbestimmung oder fehlende zumutbare
+      Schutzvorkehrungen); diese ist hier nicht abgebildet.
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
+
+  - id: V-08
+    frage: >-
+      Setzen Sie ein KI-System gezielt dafuer ein, Material oder Darbietungen
+      im Sinne von Artikel 2 Buchstaben c und e der Richtlinie 2011/93/EU zu
+      erzeugen oder zu manipulieren?
+    trifft_zu_wenn: darstellung_sexueller_kindesmissbrauch
+    klasse: verboten
+    fundstelle: "Art. 5 Abs. 1 Unterabsatz 1 lit. bb KI-VO"
+    frist_ref: F-07
+    ausnahmen: >-
+      Gilt nicht, soweit das unrechtmaessige Verhalten nach nationalem Recht
+      als gerechtfertigt gilt.
+    anmerkung: >-
+      Der Normtext verweist auf die Richtlinie 2011/93/EU, statt den
+      Tatbestand auszuformulieren; die Prueffrage gibt den Verweis wieder.
+      Fuer die Betreiberperspektive gilt dieselbe Eingrenzung wie bei V-07
+      (Art. 5 Abs. 1a lit. b): verboten ist die zweckgerichtete Verwendung.
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
+
   # NICHT ABGEBILDET aus Art. 5 Abs. 1:
   #   lit. d  Risikobewertung, ob eine natuerliche Person eine Straftat begeht,
   #           allein auf Grundlage von Profiling
