@@ -101,6 +101,7 @@ class Regelwerk:
         self.anwendungsbereich: list[dict] = daten.get("anwendungsbereich_ausnahmen", [])
         self.einsatzkontexte: dict[str, Any] = daten.get("einsatzkontexte", {})
         self.schulungsbausteine: list[dict] = daten.get("schulungsbausteine", [])
+        self.groessenregime: dict[str, Any] = daten.get("groessenregime", {})
         self.quellen: list[dict] = daten.get("quellen", [])
 
     # -- Laden ---------------------------------------------------------------
@@ -395,6 +396,44 @@ class Regelwerk:
             return
 
         einstufung.ausnahmefilter_moeglich = True
+
+    # -- Groessenregime ------------------------------------------------------
+
+    def erleichterungen_fuer(
+        self,
+        groessenklasse: str | None,
+        hat_partner_verbund: bool,
+        vorhandene_rollen: set[str],
+        vorhandene_klassen: set[str],
+    ) -> list[dict]:
+        """Filtert die groessenabhaengigen Erleichterungen fuer eine Organisation.
+
+        Rein deklarativ: die Bedingungen stehen im YAML, hier wird nur
+        abgeglichen. Ohne erfasste Groessenklasse gibt es nichts zu zeigen. Eine
+        Erleichterung, die nur Anbieter von Hochrisiko-Systemen trifft, laeuft
+        fuer einen reinen Betreiber leer und wird ausgelassen.
+        """
+        if not groessenklasse:
+            return []
+        # Ein System der Rolle "beides" ist zugleich Anbieter und Betreiber.
+        effektive_rollen = set(vorhandene_rollen)
+        if "beides" in effektive_rollen:
+            effektive_rollen |= {"anbieter", "betreiber"}
+
+        treffer: list[dict] = []
+        for e in self.groessenregime.get("erleichterungen", []):
+            if groessenklasse not in e.get("gilt_fuer_groesse", []):
+                continue
+            rollen = e.get("gilt_fuer")
+            if rollen and not (set(rollen) & effektive_rollen):
+                continue
+            klassen = e.get("nur_bei_klasse")
+            if klassen and not (set(klassen) & vorhandene_klassen):
+                continue
+            if e.get("setzt_kein_partner_verbund_voraus") and hat_partner_verbund:
+                continue
+            treffer.append(e)
+        return treffer
 
     # -- Ausgabe -------------------------------------------------------------
 

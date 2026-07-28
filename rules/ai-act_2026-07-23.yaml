@@ -1306,6 +1306,127 @@ querschnittspflichten:
     geprueft: false
 
 # -----------------------------------------------------------------------------
+# GROESSENREGIME (KMU und kleine Midcaps)
+# -----------------------------------------------------------------------------
+# Erleichterungen und Schutzvorschriften, die an die Unternehmensgroesse
+# anknuepfen. Anders als die uebrigen Abschnitte haengt dieses Regime nicht an
+# Systemflags, sondern am Organisationsattribut groessenklasse. Es wird
+# systemuebergreifend ausgewertet, siehe Regelwerk.erleichterungen_fuer.
+# Zwei Bedingungsformen: Listen fuer Zugehoerigkeit (gilt_fuer_groesse,
+# gilt_fuer nach Rolle, nur_bei_klasse), ein Boolean fuer den Negativvorbehalt
+# setzt_kein_partner_verbund_voraus. gilt_fuer und nur_bei_klasse folgen dem
+# Vokabular aus Q-03.
+
+groessenregime:
+  definitionen:
+    - klasse: kmu
+      bezeichnung: "Kleinst-, kleines oder mittleres Unternehmen (KMU)"
+      fundstelle: "Art. 3 Nr. 14a KI-VO i. d. F. der VO (EU) 2026/1744"
+      verweist_auf: "Art. 2 des Anhangs der Empfehlung 2003/361/EG"
+    - klasse: kleines_midcap
+      bezeichnung: "Kleines Unternehmen mit mittlerer Kapitalisierung (kleines Midcap)"
+      fundstelle: "Art. 3 Nr. 14b KI-VO i. d. F. der VO (EU) 2026/1744"
+      verweist_auf: "Nummer 2 des Anhangs der Empfehlung (EU) 2025/1099"
+  hinweis_zeitpunkt: >-
+    Nach Nummer 4 des Anhangs der Empfehlung 2003/361/EG (Art. 4 Abs. 2) wechselt
+    die Groessenklasse nicht sofort beim Ueber- oder Unterschreiten der
+    Schwellenwerte. Der Status als Kleinst-, kleines oder mittleres Unternehmen
+    wird erst gewonnen oder verloren, wenn es in zwei aufeinander folgenden
+    Geschaeftsjahren zu einer Ueber- oder Unterschreitung kommt. Eine einmal
+    erfasste Selbstauskunft ist deshalb nicht bei jeder Zahlenschwankung zu
+    aendern.
+  hinweis_unterstuetzung: >-
+    Unabhaengig von den Erleichterungen richten sich weitere Vorschriften an
+    Behoerden und Kommission und begruenden keine Unternehmenspflicht, benennen
+    aber, wo Unterstuetzung zu finden ist: Anleitung und Beratung durch nationale
+    Behoerden (Art. 70 Abs. 8), Beruecksichtigung von KMU und Start-ups in
+    Verhaltenskodizes (Art. 95 Abs. 4) und in den Leitlinien der Kommission
+    (Art. 96 Abs. 1 UAbs. 2).
+  geprueft: false
+
+  erleichterungen:
+    - id: G-01
+      gegenstand: "Vereinfachte technische Dokumentation"
+      fundstelle: "Art. 11 Abs. 1 UAbs. 2 KI-VO i. d. F. der VO (EU) 2026/1744"
+      gilt_fuer_groesse: [kmu, kleines_midcap]
+      gilt_fuer: [anbieter]
+      nur_bei_klasse: [hochrisiko]
+      text: >-
+        Anbieter, die KMU oder kleine Midcaps sind, duerfen die technische
+        Dokumentation eines Hochrisiko-Systems in vereinfachter Form fuehren. Die
+        Kommission stellt dafuer ein Formular bereit; wird die Vereinfachung in
+        Anspruch genommen, ist dieses Formular zu verwenden.
+      geprueft: false
+
+    - id: G-02
+      gegenstand: "Qualitaetsmanagement nach Organisationsgroesse"
+      fundstelle: "Art. 17 Abs. 2 KI-VO i. d. F. der VO (EU) 2026/1744"
+      gilt_fuer_groesse: [kmu, kleines_midcap]
+      gilt_fuer: [anbieter]
+      nur_bei_klasse: [hochrisiko]
+      text: >-
+        Das Qualitaetsmanagementsystem ist im Umfang verhaeltnismaessig zur
+        Groesse der Organisation zu fuehren. Die Verordnung nennt KMU und kleine
+        Midcaps ausdruecklich als Faelle, in denen dieser Massstab greift.
+      geprueft: false
+
+    - id: G-03
+      gegenstand: "Vorrangiger Zugang zu KI-Reallaboren"
+      fundstelle: "Art. 57 Abs. 3a und Abs. 9 lit. e KI-VO i. d. F. der VO (EU) 2026/1744"
+      gilt_fuer_groesse: [kmu, kleines_midcap]
+      text: >-
+        KMU und kleine Midcaps erhalten vorrangigen Zugang zu den KI-Reallaboren,
+        soweit sie die Teilnahmevoraussetzungen erfuellen. Fuer die Zielgruppe
+        dieses Werkzeugs meist von geringem praktischem Gewicht.
+      geprueft: false
+
+    - id: G-04
+      gegenstand: "Vereinfachtes Qualitaetsmanagement, nur ohne Partner- oder Verbundunternehmen"
+      fundstelle: "Art. 63 Abs. 1 KI-VO i. d. F. der VO (EU) 2026/1744"
+      gilt_fuer_groesse: [kmu]
+      gilt_fuer: [anbieter]
+      nur_bei_klasse: [hochrisiko]
+      setzt_kein_partner_verbund_voraus: true
+      text: >-
+        KMU einschliesslich Start-ups duerfen bestimmte Elemente des
+        Qualitaetsmanagements in vereinfachter Weise einhalten, sofern sie keine
+        Partnerunternehmen oder verbundenen Unternehmen im Sinne der Empfehlung
+        2003/361/EG haben. Anders als die uebrigen Erleichterungen gilt diese nur
+        KMU, nicht kleinen Midcaps.
+      geprueft: false
+
+    - id: G-05
+      gegenstand: "Beruecksichtigung bei der Bemessung von Sanktionen"
+      fundstelle: "Art. 99 Abs. 1 KI-VO i. d. F. der VO (EU) 2026/1744"
+      gilt_fuer_groesse: [kmu, kleines_midcap]
+      text: >-
+        Bei der Festsetzung von Sanktionen beruecksichtigen die Mitgliedstaaten
+        die Interessen von KMU und kleinen Midcaps einschliesslich Start-ups und
+        deren wirtschaftliches Ueberleben. Die Vorschrift richtet sich an die
+        Behoerde, wirkt aber zugunsten des Unternehmens.
+      geprueft: false
+
+    - id: G-06
+      gegenstand: "Gedeckelte Geldbusse"
+      fundstelle: "Art. 99 Abs. 6 und Abs. 6a KI-VO i. d. F. der VO (EU) 2026/1744"
+      gilt_fuer_groesse: [kmu, kleines_midcap]
+      lesart_original: >-
+        Nach Art. 99 Abs. 6 gilt fuer KMU einschliesslich Start-ups bei jeder
+        Geldbusse jeweils der niedrigere der beiden Werte (fester Betrag oder
+        Prozentsatz des Jahresumsatzes) als Obergrenze. Diese Deckelung besteht
+        bereits im Ausgangsrecht, siehe Q-02.
+      lesart_omnibus: >-
+        Art. 1 Nr. 38 lit. c der VO (EU) 2026/1744 fuegt Abs. 6a ein und
+        erweitert dieselbe Deckelung auf kleine Midcaps. KMU verlieren dadurch
+        nichts, die Deckelung nach Abs. 6 bleibt. Neu ist allein, dass auch
+        kleine Midcaps gedeckelt sind.
+      hinweis: >-
+        Die verbreitete Verkuerzung, nur kleine Midcaps seien gedeckelt, ist
+        unrichtig: KMU sind bereits durch Abs. 6 gedeckelt, Abs. 6a kommt fuer
+        die Midcaps hinzu.
+      geprueft: false
+
+# -----------------------------------------------------------------------------
 # SCHULUNGSMATRIX
 # -----------------------------------------------------------------------------
 
@@ -1468,4 +1589,21 @@ quellen:
     titel: "Hinweispapier der Bundesnetzagentur zur KI-Kompetenz"
     datum: "2025-06"
     fundort: "bundesnetzagentur.de"
+    geprueft: false
+  - kuerzel: "Empfehlung KMU"
+    titel: >-
+      Empfehlung 2003/361/EG der Kommission betreffend die Definition der
+      Kleinstunternehmen sowie der kleinen und mittleren Unternehmen
+    celex: "32003H0361"
+    fundort: "https://eur-lex.europa.eu/eli/reco/2003/361/oj?locale=de"
+    in_bezug_genommen_durch: "Art. 3 Nr. 14a KI-VO, Fussnote 6 der VO (EU) 2026/1744"
+    geprueft: false
+  - kuerzel: "Empfehlung Midcap"
+    titel: >-
+      Empfehlung (EU) 2025/1099 der Kommission zur Definition kleiner Unternehmen
+      mit mittlerer Kapitalisierung
+    celex: "32025H1099"
+    fundort: "https://eur-lex.europa.eu/eli/reco/2025/1099/oj?locale=de"
+    in_bezug_genommen_durch: "Art. 3 Nr. 14b KI-VO, Fussnote 7 der VO (EU) 2026/1744"
+    hinweis: "Titel, CELEX und Fundort nach ELI-Konvention gebildet, nicht am Text gegengelesen."
     geprueft: false

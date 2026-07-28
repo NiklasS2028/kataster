@@ -329,3 +329,56 @@ def test_keine_zerbrochenen_woerter(regelwerk):
                 if treffer.group(1).lower().rstrip(".,") not in erlaubt:
                     fehler.append(f"{regel['id']}.{feld}: {treffer.group()!r}")
     assert not fehler, "Zerbrochene Woerter:\n" + "\n".join(fehler)
+
+
+# -- Groessenregime: KMU und kleine Midcaps ---------------------------------
+
+def test_erleichterungen_ohne_groessenklasse_leer(regelwerk):
+    """Ohne erfasste Groessenklasse gibt es nichts anzuzeigen."""
+    assert regelwerk.erleichterungen_fuer(None, False, {"anbieter"}, {"hochrisiko"}) == []
+
+
+def test_erleichterungen_art63_nur_kmu_ohne_verbund(regelwerk):
+    """Art. 63 Abs. 1 (G-04) ist die Stelle, an der 'kleine Unternehmen bekommen
+    Erleichterungen' falsch wird: Sie gilt nur KMU, nicht Midcaps, und nur ohne
+    Partner- oder Verbundunternehmen."""
+    def ids(klasse, verbund):
+        return {e["id"] for e in regelwerk.erleichterungen_fuer(
+            klasse, verbund, {"anbieter"}, {"hochrisiko"})}
+
+    # Midcap bekommt G-04 nicht, obwohl sonst dieselbe Anbieter-Hochrisiko-Lage.
+    assert "G-04" not in ids("kleines_midcap", False)
+    # KMU mit Partner/Verbund bekommt G-04 nicht.
+    assert "G-04" not in ids("kmu", True)
+    # KMU ohne Partner/Verbund bekommt G-04.
+    assert "G-04" in ids("kmu", False)
+
+
+def test_erleichterungen_art99_deckelung_kmu_und_midcap(regelwerk):
+    """Art. 99 (G-06): Die Deckelung gilt KMU (Abs. 6, Ausgangsrecht) UND kleinen
+    Midcaps (Abs. 6a, Omnibus). Der Test faengt die falsche Verkuerzung 'nur
+    Midcaps sind gedeckelt', die KMU faelschlich ausschliessen wuerde."""
+    def ids(klasse):
+        return {e["id"] for e in regelwerk.erleichterungen_fuer(
+            klasse, False, set(), set())}
+
+    assert "G-06" in ids("kmu")
+    assert "G-06" in ids("kleines_midcap")
+    assert "G-06" not in ids("gross")
+
+
+def test_anbieter_erleichterung_laeuft_fuer_reinen_betreiber_leer(regelwerk):
+    """Art. 11/17/63 treffen nur Anbieter von Hochrisiko-Systemen. Ein reiner
+    Betreiber ohne Hochrisiko-System bekommt sie nicht, die von der Rolle
+    unabhaengigen Erleichterungen (Art. 57, 99) aber schon."""
+    treffer = {e["id"] for e in regelwerk.erleichterungen_fuer(
+        "kmu", False, {"betreiber"}, {"minimal"})}
+    assert {"G-01", "G-02", "G-04"}.isdisjoint(treffer)
+    assert {"G-03", "G-05", "G-06"} <= treffer
+
+
+def test_erleichterungen_ids_und_pruefstand(regelwerk):
+    """Die sechs Eintraege sind vorhanden und alle noch unverifiziert."""
+    eintraege = regelwerk.groessenregime["erleichterungen"]
+    assert {e["id"] for e in eintraege} == {"G-01", "G-02", "G-03", "G-04", "G-05", "G-06"}
+    assert all(e["geprueft"] is False for e in eintraege)
