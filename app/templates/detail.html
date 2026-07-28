@@ -46,6 +46,72 @@
     </div>
 
     <div class="feld">
+      <h2>Freigabe</h2>
+      <form method="post" action="{{ url_for('inventar.status_setzen', system_id=system.id) }}"
+            style="display:flex; gap:0.7rem; align-items:flex-end; flex-wrap:wrap">
+        <div class="zeile" style="margin:0; max-width:16rem">
+          <label for="status">Status</label>
+          <select id="status" name="status">
+            <option value="in_pruefung" {{ 'selected' if system.status == 'in_pruefung' }}>In Prüfung</option>
+            <option value="freigegeben" {{ 'selected' if system.status == 'freigegeben' }}>Freigegeben</option>
+            <option value="geduldet" {{ 'selected' if system.status == 'geduldet' }}>Geduldet</option>
+            <option value="untersagt" {{ 'selected' if system.status == 'untersagt' }}>Untersagt</option>
+          </select>
+        </div>
+        <button type="submit" class="knopf knopf--leise">Übernehmen</button>
+      </form>
+      <p class="hinweis">Nur freigegebene Systeme erscheinen in der KI-Richtlinie
+        als erlaubt.</p>
+    </div>
+
+    {% if einstufung and einstufung.ergebnis.ausnahmefilter_moeglich %}
+    <div class="feld">
+      <h2>Ausnahme nach Art. 6 Abs. 3</h2>
+      {% if ausnahmen %}
+      <table class="verzeichnis">
+        <thead><tr><th>Bedingung</th><th>Begründung</th><th>Entschieden</th></tr></thead>
+        <tbody>
+          {% for a in ausnahmen %}
+          <tr>
+            <td class="lfd">{{ a.bedingung_id }}</td>
+            <td>{{ a.begruendung }}</td>
+            <td class="fundstelle">{{ a.entschieden_am[:10] }}{% if a.entschieden_von %} · {{ a.entschieden_von }}{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="hinweis hinweis--ausnahme">Für dieses System kommt die Ausnahme in
+        Betracht. Sie greift nicht von allein — sie muss begründet und dokumentiert
+        werden, und die Dokumentation ist der Behörde auf Verlangen vorzulegen.</p>
+
+      <form method="post" action="{{ url_for('inventar.ausnahme', system_id=system.id) }}">
+        <div class="zeile">
+          <label for="bedingung_id">Welche Bedingung ist erfüllt?</label>
+          <select id="bedingung_id" name="bedingung_id" required>
+            <option value="">Bitte wählen</option>
+            {% for b in regelwerk.ausnahmefilter.bedingungen %}
+            <option value="{{ b.id }}">{{ b.id }} — {{ b.text }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="zeile">
+          <label for="begruendung">Begründung</label>
+          <textarea id="begruendung" name="begruendung" rows="3" required
+                    placeholder="Konkret: Was genau tut das System, und warum beeinflusst es die Entscheidung nicht wesentlich?"></textarea>
+        </div>
+        <div class="zeile" style="max-width:22rem">
+          <label for="entschieden_von">Entschieden durch</label>
+          <input type="text" id="entschieden_von" name="entschieden_von"
+                 value="{{ system.verantwortlich or '' }}">
+        </div>
+        <button type="submit" class="knopf">Ausnahme dokumentieren</button>
+      </form>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="feld">
       <h2>Stammdaten</h2>
       <table class="verzeichnis">
         <tbody>
@@ -55,6 +121,11 @@
           <tr><td>In Betrieb seit</td><td>{{ system.in_betrieb_seit or '—' }}</td></tr>
           <tr><td>Kosten je Monat</td><td class="zahl">{{ '%.2f €'|format(system.kosten_monat_eur) if system.kosten_monat_eur else '—' }}</td></tr>
           <tr><td>Herkunft des Eintrags</td><td>{{ 'Aus Umfrage gemeldet' if system.quelle == 'schatten_gemeldet' else 'Offiziell eingeführt' }}</td></tr>
+          <tr><td>Datenkategorien</td><td>{{ system.datenkategorien|join(', ') if system.datenkategorien else '—' }}</td></tr>
+          <tr><td>AV-Vertrag</td><td>{{ 'liegt vor' if system.av_vertrag else 'fehlt' }}</td></tr>
+          <tr><td>Verarbeitung in der EU</td><td>{{ 'ja' if system.eu_hosting else 'nein oder unbekannt' }}</td></tr>
+          <tr><td>Training mit Eingaben</td><td>{{ 'ja' if system.training_mit_eingaben else 'nein oder unbekannt' }}</td></tr>
+          <tr><td>Wesentlich verändert am</td><td>{{ system.wesentlich_veraendert_am or '—' }}</td></tr>
         </tbody>
       </table>
     </div>
@@ -83,6 +154,7 @@
           style="margin-top:1.4rem">
       <button type="submit" class="knopf knopf--leise">Mit aktuellem Regelwerk neu bewerten</button>
       <a class="knopf knopf--leise" href="{{ url_for('wizard.frage', system_id=system.id) }}">Antworten überarbeiten</a>
+      <a class="knopf knopf--leise" href="{{ url_for('inventar.bearbeiten', system_id=system.id) }}">Bestandsblatt bearbeiten</a>
     </form>
   </div>
 </main>

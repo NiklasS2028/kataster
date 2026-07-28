@@ -1,0 +1,149 @@
+{% extends "basis.html" %}
+{% block titel %}{{ system.name }} bearbeiten &middot; Kataster{% endblock %}
+
+{% block inhalt %}
+<main class="blatt blatt--einspaltig" style="max-width:760px">
+  <div>
+    <p class="rubrik">Bestandsblatt bearbeiten</p>
+    <h1>{{ system.name }}</h1>
+    <p class="vorspann">Nach dem Speichern wird die Einstufung neu berechnet,
+      weil Inbetriebnahme und wesentliche Änderung den Bestandsschutz beeinflussen.</p>
+
+    <form method="post">
+      <div class="feld">
+        <h2>Stammdaten</h2>
+        <div class="zeile">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" value="{{ system.name }}" required>
+        </div>
+        <div class="paar">
+          <div class="zeile">
+            <label for="anbieter">Anbieter</label>
+            <input type="text" id="anbieter" name="anbieter" value="{{ system.anbieter or '' }}">
+          </div>
+          <div class="zeile">
+            <label for="url">Adresse</label>
+            <input type="text" id="url" name="url" value="{{ system.url or '' }}"
+                   placeholder="https://…">
+          </div>
+        </div>
+        <div class="zeile">
+          <label for="zweck">Wofür wird es genutzt?</label>
+          <textarea id="zweck" name="zweck" rows="2">{{ system.zweck or '' }}</textarea>
+        </div>
+        <div class="paar">
+          <div class="zeile">
+            <label for="abteilung">Bereich</label>
+            <input type="text" id="abteilung" name="abteilung" value="{{ system.abteilung or '' }}">
+          </div>
+          <div class="zeile">
+            <label for="verantwortlich">Verantwortlich</label>
+            <input type="text" id="verantwortlich" name="verantwortlich"
+                   value="{{ system.verantwortlich or '' }}">
+          </div>
+        </div>
+      </div>
+
+      <div class="feld">
+        <h2>Freigabe</h2>
+        <div class="zeile">
+          <label for="status">Status</label>
+          <select id="status" name="status">
+            {% for wert, bezeichnung in statuswerte %}
+            <option value="{{ wert }}" {{ 'selected' if system.status == wert }}>{{ bezeichnung }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <p class="hinweis">Nur freigegebene Systeme erscheinen in der KI-Richtlinie
+          als erlaubt. Geduldete werden gesondert aufgeführt, untersagte ebenfalls.</p>
+      </div>
+
+      <div class="feld">
+        <h2>Daten und Verarbeitung</h2>
+        <label>Welche Daten gelangen in dieses System?</label>
+        <div class="mehrfach">
+          {% for wert, bezeichnung in datenkategorien %}
+          <label>
+            <input type="checkbox" name="datenkategorien" value="{{ wert }}"
+                   {{ 'checked' if wert in system.datenkategorien }}>
+            <span>{{ bezeichnung }}</span>
+          </label>
+          {% endfor %}
+        </div>
+
+        <div class="mehrfach" style="margin-top:1.2rem">
+          <label>
+            <input type="checkbox" name="av_vertrag" {{ 'checked' if system.av_vertrag }}>
+            <span>Auftragsverarbeitungsvertrag liegt vor
+              <small>Fehlt er, schränkt die erzeugte Richtlinie die Nutzung ausdrücklich ein.</small></span>
+          </label>
+          <label>
+            <input type="checkbox" name="eu_hosting" {{ 'checked' if system.eu_hosting }}>
+            <span>Verarbeitung in der EU</span>
+          </label>
+          <label>
+            <input type="checkbox" name="training_mit_eingaben" {{ 'checked' if system.training_mit_eingaben }}>
+            <span>Eingaben werden zum Training des Modells genutzt
+              <small>Steht meist in den Nutzungsbedingungen. Im Zweifel beim Anbieter nachfragen.</small></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="feld">
+        <h2>Zeitpunkte</h2>
+        <div class="paar">
+          <div class="zeile">
+            <label for="in_betrieb_seit">In Betrieb seit</label>
+            <input type="date" id="in_betrieb_seit" name="in_betrieb_seit"
+                   value="{{ system.in_betrieb_seit or '' }}">
+          </div>
+          <div class="zeile">
+            <label for="wesentlich_veraendert_am">Wesentlich verändert am</label>
+            <input type="date" id="wesentlich_veraendert_am" name="wesentlich_veraendert_am"
+                   value="{{ system.wesentlich_veraendert_am or '' }}">
+          </div>
+        </div>
+        <p class="hinweis">Systeme, die vor dem 2. August 2026 in Betrieb genommen und
+          seitdem nicht wesentlich verändert wurden, können unter den Bestandsschutz
+          nach Art. 111 Abs. 2 fallen.</p>
+      </div>
+
+      <div class="feld">
+        <h2>Kosten und Notizen</h2>
+        <div class="paar">
+          <div class="zeile">
+            <label for="kosten_monat_eur">Kosten je Monat (€)</label>
+            <input type="text" id="kosten_monat_eur" name="kosten_monat_eur"
+                   value="{{ '%.2f'|format(system.kosten_monat_eur)|replace('.', ',') if system.kosten_monat_eur else '' }}">
+          </div>
+          <div class="zeile">
+            <label for="kostenstelle">Kostenstelle</label>
+            <input type="text" id="kostenstelle" name="kostenstelle" value="{{ system.kostenstelle or '' }}">
+          </div>
+        </div>
+        <div class="zeile">
+          <label for="notiz">Notiz</label>
+          <textarea id="notiz" name="notiz" rows="3">{{ system.notiz or '' }}</textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="knopf">Speichern und neu bewerten</button>
+      <a class="knopf knopf--leise" href="{{ url_for('inventar.detail', system_id=system.id) }}">Abbrechen</a>
+    </form>
+
+    <div class="feld" style="margin-top:2rem; border-color:var(--riss)">
+      <h2>Eintrag löschen</h2>
+      <p class="hinweis hinweis--sperre">Löscht das System samt aller Einstufungen und
+        Ausnahmeentscheidungen. Der Fortführungsnachweis geht verloren und lässt sich
+        nicht wiederherstellen.</p>
+      <form method="post" action="{{ url_for('inventar.loeschen', system_id=system.id) }}">
+        <div class="zeile" style="max-width:24rem">
+          <label for="bestaetigung">Zum Bestätigen den Namen eintippen</label>
+          <input type="text" id="bestaetigung" name="bestaetigung" placeholder="{{ system.name }}">
+        </div>
+        <button type="submit" class="knopf knopf--leise">Endgültig löschen</button>
+      </form>
+    </div>
+  </div>
+</main>
+{% endblock %}

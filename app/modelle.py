@@ -24,6 +24,24 @@ from typing import Any, Iterator
 
 SCHEMA_VERSION = 1
 
+# Vokabular fuer das Feld datenkategorien. Bewusst hier und nicht im Regelwerk:
+# Das sind Begriffe der Erfassung, kein Rechtsinhalt.
+DATENKATEGORIEN = [
+    ("personenbezogen", "Personenbezogene Daten"),
+    ("besondere_kategorien", "Besondere Kategorien (Gesundheit, Herkunft, Religion \u2026)"),
+    ("beschaeftigtendaten", "Daten von Beschaeftigten"),
+    ("kundendaten", "Kundendaten"),
+    ("geschaeftsgeheimnisse", "Geschaeftsgeheimnisse, Kalkulationen, Quellcode"),
+    ("keine", "Keine der genannten"),
+]
+
+STATUS = [
+    ("in_pruefung", "In Pruefung"),
+    ("freigegeben", "Freigegeben"),
+    ("geduldet", "Geduldet"),
+    ("untersagt", "Untersagt"),
+]
+
 SCHEMA = """
 PRAGMA foreign_keys = ON;
 

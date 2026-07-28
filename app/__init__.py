@@ -46,9 +46,10 @@ def erzeuge_app(testkonfiguration: dict | None = None) -> Flask:
 
     app.datenbank = datenbank
 
-    from .routen import inventar, wizard as wizard_routen
+    from .routen import inventar, organisation, wizard as wizard_routen
 
     app.register_blueprint(inventar.blueprint)
+    app.register_blueprint(organisation.blueprint)
     app.register_blueprint(wizard_routen.blueprint)
 
     @app.context_processor

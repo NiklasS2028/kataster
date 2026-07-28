@@ -1,0 +1,58 @@
+{% extends "basis.html" %}
+{% block titel %}Unternehmen &middot; Kataster{% endblock %}
+
+{% block inhalt %}
+<main class="blatt blatt--einspaltig" style="max-width:720px">
+  <div>
+    <h1>Unternehmen</h1>
+    <p class="vorspann">Diese Angaben erscheinen in jedem erzeugten Nachweis.
+      Zwei davon haben Rechtsfolgen und stehen deshalb hier statt beim einzelnen
+      System.</p>
+
+    {% if gespeichert %}<p class="hinweis">Gespeichert.</p>{% endif %}
+
+    <form method="post" class="feld">
+      <div class="zeile">
+        <label for="name">Name des Unternehmens</label>
+        <input type="text" id="name" name="name" autofocus
+               value="{{ organisation.name or '' }}" placeholder="Musterbau GmbH">
+      </div>
+      <div class="paar">
+        <div class="zeile">
+          <label for="rechtsform">Rechtsform</label>
+          <input type="text" id="rechtsform" name="rechtsform"
+                 value="{{ organisation.rechtsform or '' }}" placeholder="GmbH">
+        </div>
+        <div class="zeile">
+          <label for="beschaeftigte">Beschäftigte</label>
+          <input type="number" id="beschaeftigte" name="beschaeftigte" min="0"
+                 value="{{ organisation.beschaeftigte or '' }}" placeholder="42">
+        </div>
+      </div>
+      <div class="zeile">
+        <label for="ansprechpartner">Ansprechperson für KI-Fragen</label>
+        <input type="text" id="ansprechpartner" name="ansprechpartner"
+               value="{{ organisation.ansprechpartner or '' }}"
+               placeholder="Name, keine Abteilung">
+      </div>
+
+      <div class="mehrfach" style="margin-top:1.4rem">
+        <label>
+          <input type="checkbox" name="ist_behoerde" {{ 'checked' if organisation.ist_behoerde }}>
+          <span>Wir sind eine Behörde oder Einrichtung des öffentlichen Rechts
+            <small>Bestandsschutz nach Art. 111 Abs. 2 gilt dann nicht — die Frist
+            läuft stattdessen bis zum 2. August 2030.</small></span>
+        </label>
+        <label>
+          <input type="checkbox" name="erbringt_oeff_dienste" {{ 'checked' if organisation.erbringt_oeff_dienste }}>
+          <span>Wir erbringen öffentliche Dienste
+            <small>Etwa in Bildung, Gesundheitsversorgung, Sozialdiensten,
+            Wohnungswesen. Löst die Grundrechte-Folgenabschätzung nach Art. 27 aus.</small></span>
+        </label>
+      </div>
+
+      <button type="submit" class="knopf" style="margin-top:1.2rem">Speichern</button>
+    </form>
+  </div>
+</main>
+{% endblock %}

@@ -150,3 +150,90 @@ def export_datei(dateiname: str):
     from ..export import EXPORTORDNER
     wurzel = Path(current_app.config["DATENBANK_PFAD"]).parent / EXPORTORDNER
     return send_from_directory(wurzel, dateiname)
+
+
+@blueprint.route("/system/<int:system_id>/bearbeiten", methods=["GET", "POST"])
+def bearbeiten(system_id: int):
+    from ..modelle import DATENKATEGORIEN, STATUS
+
+    db = _db()
+    system = db.system_lesen(system_id)
+    if not system:
+        abort(404)
+
+    if request.method == "POST":
+        f = request.form
+        kosten = f.get("kosten_monat_eur", "").replace(",", ".").strip()
+        try:
+            kostenwert = float(kosten) if kosten else None
+        except ValueError:
+            kostenwert = system.get("kosten_monat_eur")
+
+        db.system_aktualisieren(
+            system_id,
+            name=f.get("name", "").strip() or system["name"],
+            anbieter=f.get("anbieter", "").strip() or None,
+            url=f.get("url", "").strip() or None,
+            zweck=f.get("zweck", "").strip() or None,
+            abteilung=f.get("abteilung", "").strip() or None,
+            verantwortlich=f.get("verantwortlich", "").strip() or None,
+            status=f.get("status", system["status"]),
+            kosten_monat_eur=kostenwert,
+            kostenstelle=f.get("kostenstelle", "").strip() or None,
+            av_vertrag=1 if f.get("av_vertrag") else 0,
+            eu_hosting=1 if f.get("eu_hosting") else 0,
+            training_mit_eingaben=1 if f.get("training_mit_eingaben") else 0,
+            datenkategorien=f.getlist("datenkategorien"),
+            in_betrieb_seit=f.get("in_betrieb_seit") or None,
+            wesentlich_veraendert_am=f.get("wesentlich_veraendert_am") or None,
+            notiz=f.get("notiz", "").strip() or None,
+        )
+        # Bestandsschutz und Rolle koennen sich geaendert haben - neu rechnen.
+        einstufung_neu_berechnen(system_id)
+        return redirect(url_for("inventar.detail", system_id=system_id))
+
+    return render_template(
+        "bearbeiten.html",
+        system=system,
+        datenkategorien=DATENKATEGORIEN,
+        statuswerte=STATUS,
+    )
+
+
+@blueprint.route("/system/<int:system_id>/status", methods=["POST"])
+def status_setzen(system_id: int):
+    if not _db().system_lesen(system_id):
+        abort(404)
+    neu = request.form.get("status")
+    gueltig = {"in_pruefung", "freigegeben", "geduldet", "untersagt"}
+    if neu in gueltig:
+        _db().system_aktualisieren(system_id, status=neu)
+    return redirect(url_for("inventar.detail", system_id=system_id))
+
+
+@blueprint.route("/system/<int:system_id>/ausnahme", methods=["POST"])
+def ausnahme(system_id: int):
+    db = _db()
+    if not db.system_lesen(system_id):
+        abort(404)
+    begruendung = request.form.get("begruendung", "").strip()
+    bedingung = request.form.get("bedingung_id", "").strip()
+    if begruendung and bedingung:
+        db.ausnahme_dokumentieren(
+            system_id, bedingung, begruendung,
+            request.form.get("entschieden_von", "").strip() or None,
+        )
+    return redirect(url_for("inventar.detail", system_id=system_id))
+
+
+@blueprint.route("/system/<int:system_id>/loeschen", methods=["POST"])
+def loeschen(system_id: int):
+    db = _db()
+    system = db.system_lesen(system_id)
+    if not system:
+        abort(404)
+    # Sicherung gegen versehentliches Loeschen: der Name muss getippt werden.
+    if request.form.get("bestaetigung", "").strip() == system["name"]:
+        db.system_loeschen(system_id)
+        return redirect(url_for("inventar.liste"))
+    return redirect(url_for("inventar.detail", system_id=system_id, fehler="name"))

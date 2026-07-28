@@ -16,6 +16,7 @@
           <th scope="col">Lfd.</th>
           <th scope="col">System</th>
           <th scope="col">Bereich</th>
+          <th scope="col">Status</th>
           <th scope="col">Einstufung</th>
           <th scope="col" class="zahl">€ / Monat</th>
         </tr>
@@ -29,6 +30,7 @@
             {% if s.zweck %}<span class="zweck">{{ s.zweck }}</span>{% endif %}
           </td>
           <td>{{ s.abteilung or '—' }}</td>
+          <td>{{ {'in_pruefung':'in Prüfung','freigegeben':'freigegeben','geduldet':'geduldet','untersagt':'untersagt'}[s.status] }}</td>
           <td>
             {% if s.einstufung %}
               {{ marke(s.einstufung.klasse, klassennamen[s.einstufung.klasse]) }}
