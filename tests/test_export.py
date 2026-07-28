@@ -129,3 +129,31 @@ def test_fragebogen_sagt_folgenlosigkeit_zu(datenbank, regelwerk, arbeitsordner)
     assert "anonym" in inhalt
     assert "folgenlos" in inhalt
     assert "http" not in inhalt
+
+
+def test_dossier_meldet_abweichende_regelwerksfassung(datenbank, regelwerk, arbeitsordner):
+    """Ein Dossier, dessen Kopf 1.0.0 sagt und dessen Nachweise 0.3.0 sagen,
+    liest sich als Fehler - auch wenn es korrekt historisiert ist."""
+    import sqlite3
+    _bestand(datenbank, regelwerk)
+    with datenbank.verbindung() as con:
+        con.execute("UPDATE einstufung SET regelwerk_version = 'alt-0.0.1'")
+
+    from app.export import erzeuge_alle
+    erzeuge_alle(datenbank, regelwerk, arbeitsordner)
+    inhalt = (arbeitsordner / "exporte" / "dossier.html").read_text(encoding="utf-8")
+    assert "Abweichende Regelwerksfassung" in inhalt
+    assert "aelter als der Kopfstand" in inhalt
+
+
+def test_dossier_ohne_abweichung_ohne_warnung(datenbank, regelwerk, arbeitsordner):
+    _erzeugen(datenbank, regelwerk, arbeitsordner)
+    inhalt = (arbeitsordner / "exporte" / "dossier.html").read_text(encoding="utf-8")
+    assert "Abweichende Regelwerksfassung" not in inhalt
+
+
+def test_dossier_nutzt_deutsche_zahlen(datenbank, regelwerk, arbeitsordner):
+    _erzeugen(datenbank, regelwerk, arbeitsordner)
+    inhalt = (arbeitsordner / "exporte" / "dossier.html").read_text(encoding="utf-8")
+    assert "74,70" in inhalt      # 3 x 24,90 monatlich
+    assert "74.70" not in inhalt

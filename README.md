@@ -9,7 +9,7 @@ Beim Seitenaufbau geht keine einzige Anfrage an einen fremden Server — die
 Schriften liegen lokal, das Nachweis-Dossier ist eine eigenständige Datei ohne
 externe Verweise.
 
-![Bestandsverzeichnis](docs/bilder/verzeichnis.png)
+![Bestandsverzeichnis](docs/bilder/verzeichnis.jpeg)
 
 ---
 
@@ -36,7 +36,7 @@ nach Werkzeug, mit Schreibvarianten, zur Prüfung vor der Übernahme.
 Tabelle, Entwurf einer KI-Richtlinie, rollenspezifische Schulungsmatrix und ein
 Nachweis-Dossier mit Zeitstempel, Rechtsstand und Prüfsumme.
 
-![Bestandsblatt eines Hochrisiko-Systems](docs/bilder/bestandsblatt.png)
+![Bestandsblatt eines Hochrisiko-Systems](docs/bilder/bestandsblatt.jpeg)
 
 ---
 

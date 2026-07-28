@@ -51,6 +51,11 @@ def _z(wert) -> str:
     return escape(str(wert)) if wert not in (None, "") else "&mdash;"
 
 
+def _eur(wert) -> str:
+    """Deutsche Schreibweise: Punkt als Tausender-, Komma als Dezimaltrenner."""
+    return f"{float(wert):,.2f}".replace(",", "\u00a0").replace(".", ",").replace("\u00a0", ".")
+
+
 def dossier_html(organisation, systeme, kennzahlen, regelwerk,
                  klassennamen, zeitpunkt: datetime) -> str:
     firma = organisation.get("name") or "[Name des Unternehmens]"
@@ -84,6 +89,25 @@ def dossier_html(organisation, systeme, kennzahlen, regelwerk,
                  "verifiziert. Dieses Dokument ist bis zur vollstaendigen "
                  "Verifikation nicht als Nachweis gegenueber Dritten geeignet.</div>")
 
+    # Einstufungen, die unter einer aelteren Regelwerksfassung entstanden sind,
+    # tragen deren Version und Pruefvermerke. Das ist richtig historisiert -
+    # aber ein Dokument, dessen Kopf 1.0.0 sagt und dessen Einzelnachweise
+    # 0.3.0 sagen, liest sich als Fehler. Also ausdruecklich benennen.
+    veraltet = [
+        s for s in systeme
+        if s.get("einstufung")
+        and s["einstufung"]["regelwerk_version"] != regelwerk.version
+    ]
+    if veraltet:
+        h.append("<div class='warnung'><strong>Abweichende Regelwerksfassung.</strong> "
+                 f"{len(veraltet)} von {len(systeme)} Einstufungen wurden mit einer "
+                 "aelteren Fassung des Regelwerks berechnet und tragen deshalb deren "
+                 "Versionsnummer und Pruefvermerke. Die Angaben sind korrekt "
+                 "historisiert, geben aber nicht den aktuellen Stand wieder. "
+                 "Vor der Verwendung als Nachweis: neu bewerten.<br><br>"
+                 "Betroffen: " + escape(", ".join(s["name"] for s in veraltet))
+                 + "</div>")
+
     h.append("<h2>1. Uebersicht</h2>")
     h.append("<table><thead><tr><th>Einstufung</th><th>Anzahl</th></tr></thead><tbody>")
     for schluessel, bezeichnung in klassennamen.items():
@@ -95,8 +119,8 @@ def dossier_html(organisation, systeme, kennzahlen, regelwerk,
                  f"<td>{kennzahlen['ohne_einstufung']}</td></tr>")
     h.append("</tbody></table>")
     h.append(f"<p class='hinweis'>Erfasster Aufwand fuer KI-Dienste: "
-             f"{kennzahlen['kosten_monat_eur']:.2f} EUR monatlich, "
-             f"{kennzahlen['kosten_jahr_eur']:.2f} EUR im Jahr.</p>")
+             f"{_eur(kennzahlen['kosten_monat_eur'])} EUR monatlich, "
+             f"{_eur(kennzahlen['kosten_jahr_eur'])} EUR im Jahr.</p>")
 
     h.append("<h2>2. Bestandsverzeichnis</h2>")
     if not sortiert:
@@ -134,8 +158,10 @@ def dossier_html(organisation, systeme, kennzahlen, regelwerk,
                  f"{escape(klassennamen.get(e['klasse'], e['klasse']))}</td></tr>")
         h.append(f"<tr><td>Berechnet am</td><td>{_z(e['berechnet_am'])}</td></tr>")
         h.append(f"<tr><td>Lesart</td><td>{_z(e['lesart'])}</td></tr>")
+        aktuell = e["regelwerk_version"] == regelwerk.version
+        vermerk = "" if aktuell else " &mdash; aelter als der Kopfstand"
         h.append(f"<tr><td>Regelwerk</td><td class='fund'>{_z(e['regelwerk_version'])} "
-                 f"&middot; {e['regelwerk_hash'][:16]}</td></tr>")
+                 f"&middot; {e['regelwerk_hash'][:16]}{vermerk}</td></tr>")
         h.append("</tbody></table>")
 
         treffer = e["ergebnis"].get("treffer", [])
