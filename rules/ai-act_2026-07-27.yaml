@@ -12,7 +12,7 @@
 # =============================================================================
 
 meta:
-  regelwerk_version: "0.3.0-entwurf"
+  regelwerk_version: "0.4.1-entwurf"
   rechtsstand: "2026-07-27"
   abgeglichen_am: "2026-07-27"
   abgeglichen_gegen: "Verordnung (EU) 2024/1689, amtlicher deutscher Text, CELEX 32024R1689"
@@ -49,6 +49,39 @@ meta:
         gestellt werden. Der gewaehlte Kontext ist im Nachweis-Dossier
         auszuweisen, damit nachvollziehbar bleibt, warum eine Regel nicht
         geprueft wurde.
+    - datum: "2026-07-28"
+      version: "0.3.1-entwurf"
+      aenderung: >-
+        Verifikation Art. 5 durch N. Steinhauser: Buchstabenzuordnung f, g, c,
+        e, a, b bestaetigt. Korrigiert: V-01 Ausnahmewortlaut ("auf den Markt
+        gebracht"), V-02 Tatbestandsmerkmal "individuell" und
+        "erschliessen oder ableiten" ergaenzt, V-05 und V-06 um den drohenden
+        Schaden ergaenzt ("oder mit hinreichender Wahrscheinlichkeit"). Die
+        Nichtabbildung von Art. 5 Abs. 1 lit. d und h ist als bewusste
+        Entscheidung dokumentiert.
+    - datum: "2026-07-28"
+      version: "0.4.0-entwurf"
+      aenderung: >-
+        Verifikation Anhang III, Art. 50 und Art. 6 durch N. Steinhauser. Alle
+        18 Fundstellen bestaetigt. Inhaltlich korrigiert: H-12 war zu weit -
+        die Eingrenzung "von einer oder im Namen einer Justizbehoerde" fehlte;
+        H-02 war zu eng - der Normtext erfasst Entscheidungen, die die
+        Arbeitsbedingungen BEEINFLUSSEN, nicht nur solche darueber. Neu
+        aufgenommen: H-13 (Anhang III Nr. 8 lit. b, Beeinflussung von Wahlen
+        und Referenden) - anders als Nr. 6 und 7 nicht auf Behoerden
+        beschraenkt und damit fuer die Zielgruppe einschlaegig. Praezisiert:
+        H-05, H-07, H-08, H-09, H-10, T-02. Anmerkungen ergaenzt, wo die
+        Pruefrage bewusst vom Wortlaut abweicht.
+    - datum: "2026-07-28"
+      version: "0.4.1-entwurf"
+      aenderung: >-
+        Nachpruefung V-05 und V-06 durch N. Steinhauser. V-05 war zu weit
+        gefasst: Es fehlten das Merkmal "absichtlich" sowie das Zwischenglied,
+        dass die Verhaltensaenderung durch Beeintraechtigung der freien
+        Entscheidung eintritt. Ohne diese Merkmale waeren uebliche
+        Werbewerkzeuge als verbotene Praktik eingestuft worden. V-06 auf
+        "mit dem Ziel oder der Wirkung" umgestellt - die blosse Wirkung genuegt,
+        eine Absicht ist nicht erforderlich.
 
 # -----------------------------------------------------------------------------
 # LESARTEN
@@ -400,6 +433,7 @@ einsatzkontexte:
     H-10: [oeffentliche_aufgaben]
     H-11: [oeffentliche_aufgaben]
     H-12: [recht]
+    H-13: [inhalte, kundenkontakt]
     T-01: [kundenkontakt]
     T-02: [inhalte]
     T-03: [inhalte]
@@ -424,24 +458,34 @@ regeln:
     klasse: verboten
     fundstelle: "Art. 5 Abs. 1 lit. f KI-VO"
     ausnahmen: >-
-      Gilt nicht, wenn die Verwendung aus medizinischen Gruenden oder
-      Sicherheitsgruenden eingefuehrt oder in Verkehr gebracht werden soll.
-    geprueft: false
+      Gilt nicht, wenn die Verwendung des KI-Systems aus medizinischen Gruenden
+      oder Sicherheitsgruenden eingefuehrt oder auf den Markt gebracht werden soll.
+    anmerkung: >-
+      Der Normtext nennt Arbeitsplatz UND Bildungseinrichtungen als Aufzaehlung.
+      Die Pruefrage verknuepft sie mit ODER, weil jeder Kontext fuer sich den
+      Tatbestand erfuellt.
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: V-02
     frage: >-
-      Werden Personen anhand ihrer biometrischen Daten kategorisiert, um daraus
-      Rasse, politische Einstellungen, Gewerkschaftszugehoerigkeit, religioese
-      oder weltanschauliche Ueberzeugungen, das Sexualleben oder die sexuelle
-      Ausrichtung abzuleiten?
+      Werden natuerliche Personen individuell anhand ihrer biometrischen Daten
+      kategorisiert, um daraus Rasse, politische Einstellungen,
+      Gewerkschaftszugehoerigkeit, religioese oder weltanschauliche
+      Ueberzeugungen, das Sexualleben oder die sexuelle Ausrichtung zu
+      erschliessen oder abzuleiten?
     trifft_zu_wenn: biometrische_kategorisierung_sensibel
     klasse: verboten
     fundstelle: "Art. 5 Abs. 1 lit. g KI-VO"
     ausnahmen: >-
       Gilt nicht fuer die Kennzeichnung oder Filterung rechtmaessig erworbener
-      biometrischer Datensaetze oder die Kategorisierung biometrischer Daten im
-      Bereich der Strafverfolgung.
-    geprueft: false
+      biometrischer Datensaetze, etwa Bilder auf der Grundlage biometrischer
+      Daten, oder fuer die Kategorisierung biometrischer Daten im Bereich der
+      Strafverfolgung.
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: V-03
     frage: >-
@@ -452,7 +496,9 @@ regeln:
     trifft_zu_wenn: social_scoring
     klasse: verboten
     fundstelle: "Art. 5 Abs. 1 lit. c KI-VO"
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: V-04
     frage: >-
@@ -462,28 +508,64 @@ regeln:
     trifft_zu_wenn: gesichtsbilder_scraping
     klasse: verboten
     fundstelle: "Art. 5 Abs. 1 lit. e KI-VO"
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: V-05
     frage: >-
-      Nutzt das System unterschwellige, manipulative oder taeuschende Techniken,
-      um das Verhalten von Personen wesentlich zu veraendern, sodass ihnen oder
-      anderen erheblicher Schaden zugefuegt wird?
+      Setzt das System Techniken der unterschwelligen Beeinflussung ausserhalb
+      des Bewusstseins einer Person oder absichtlich manipulative oder
+      taeuschende Techniken ein, die das Verhalten wesentlich veraendern, indem
+      sie die Faehigkeit zu einer fundierten Entscheidung deutlich
+      beeintraechtigen - sodass die Person eine Entscheidung trifft, die sie
+      andernfalls nicht getroffen haette, und ihr oder anderen dadurch
+      erheblicher Schaden zugefuegt wird oder mit hinreichender
+      Wahrscheinlichkeit zugefuegt werden wird?
     trifft_zu_wenn: manipulative_techniken
     klasse: verboten
     fundstelle: "Art. 5 Abs. 1 lit. a KI-VO"
-    geprueft: false
+    hinweis: >-
+      Die Beeintraechtigung der freien Entscheidung ist Teil des Tatbestands.
+      Uebliche und rechtmaessige Geschaeftspraktiken wie Werbung fallen nicht
+      darunter, nur weil sie Verhalten beeinflussen (Erwaegungsgrund 29).
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: V-06
     frage: >-
-      Nutzt das System eine Schutzbeduerftigkeit aufgrund von Alter, Behinderung
-      oder einer bestimmten sozialen oder wirtschaftlichen Situation aus, um
-      Verhalten wesentlich zu veraendern und dadurch erheblichen Schaden
-      zuzufuegen?
+      Nutzt das System eine Vulnerabilitaet oder Schutzbeduerftigkeit aufgrund
+      von Alter, Behinderung oder einer bestimmten sozialen oder
+      wirtschaftlichen Situation aus - mit dem Ziel oder der Wirkung, Verhalten
+      wesentlich zu veraendern und dadurch erheblichen Schaden zuzufuegen oder
+      mit hinreichender Wahrscheinlichkeit zuzufuegen?
     trifft_zu_wenn: ausnutzung_vulnerabilitaet
     klasse: verboten
     fundstelle: "Art. 5 Abs. 1 lit. b KI-VO"
-    geprueft: false
+    hinweis: >-
+      Es genuegt die Wirkung; eine Absicht muss nicht nachgewiesen werden.
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
+
+  # NICHT ABGEBILDET aus Art. 5 Abs. 1:
+  #   lit. d  Risikobewertung, ob eine natuerliche Person eine Straftat begeht,
+  #           allein auf Grundlage von Profiling
+  #   lit. h  Biometrische Echtzeit-Fernidentifizierung in oeffentlich
+  #           zugaenglichen Raeumen zu Strafverfolgungszwecken
+  # Beide richten sich an Strafverfolgungsbehoerden. Fuer die Zielgruppe dieses
+  # Werkzeugs - Unternehmen ohne hoheitliche Aufgaben - sind sie praktisch nie
+  # einschlaegig. Die Auslassung ist eine bewusste Entscheidung, keine Luecke.
+  # Wer Kataster in einem behoerdlichen Umfeld einsetzt, muss beide ergaenzen.
+
+  # NICHT ABGEBILDET aus Anhang III:
+  #   Nr. 6      Strafverfolgung (lit. a bis e)
+  #   Nr. 7      Migration, Asyl und Grenzkontrolle (lit. a bis d)
+  # Beide setzen ein Handeln von Strafverfolgungs-, Grenzschutz-, Einwanderungs-
+  # oder Asylbehoerden voraus. Dieselbe Begruendung wie bei Art. 5 lit. d und h.
+  # Anhang III Nr. 8 lit. b ist dagegen abgebildet (H-13), weil er nicht auf
+  # Behoerden beschraenkt ist.
 
   # --- Art. 6 Abs. 1: Hochrisiko ueber Anhang I -----------------------------
   # Der praktisch wichtigste Pfad fuer produzierende Unternehmen.
@@ -508,7 +590,9 @@ regeln:
       Beide Bedingungen muessen kumulativ erfuellt sein. Der Ausnahmefilter des
       Art. 6 Abs. 3 gilt fuer diesen Pfad NICHT - er bezieht sich nur auf
       Anhang III.
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   # --- Anhang III Nr. 1: Biometrie (soweit nicht verboten) ------------------
 
@@ -521,19 +605,34 @@ regeln:
     frist_ref: F-05
     ausnahmen: >-
       Nicht erfasst sind Systeme zur biometrischen Verifizierung, deren einziger
-      Zweck darin besteht, zu bestaetigen, dass eine Person die ist, fuer die
-      sie sich ausgibt (z. B. Entsperren eines Geraets, Zugang zu einem Dienst).
-    geprueft: false
+      Zweck darin besteht, zu bestaetigen, dass eine bestimmte natuerliche
+      Person die ist, fuer die sie sich ausgibt.
+    anmerkung: >-
+      Beispiele aus Art. 3 Nr. 35 und Erwaegungsgrund 15, nicht aus dem
+      Anhangstext: Entsperren eines Geraets, Zugang zu einem Dienst,
+      Sicherheitszugang zu Raeumlichkeiten. Der Einleitungssatz zu Nr. 1
+      stellt ausserdem darauf ab, dass der Einsatz nach Unionsrecht oder
+      nationalem Recht ueberhaupt zugelassen ist.
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: H-08
     frage: >-
       Dient das System der biometrischen Kategorisierung nach sensiblen oder
-      geschuetzten Attributen, ohne unter das Verbot des Art. 5 zu fallen?
+      geschuetzten Attributen oder Merkmalen auf der Grundlage von
+      Rueckschluessen auf diese Attribute oder Merkmale?
     trifft_zu_wenn: biometrische_kategorisierung_hochrisiko
     klasse: hochrisiko
     fundstelle: "Anhang III Nr. 1 lit. b KI-VO"
     frist_ref: F-05
-    geprueft: false
+    hinweis: >-
+      Greift nur, soweit die Kategorisierung nicht bereits nach Art. 5 Abs. 1
+      lit. g verboten ist. Diese Abgrenzung folgt aus der Systematik, nicht aus
+      dem Anhangstext.
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: H-09
     frage: >-
@@ -545,7 +644,13 @@ regeln:
     frist_ref: F-05
     hinweis: >-
       Loest zusaetzlich die Transparenzpflicht T-04 nach Art. 50 Abs. 3 aus.
-    geprueft: false
+    anmerkung: >-
+      Der Anhangstext nennt Emotionserkennung ohne Einschraenkung. Die
+      Eingrenzung auf Faelle ausserhalb von Arbeitsplatz und Bildung folgt
+      daraus, dass dort bereits das Verbot nach Art. 5 Abs. 1 lit. f greift.
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   # --- Anhang III Nr. 2 bis 5: uebrige Hochrisikobereiche -------------------
 
@@ -558,18 +663,26 @@ regeln:
     klasse: hochrisiko
     fundstelle: "Anhang III Nr. 2 KI-VO"
     frist_ref: F-05
-    geprueft: false
+    anmerkung: >-
+      Der Normtext nennt Verwaltung UND Betrieb als Aufzaehlung. Die Pruefrage
+      verknuepft sie mit ODER, weil jede Taetigkeit fuer sich genuegt.
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: H-05
     frage: >-
-      Steuert das System den Zugang oder die Zulassung zu Bildungseinrichtungen,
-      bewertet es Lernergebnisse, bewertet es das angemessene Bildungsniveau
-      einer Person oder ueberwacht es verbotenes Verhalten bei Pruefungen?
+      Steuert das System den Zugang, die Zulassung oder die Zuweisung von
+      Personen zu Bildungseinrichtungen, bewertet es Lernergebnisse, bewertet
+      es das angemessene Bildungsniveau einer Person oder ueberwacht es
+      verbotenes Verhalten bei Pruefungen?
     trifft_zu_wenn: bildung_bewertung
     klasse: hochrisiko
-    fundstelle: "Anhang III Nr. 3 KI-VO"
+    fundstelle: "Anhang III Nr. 3 lit. a bis d KI-VO"
     frist_ref: F-05
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: H-01
     frage: >-
@@ -580,30 +693,42 @@ regeln:
     klasse: hochrisiko
     fundstelle: "Anhang III Nr. 4 lit. a KI-VO"
     frist_ref: F-05
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: H-02
     frage: >-
-      Wird das System fuer Entscheidungen ueber Arbeitsbedingungen, Befoerderung
-      oder Kuendigung, fuer die Zuweisung von Aufgaben anhand individuellen
-      Verhaltens oder persoenlicher Merkmale, oder fuer die Beobachtung und
-      Bewertung von Leistung und Verhalten Beschaeftigter eingesetzt?
+      Wird das System fuer Entscheidungen eingesetzt, die die Bedingungen von
+      Arbeitsverhaeltnissen, Befoerderungen oder Kuendigungen beeinflussen -
+      oder fuer die Zuweisung von Aufgaben anhand individuellen Verhaltens oder
+      persoenlicher Merkmale und Eigenschaften, oder fuer die Beobachtung und
+      Bewertung von Leistung und Verhalten Beschaeftigter?
     trifft_zu_wenn: leistungsbewertung
     klasse: hochrisiko
     fundstelle: "Anhang III Nr. 4 lit. b KI-VO"
     frist_ref: F-05
-    geprueft: false
+    hinweis: >-
+      Der Normtext erfasst Entscheidungen, die die genannten Bedingungen
+      BEEINFLUSSEN. Ein System, das eine Entscheidung nur vorbereitet oder
+      mitpraegt, ist damit erfasst - nicht erst eines, das sie trifft.
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: H-10
     frage: >-
       Wird das System von einer Behoerde oder in deren Namen verwendet, um ueber
       Anspruch, Gewaehrung, Einschraenkung, Widerruf oder Rueckforderung
-      grundlegender oeffentlicher Unterstuetzungsleistungen zu entscheiden?
+      grundlegender oeffentlicher Unterstuetzungsleistungen und -dienste zu
+      entscheiden - einschliesslich Gesundheitsdiensten?
     trifft_zu_wenn: oeffentliche_leistungen
     klasse: hochrisiko
     fundstelle: "Anhang III Nr. 5 lit. a KI-VO"
     frist_ref: F-05
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: H-03
     frage: >-
@@ -615,7 +740,9 @@ regeln:
     frist_ref: F-05
     ausnahmen: "Systeme zur Aufdeckung von Finanzbetrug sind ausgenommen."
     loest_aus: [Q-04]
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: H-04
     frage: >-
@@ -626,7 +753,9 @@ regeln:
     fundstelle: "Anhang III Nr. 5 lit. c KI-VO"
     frist_ref: F-05
     loest_aus: [Q-04]
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: H-11
     frage: >-
@@ -637,21 +766,55 @@ regeln:
     klasse: hochrisiko
     fundstelle: "Anhang III Nr. 5 lit. d KI-VO"
     frist_ref: F-05
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: H-12
     frage: >-
-      Wird das System eingesetzt, um bei der Ermittlung und Auslegung von
-      Sachverhalten und Rechtsvorschriften zu unterstuetzen - etwa im Rahmen
-      alternativer Streitbeilegung mit Rechtswirkung fuer die Parteien?
+      Wird das System von einer Justizbehoerde oder in deren Namen verwendet,
+      um bei der Ermittlung und Auslegung von Sachverhalten und
+      Rechtsvorschriften oder bei der Anwendung des Rechts auf konkrete
+      Sachverhalte zu unterstuetzen - oder auf aehnliche Weise fuer die
+      alternative Streitbeilegung?
     trifft_zu_wenn: rechtspflege_streitbeilegung
     klasse: hochrisiko
     fundstelle: "Anhang III Nr. 8 lit. a KI-VO"
     frist_ref: F-05
     hinweis: >-
-      Betrifft Justizbehoerden sowie Stellen fuer alternative Streitbeilegung.
-      Reine Verwaltungstaetigkeiten wie Anonymisierung sind nicht erfasst.
-    geprueft: false
+      Die Eingrenzung auf Justizbehoerden ist Teil des Tatbestands. Ein
+      Unternehmen, das intern Rechtsfragen mit KI prueft, ist nicht erfasst.
+      Reine Verwaltungstaetigkeiten wie Anonymisierung sind ebenfalls nicht
+      erfasst (Erwaegungsgrund 61).
+    anmerkung: >-
+      Erwaegungsgrund 61 nennt fuer die alternative Streitbeilegung zusaetzlich
+      das Merkmal, dass die Ergebnisse Rechtswirkung fuer die Parteien
+      entfalten. Im Anhangstext steht dieses Merkmal nicht.
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
+
+  - id: H-13
+    frage: >-
+      Wird das System eingesetzt, um das Ergebnis einer Wahl oder eines
+      Referendums oder das Wahlverhalten von Personen bei der Ausuebung ihres
+      Wahlrechts zu beeinflussen?
+    trifft_zu_wenn: wahlbeeinflussung
+    klasse: hochrisiko
+    fundstelle: "Anhang III Nr. 8 lit. b KI-VO"
+    frist_ref: F-05
+    ausnahmen: >-
+      Nicht erfasst sind Systeme, deren Ausgaben natuerliche Personen nicht
+      direkt ausgesetzt sind - etwa Werkzeuge zur Organisation, Optimierung
+      oder Strukturierung politischer Kampagnen in administrativer oder
+      logistischer Hinsicht.
+    hinweis: >-
+      Anders als Nr. 6 und Nr. 7 ist diese Nummer nicht auf Behoerden
+      beschraenkt. Sie kann Kommunikationsagenturen, Verbaende und Unternehmen
+      treffen, die politische Kampagnen begleiten.
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   # --- Art. 50: Transparenzpflichten ----------------------------------------
   # Rolle beachten: Abs. 1 und 2 sind Anbieterpflichten, Abs. 3 und 4
@@ -675,7 +838,9 @@ regeln:
     hinweis: >-
       ANBIETERPFLICHT. Ein reiner Betreiber eines zugekauften Chatbots ist nicht
       Adressat. Er kann aber ueber R-02 zum Anbieter werden.
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: T-05
     frage: >-
@@ -693,7 +858,9 @@ regeln:
       nicht wesentlich veraendert.
     frist_ref: F-04
     hinweis: "ANBIETERPFLICHT."
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: T-04
     frage: >-
@@ -708,7 +875,9 @@ regeln:
       Personenbezogene Daten sind nach DSGVO zu verarbeiten.
     frist_ref: F-04
     hinweis: "BETREIBERPFLICHT."
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: T-02
     frage: >-
@@ -720,13 +889,18 @@ regeln:
     klasse: transparenz
     fundstelle: "Art. 50 Abs. 4 Unterabs. 1 KI-VO"
     massnahme: "Offenlegung, dass die Inhalte kuenstlich erzeugt oder manipuliert wurden."
+    anmerkung: >-
+      Die Begriffsbestimmung des Deepfake steht nicht in Art. 50, sondern in
+      Art. 3 Nr. 60."
     ausnahmen: >-
       Bei offensichtlich kuenstlerischen, kreativen, satirischen oder fiktionalen
       Werken beschraenkt sich die Pflicht auf eine geeignete Offenlegung, die
       die Darstellung oder den Genuss des Werks nicht beeintraechtigt.
     frist_ref: F-04
     hinweis: "BETREIBERPFLICHT."
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: T-03
     frage: >-
@@ -743,7 +917,9 @@ regeln:
       juristische Person die redaktionelle Verantwortung traegt.
     frist_ref: F-04
     hinweis: "BETREIBERPFLICHT."
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-28"
+    geprueft_von: "Niklas Steinhauser"
 
 # -----------------------------------------------------------------------------
 # AUSNAHMEFILTER NACH ART. 6 ABS. 3
