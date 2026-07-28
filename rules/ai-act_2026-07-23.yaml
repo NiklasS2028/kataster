@@ -1331,8 +1331,14 @@ anhang_i:
     maschinelle Uebersetzung gekennzeichnet. Massgeblich ist der amtliche Text
     der KI-VO. Die Nummerierung wird durch Anhang XIV der KI-VO in der Fassung
     der VO (EU) 2026/1744 gestuetzt: die AIP-Codes laufen von 0102 bis 0112 und
-    entsprechen Abschnitt A Nr. 2 bis 12.
-  geprueft: false
+    entsprechen Abschnitt A Nr. 2 bis 12. Am 28.07.2026 gegen den amtlichen Text
+    abgeglichen: Anhang I der VO (EU) 2024/1689 in der PDF-Originalfassung (ELI
+    data.europa.eu/eli/reg/2024/1689/oj); die drei Omnibus-Punkte (Streichung
+    Abschnitt A Nr. 1, Nr. 21 neu, AIP-Codes und Art. 2 Abs. 2) gegen die VO
+    (EU) 2026/1744.
+  geprueft: true
+  geprueft_am: "2026-07-28"
+  geprueft_von: "Niklas Steinhauser"
 
   abschnitt_a:
     bezeichnung: "Harmonisierungsrechtsvorschriften auf Grundlage des neuen Rechtsrahmens"
@@ -1357,7 +1363,7 @@ anhang_i:
       - nr: 9
         titel: "Verordnung (EU) 2016/425 (Persoenliche Schutzausruestung)"
       - nr: 10
-        titel: "Verordnung (EU) 2016/426 (Gasverbrauchseinrichtungen)"
+        titel: "Verordnung (EU) 2016/426 (Geraete zur Verbrennung gasfoermiger Brennstoffe)"
       - nr: 11
         titel: "Verordnung (EU) 2017/745 (Medizinprodukte)"
       - nr: 12
@@ -1382,7 +1388,7 @@ anhang_i:
       - nr: 13
         titel: "Verordnung (EG) Nr. 300/2008 (Sicherheit in der Zivilluftfahrt)"
       - nr: 14
-        titel: "Verordnung (EU) Nr. 168/2013 (zwei-, drei- und vierraedrige Fahrzeuge)"
+        titel: "Verordnung (EU) Nr. 168/2013 (zwei- oder dreiraedrige und vierraedrige Fahrzeuge)"
       - nr: 15
         titel: "Verordnung (EU) Nr. 167/2013 (land- und forstwirtschaftliche Fahrzeuge)"
       - nr: 16
