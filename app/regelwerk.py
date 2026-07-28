@@ -306,7 +306,18 @@ class Regelwerk:
         if einstufung.klasse != "hochrisiko" or in_betrieb_seit is None:
             return
 
-        stichtag_str = self.frist_fuer("F-03", lesart)
+        # Art. 111 Abs. 2 knuepft an den Geltungsbeginn des Kapitels III an,
+        # nicht an den allgemeinen Geltungsbeginn. Der ist seit Art. 113
+        # Abs. 3 lit. c gespalten: F-05 fuer Anhang III, F-06 fuer Anhang I.
+        # Bei Ueberschneidung gilt der fruehere Termin (F-05) - die
+        # konservative Wahl, weil sie weniger Bestandsschutz gewaehrt.
+        anhang_i = any(t.regel_id in ("P-01", "P-02") for t in einstufung.treffer)
+        anhang_iii = any(
+            t.regel_id not in ("P-01", "P-02") for t in einstufung.treffer
+        )
+        frist_id = "F-05" if anhang_iii or not anhang_i else "F-06"
+
+        stichtag_str = self.frist_fuer(frist_id, lesart)
         if not stichtag_str:
             return
         stichtag = date.fromisoformat(stichtag_str)

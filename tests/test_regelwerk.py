@@ -198,6 +198,39 @@ def test_bestandsschutz_nur_bei_hochrisiko(regelwerk):
     assert not e.bestandsschutz_greift
 
 
+def test_bestandsschutz_anhang_i_nutzt_spaeteren_stichtag(regelwerk):
+    # Art. 111 Abs. 2 knuepft an den Geltungsbeginn des Kapitels III an.
+    # Fuer Anhang I ist das F-06, nicht der allgemeine Geltungsbeginn F-03.
+    e = regelwerk.einstufen({
+        "anhang_i_produkt": True,
+        "anhang_i_dritte_konformitaetsbewertung": True,
+    }, rolle="anbieter", in_betrieb_seit=date(2027, 1, 1))
+    assert e.klasse == "hochrisiko"
+    assert e.bestandsschutz_greift
+
+
+def test_bestandsschutz_anhang_iii_folgt_der_lesart(regelwerk):
+    # In der Lesart omnibus verschiebt F-05 den Stichtag auf 2027-12-02.
+    e = regelwerk.einstufen({"personalauswahl": True},
+                            lesart="omnibus",
+                            in_betrieb_seit=date(2027, 1, 1))
+    assert e.klasse == "hochrisiko"
+    assert e.bestandsschutz_greift
+
+
+def test_bestandsschutz_bei_ueberschneidung_gilt_frueherer_stichtag(regelwerk):
+    # Faellt ein System unter Anhang I und Anhang III, gilt F-05 (frueher)
+    # und nicht F-06 - die konservative Wahl.
+    e = regelwerk.einstufen({
+        "personalauswahl": True,
+        "anhang_i_produkt": True,
+        "anhang_i_dritte_konformitaetsbewertung": True,
+    }, rolle="anbieter", lesart="omnibus",
+        in_betrieb_seit=date(2028, 1, 1))
+    assert e.klasse == "hochrisiko"
+    assert not e.bestandsschutz_greift
+
+
 # --- Ausnahmefilter nach Art. 6 Abs. 3 ------------------------------------
 
 def test_ausnahmefilter_bei_anhang_iii_moeglich(regelwerk):
