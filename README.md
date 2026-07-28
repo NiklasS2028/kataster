@@ -63,7 +63,7 @@ unter Bestandsschutz, eine dokumentierte Ausnahme und drei Werkzeuge, die erst
 ## Wie es funktioniert
 
 Das gesamte Rechtswissen steht in **einer versionierten Datei**:
-`rules/ai-act_2026-07-27.yaml`. Der Anwendungscode kennt keine Paragraphen — er
+`rules/ai-act_2026-07-23.yaml`. Der Anwendungscode kennt keine Paragraphen — er
 wertet nur diese Datei aus.
 
 ```yaml
@@ -142,11 +142,16 @@ muss sie ergänzen.
 Wahlen und Referenden ist nicht auf Behörden beschränkt und kann
 Kommunikationsagenturen und Verbände treffen.
 
-**Die Omnibus-Lesart ist unverifiziert.** Der Digital Omnibus on AI wurde vom
-Gesetzgeber angenommen, lag zum Rechtsstand aber nicht im Amtsblatt vor. Die
-Struktur dafür steht, das Feld `lesarten.omnibus.amtsblatt` ist `null`. Wer
-diese Lesart nutzen will, muss sie zuvor gegen den veröffentlichten Text
-prüfen.
+**Der Omnibus ist noch nicht eingearbeitet.** Die Digital-Omnibus-Verordnung
+zur KI — Verordnung (EU) 2026/1744, ABl. L, 2026/1744 vom 24.07.2026 — ist seit
+dem 27.07.2026 in Kraft. Dieses Regelwerk bildet den Stand davor ab und ist
+insoweit **nicht aktuell**: Die geänderten Anwendungsfristen für
+Hochrisiko-Systeme, die beiden neuen Verbotstatbestände, der neu gefasste
+Begriff des Sicherheitsbauteils und die Änderungen an Art. 4 und Art. 111 sind
+nicht abgebildet. Die Metadaten des Änderungsrechtsakts stehen unter
+`lesarten.omnibus`, das Feld `eingearbeitet` ist `false`. Wer Kataster
+produktiv einsetzt, muss diese Änderungen bis zur nächsten verifizierten
+Fassung selbst berücksichtigen.
 
 ---
 

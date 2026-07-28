@@ -10,7 +10,7 @@ import pytest
 WURZEL = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(WURZEL))
 
-REGELWERK_PFAD = WURZEL / "rules" / "ai-act_2026-07-27.yaml"
+REGELWERK_PFAD = WURZEL / "rules" / "ai-act_2026-07-23.yaml"
 
 
 @pytest.fixture(scope="session")

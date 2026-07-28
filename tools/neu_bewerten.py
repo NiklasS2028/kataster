@@ -23,7 +23,7 @@ from app.modelle import Datenbank            # noqa: E402
 from app.regelwerk import Regelwerk          # noqa: E402
 
 DATENBANK = WURZEL / "kataster.sqlite"
-REGELWERK = WURZEL / "rules" / "ai-act_2026-07-27.yaml"
+REGELWERK = WURZEL / "rules" / "ai-act_2026-07-23.yaml"
 
 
 def _lage(db: Datenbank, rw: Regelwerk):

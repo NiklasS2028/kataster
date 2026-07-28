@@ -386,7 +386,7 @@ if __name__ == "__main__":
     sys.path.insert(0, str(__import__("pathlib").Path(__file__).parent))
     from regelwerk import Regelwerk
 
-    rw = Regelwerk.laden("rules/ai-act_2026-07-27.yaml")
+    rw = Regelwerk.laden("rules/ai-act_2026-07-23.yaml")
     w = Wizard(rw)
 
     antworten: dict[str, Any] = {}

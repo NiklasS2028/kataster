@@ -15,7 +15,7 @@ from flask import Flask, g, render_template
 
 PORT = 8771
 WURZEL = Path(__file__).resolve().parent.parent
-REGELWERK_STANDARD = WURZEL / "rules" / "ai-act_2026-07-27.yaml"
+REGELWERK_STANDARD = WURZEL / "rules" / "ai-act_2026-07-23.yaml"
 DATENBANK_STANDARD = WURZEL / "kataster.sqlite"
 
 

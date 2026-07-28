@@ -398,7 +398,7 @@ class Regelwerk:
 if __name__ == "__main__":
     import sys
 
-    pfad = sys.argv[1] if len(sys.argv) > 1 else "rules/ai-act_2026-07-27.yaml"
+    pfad = sys.argv[1] if len(sys.argv) > 1 else "rules/ai-act_2026-07-23.yaml"
     rw = Regelwerk.laden(pfad)
     geprueft, gesamt = rw.pruefstand
     print(f"Regelwerk {rw.version}, Rechtsstand {rw.rechtsstand}")

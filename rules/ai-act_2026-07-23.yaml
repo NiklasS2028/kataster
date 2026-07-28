@@ -12,10 +12,12 @@
 # =============================================================================
 
 meta:
-  regelwerk_version: "1.0.0"
-  rechtsstand: "2026-07-27"
+  regelwerk_version: "1.0.1"
+  rechtsstand: "2026-07-23"
   abgeglichen_am: "2026-07-27"
-  abgeglichen_gegen: "Verordnung (EU) 2024/1689, amtlicher deutscher Text, CELEX 32024R1689"
+  abgeglichen_gegen: >-
+    Verordnung (EU) 2024/1689, amtlicher deutscher Text, CELEX 32024R1689,
+    Fassung vor Verordnung (EU) 2026/1744
   sprache: "de"
   autor: "Niklas Steinhauser"
   lizenz_regelwerk: "CC-BY-4.0"
@@ -25,6 +27,20 @@ meta:
     Authentisch sind ausschliesslich die im Amtsblatt der Europaeischen Union
     veroeffentlichten Texte (Art. 297 AEUV).
   aenderungshistorie:
+    - datum: "2026-07-28"
+      version: "1.0.1"
+      aenderung: >-
+        Korrektur des Rechtsstands. Die Angabe in Version 1.0.0, der
+        Aenderungsrechtsakt habe zum Rechtsstand nicht im Amtsblatt
+        vorgelegen, ist unzutreffend. Die Digital-Omnibus-Verordnung zur KI,
+        Verordnung (EU) 2026/1744, wurde am 24.07.2026 im Amtsblatt
+        veroeffentlicht (ABl. L, 2026/1744, CELEX 32026R1744) und trat am
+        27.07.2026 in Kraft, also am Tag des angegebenen Rechtsstands. Der
+        Rechtsstand wird daher auf den 23.07.2026 zurueckgesetzt, den letzten
+        Tag, an dem der Inhalt dieser Datei die Rechtslage vollstaendig
+        abbildete; die Datei wurde entsprechend umbenannt. Regelinhalte
+        unveraendert. Die Einarbeitung des Aenderungsrechtsakts steht aus,
+        siehe lesarten.omnibus.
     - datum: "2026-07-28"
       version: "1.0.0"
       aenderung: >-
@@ -98,6 +114,32 @@ meta:
 # -----------------------------------------------------------------------------
 
 lesarten:
+  omnibus:
+    bezeichnung: "Fassung nach Digital-Omnibus-Verordnung zur KI"
+    rechtsakt: "Verordnung (EU) 2026/1744"
+    celex: "32026R1744"
+    verfahren: "2025/0359(COD)"
+    kommissionsvorschlag: "COM(2025) 836 final vom 2025-11-19"
+    trilog_einigung: "2026-05-07"
+    ep_erste_lesung: "2026-06-16"
+    rat_annahme: "2026-06-29"
+    unterzeichnet: "2026-07-08"
+    amtsblatt: "ABl. L, 2026/1744, 24.7.2026"
+    eli: "http://data.europa.eu/eli/reg/2026/1744/oj"
+    inkrafttreten: "2026-07-27"
+    status: "in Kraft"
+    eingearbeitet: false
+    geprueft: false
+    hinweis: >-
+      Der Aenderungsrechtsakt liegt im Amtsblatt vor und ist in Kraft. Seine
+      Auswirkungen sind in dieses Regelwerk noch NICHT eingearbeitet. Betroffen
+      sind mindestens: Art. 5 (zwei neue Verbotstatbestaende lit. ba und bb),
+      Art. 113 Abs. 3 (Fristen Kapitel III), Art. 3 Nr. 14 und Art. 6 Abs. 1a
+      bis 1c (Begriff Sicherheitsbauteil), Art. 4 (KI-Kompetenz), Art. 111
+      Abs. 2 und 4 (Bestandsschutz, Uebergangsfrist Art. 50 Abs. 2) sowie
+      Anhang I (Maschinenverordnung von Abschnitt A nach Abschnitt B). Wer
+      diese Lesart nutzen will, muss sie zuvor gegen den Text pruefen.
+
   original:
     bezeichnung: "Originalfassung"
     rechtsakt: "Verordnung (EU) 2024/1689"
@@ -106,23 +148,6 @@ lesarten:
     geltungsbeginn_allgemein: "2026-08-02"
     status: "in Kraft"
     geprueft: false
-
-  omnibus:
-    bezeichnung: "Fassung nach Digital Omnibus on AI"
-    verfahren: "2025/0359(COD)"
-    kommissionsvorschlag: "COM(2025)837 vom 2025-11-19"
-    trilog_einigung: "2026-05-07"
-    ep_erste_lesung: "2026-06-16"
-    rat_annahme: "2026-06-29"
-    amtsblatt: null            # <-- NACHTRAGEN, sobald veroeffentlicht
-    inkrafttreten: "dritter Tag nach Veroeffentlichung im Amtsblatt"
-    status: "angenommen, Veroeffentlichung im Amtsblatt zum Rechtsstand ausstehend"
-    hinweis: >-
-      Der Omnibus-Text lag beim Abgleich nicht im Amtsblatt vor. Alle
-      Omnibus-Angaben in dieser Datei stammen aus Sekundaerquellen und sind
-      gesondert zu verifizieren, sobald der Aenderungsrechtsakt vorliegt.
-    geprueft: false
-
 # -----------------------------------------------------------------------------
 # ANWENDUNGSBEREICH - Ausschlussgruende
 # -----------------------------------------------------------------------------

@@ -27,7 +27,7 @@ from datetime import date
 from pathlib import Path
 
 WURZEL = Path(__file__).resolve().parent.parent
-REGELWERK = WURZEL / "rules" / "ai-act_2026-07-27.yaml"
+REGELWERK = WURZEL / "rules" / "ai-act_2026-07-23.yaml"
 ARBEITSLISTE = WURZEL / "VERIFIKATION.md"
 
 EURLEX = "https://eur-lex.europa.eu/eli/reg/2024/1689/oj?locale=de"

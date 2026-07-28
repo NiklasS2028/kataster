@@ -24,7 +24,7 @@ from datetime import date
 from pathlib import Path
 
 WURZEL = Path(__file__).resolve().parent.parent
-REGELWERK = WURZEL / "rules" / "ai-act_2026-07-27.yaml"
+REGELWERK = WURZEL / "rules" / "ai-act_2026-07-23.yaml"
 
 VERSION_ZEILE = re.compile(r'^(\s*regelwerk_version:\s*)"([^"]+)"\s*$')
 HISTORIE_ANKER = "  aenderungshistorie:"
