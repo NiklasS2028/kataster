@@ -341,44 +341,127 @@ def test_erleichterungen_ohne_groessenklasse_leer(regelwerk):
 def test_erleichterungen_art63_nur_kmu_ohne_verbund(regelwerk):
     """Art. 63 Abs. 1 (G-04) ist die Stelle, an der 'kleine Unternehmen bekommen
     Erleichterungen' falsch wird: Sie gilt nur KMU, nicht Midcaps, und nur ohne
-    Partner- oder Verbundunternehmen."""
-    def ids(klasse, verbund):
+    Partner- oder Verbundunternehmen. Das gilt in beiden Lesarten (im Ausgangs-
+    recht sogar nur Kleinstunternehmen, im Werkzeug als Zuvielanzeige gefuehrt)."""
+    def ids(klasse, verbund, lesart):
         return {e["id"] for e in regelwerk.erleichterungen_fuer(
-            klasse, verbund, {"anbieter"}, {"hochrisiko"})}
+            klasse, verbund, {"anbieter"}, {"hochrisiko"}, lesart=lesart)}
 
-    # Midcap bekommt G-04 nicht, obwohl sonst dieselbe Anbieter-Hochrisiko-Lage.
-    assert "G-04" not in ids("kleines_midcap", False)
-    # KMU mit Partner/Verbund bekommt G-04 nicht.
-    assert "G-04" not in ids("kmu", True)
-    # KMU ohne Partner/Verbund bekommt G-04.
-    assert "G-04" in ids("kmu", False)
+    for lesart in ("original", "omnibus"):
+        # Midcap bekommt G-04 nicht, obwohl sonst dieselbe Anbieter-Hochrisiko-Lage.
+        assert "G-04" not in ids("kleines_midcap", False, lesart)
+        # KMU mit Partner/Verbund bekommt G-04 nicht.
+        assert "G-04" not in ids("kmu", True, lesart)
+        # KMU ohne Partner/Verbund bekommt G-04.
+        assert "G-04" in ids("kmu", False, lesart)
 
 
-def test_erleichterungen_art99_deckelung_kmu_und_midcap(regelwerk):
-    """Art. 99 (G-06): Die Deckelung gilt KMU (Abs. 6, Ausgangsrecht) UND kleinen
-    Midcaps (Abs. 6a, Omnibus). Der Test faengt die falsche Verkuerzung 'nur
-    Midcaps sind gedeckelt', die KMU faelschlich ausschliessen wuerde."""
-    def ids(klasse):
+def test_erleichterungen_art99_deckelung_getrennt_nach_absatz(regelwerk):
+    """Art. 99 Deckelung: KMU ueber Abs. 6 (G-06, Ausgangsrecht, beide Lesarten),
+    kleine Midcaps ueber Abs. 6a (G-07, omnibus-neu). Getrennte Eintraege, weil
+    verschiedene Absaetze mit verschiedener Lesart-Verfuegbarkeit."""
+    def ids(klasse, lesart):
         return {e["id"] for e in regelwerk.erleichterungen_fuer(
-            klasse, False, set(), set())}
+            klasse, False, set(), set(), lesart=lesart)}
 
-    assert "G-06" in ids("kmu")
-    assert "G-06" in ids("kleines_midcap")
-    assert "G-06" not in ids("gross")
+    # KMU-Deckelung gilt in beiden Lesarten.
+    assert "G-06" in ids("kmu", "original")
+    assert "G-06" in ids("kmu", "omnibus")
+    assert "G-06" not in ids("gross", "omnibus")
+    # Midcap-Deckelung erst mit dem Omnibus.
+    assert "G-07" not in ids("kleines_midcap", "original")
+    assert "G-07" in ids("kleines_midcap", "omnibus")
+    # G-06 ist nicht mehr die Midcap-Regel.
+    assert "G-06" not in ids("kleines_midcap", "original")
+    assert "G-06" not in ids("kleines_midcap", "omnibus")
+
+
+def test_gilt_fuer_groesse_dict_folgt_der_lesart(regelwerk):
+    """G-01 und G-05 erstrecken sich erst mit dem Omnibus auf kleine Midcaps.
+    Unter original erhaelt ein Midcap sie nicht (Befund A: sonst bekaeme es eine
+    Erleichterung, die im Ausgangsrecht nur KMU zusteht)."""
+    def hat(eid, klasse, rollen, klassen, lesart):
+        return eid in {e["id"] for e in regelwerk.erleichterungen_fuer(
+            klasse, False, rollen, klassen, lesart=lesart)}
+
+    assert not hat("G-01", "kleines_midcap", {"anbieter"}, {"hochrisiko"}, "original")
+    assert hat("G-01", "kleines_midcap", {"anbieter"}, {"hochrisiko"}, "omnibus")
+    assert not hat("G-05", "kleines_midcap", set(), set(), "original")
+    assert hat("G-05", "kleines_midcap", set(), set(), "omnibus")
+    # KMU dagegen in beiden Lesarten.
+    assert hat("G-05", "kmu", set(), set(), "original")
+    assert hat("G-05", "kmu", set(), set(), "omnibus")
+
+
+def test_gilt_in_lesart_beschraenkt_omnibus_eintraege(regelwerk):
+    """G-07 (Abs. 6a) und G-08 (Art. 57 Abs. 3a) sind omnibus-neu und duerfen
+    unter original nicht erscheinen."""
+    def ids(klasse, lesart):
+        return {e["id"] for e in regelwerk.erleichterungen_fuer(
+            klasse, False, set(), set(), lesart=lesart)}
+
+    assert {"G-07", "G-08"}.isdisjoint(ids("kleines_midcap", "original"))
+    assert "G-08" not in ids("kmu", "original")
+    assert "G-08" in ids("kmu", "omnibus")
+    assert "G-08" in ids("kleines_midcap", "omnibus")
 
 
 def test_anbieter_erleichterung_laeuft_fuer_reinen_betreiber_leer(regelwerk):
-    """Art. 11/17/63 treffen nur Anbieter von Hochrisiko-Systemen. Ein reiner
+    """Art. 11/63 treffen nur Anbieter von Hochrisiko-Systemen. Ein reiner
     Betreiber ohne Hochrisiko-System bekommt sie nicht, die von der Rolle
-    unabhaengigen Erleichterungen (Art. 57, 99) aber schon."""
+    unabhaengigen Erleichterungen (Art. 62, 99) aber schon."""
     treffer = {e["id"] for e in regelwerk.erleichterungen_fuer(
         "kmu", False, {"betreiber"}, {"minimal"})}
-    assert {"G-01", "G-02", "G-04"}.isdisjoint(treffer)
+    assert {"G-01", "G-04"}.isdisjoint(treffer)
     assert {"G-03", "G-05", "G-06"} <= treffer
 
 
+def test_g02_ist_kein_erleichterungseintrag_mehr(regelwerk):
+    """Art. 17 Abs. 2 ist size-neutral und darf nicht als groessengebundene
+    Erleichterung gefuehrt werden (sonst Vorenthaltung fuer grosse Anbieter)."""
+    ids = {e["id"] for e in regelwerk.groessenregime["erleichterungen"]}
+    assert "G-02" not in ids
+    hinweis = regelwerk.groessenregime.get("hinweis_verhaeltnismaessigkeit")
+    assert hinweis and "Art. 17 Abs. 2" in hinweis["text"]
+    assert hinweis["fundstelle_original"] == "Art. 17 Abs. 2 KI-VO"
+
+
+def test_zeiger_wird_gegen_q02_aufgeloest(regelwerk):
+    """G-06 traegt keinen eigenen Regeltext, sondern zeigt auf Q-02.kmu_regel."""
+    g06 = next(e for e in regelwerk.groessenregime["erleichterungen"] if e["id"] == "G-06")
+    q02 = next(q for q in regelwerk.querschnittspflichten if q["id"] == "Q-02")
+    assert regelwerk.erleichterung_text(g06) == q02["kmu_regel"]
+
+
+def test_zeiger_ohne_ziel_rendert_sichtbar_statt_leer(regelwerk):
+    """G-07 zeigt auf das noch fehlende Q-02.midcap_regel. Bis zum Folgecommit
+    muss der Platzhalter sichtbar sein, nicht der leere String."""
+    g07 = next(e for e in regelwerk.groessenregime["erleichterungen"] if e["id"] == "G-07")
+    text = regelwerk.erleichterung_text(g07)
+    assert text
+    assert "midcap_regel" in text and "Folgecommit" in text
+    # Und die Validierung meldet das offene Ziel als Hinweis, nicht als Fehler.
+    hinweise = [p for p in regelwerk.validieren()
+                if p.schwere == "hinweis" and "midcap_regel" in p.text]
+    assert hinweise
+    fehler = [p for p in regelwerk.validieren()
+              if p.schwere == "fehler" and p.ort.startswith("groessenregime/")]
+    assert not fehler
+
+
+def test_erleichterung_text_dict_fall_folgt_lesart(regelwerk):
+    """Ein Dict-Fall liefert je Lesart den passenden Text."""
+    g05 = next(e for e in regelwerk.groessenregime["erleichterungen"] if e["id"] == "G-05")
+    original = regelwerk.erleichterung_text(g05, "original")
+    omnibus = regelwerk.erleichterung_text(g05, "omnibus")
+    assert original != omnibus
+    assert "Midcap" in omnibus and "Midcap" not in original
+
+
 def test_erleichterungen_ids_und_pruefstand(regelwerk):
-    """Die sechs Eintraege sind vorhanden und alle noch unverifiziert."""
+    """Die sieben Eintraege sind vorhanden (G-02 entfaellt) und alle noch
+    unverifiziert."""
     eintraege = regelwerk.groessenregime["erleichterungen"]
-    assert {e["id"] for e in eintraege} == {"G-01", "G-02", "G-03", "G-04", "G-05", "G-06"}
+    assert {e["id"] for e in eintraege} == {
+        "G-01", "G-03", "G-04", "G-05", "G-06", "G-07", "G-08"}
     assert all(e["geprueft"] is False for e in eintraege)

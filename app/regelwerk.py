@@ -196,6 +196,64 @@ class Regelwerk:
                     Problem("warnung", ort, "Fundstelle noch nicht verifiziert.")
                 )
 
+        # Groessenregime: Erleichterungen strukturell pruefen. Der Regeltext
+        # muss aufloesbar sein (text, lesart_* oder Zeiger). Ein Zeiger auf ein
+        # noch fehlendes Zielfeld ist ein bewusster Uebergangszustand und wird
+        # als Hinweis gemeldet, nicht als Fehler oder Warnung, damit die Kopplung
+        # von ausspielbar() an den Regel-Pruefstand unveraendert bleibt.
+        g_ids: set[str] = set()
+        for e in self.groessenregime.get("erleichterungen", []):
+            ort = f"groessenregime/{e.get('id', '???')}"
+            eid = e.get("id")
+            if not eid:
+                probleme.append(Problem("fehler", ort, "Feld 'id' fehlt."))
+            if eid in g_ids:
+                probleme.append(Problem("fehler", ort, "Doppelte Erleichterungs-ID."))
+            g_ids.add(eid)
+
+            if not e.get("fundstelle"):
+                probleme.append(Problem("fehler", ort, "Feld 'fundstelle' fehlt."))
+
+            for l in e.get("gilt_in_lesart") or []:
+                if l not in LESARTEN:
+                    probleme.append(
+                        Problem("fehler", ort, f"Unbekannte Lesart '{l}' in 'gilt_in_lesart'.")
+                    )
+
+            gfg = e.get("gilt_fuer_groesse")
+            if isinstance(gfg, dict):
+                for k in gfg:
+                    if k not in LESARTEN:
+                        probleme.append(
+                            Problem("fehler", ort, f"Unbekannter Lesart-Schluessel '{k}' in 'gilt_fuer_groesse'.")
+                        )
+
+            ziel_id = e.get("verweist_auf")
+            if ziel_id:
+                ziel = next(
+                    (q for q in self.querschnittspflichten if q.get("id") == ziel_id),
+                    None,
+                )
+                feld = e.get("verweist_auf_feld")
+                if ziel is None:
+                    probleme.append(
+                        Problem("fehler", ort, f"Zeigerziel '{ziel_id}' existiert nicht.")
+                    )
+                elif not feld:
+                    probleme.append(Problem("fehler", ort, "Zeiger ohne 'verweist_auf_feld'."))
+                elif not ziel.get(feld):
+                    probleme.append(
+                        Problem("hinweis", ort, f"Zeigerziel {ziel_id}.{feld} noch nicht vorhanden (Folgecommit).")
+                    )
+            else:
+                hat_text = bool(
+                    e.get("text") or e.get("lesart_original") or e.get("lesart_omnibus")
+                )
+                if not hat_text:
+                    probleme.append(
+                        Problem("fehler", ort, "Kein Regeltext: weder 'text', 'lesart_*' noch Zeiger.")
+                    )
+
         if self.lesarten.get("omnibus", {}).get("amtsblatt") in (None, ""):
             probleme.append(
                 Problem(
@@ -399,20 +457,36 @@ class Regelwerk:
 
     # -- Groessenregime ------------------------------------------------------
 
+    @staticmethod
+    def _groesse_fuer_lesart(wert: Any, lesart: str) -> list[str]:
+        """Loest gilt_fuer_groesse auf: flache Liste ODER Dict {original, omnibus}.
+
+        Der Dict-Fall tritt auf, wenn sich der erfasste Groessenkreis mit der
+        Lesart aendert (z. B. G-01: original nur KMU, omnibus auch Midcaps).
+        """
+        if isinstance(wert, dict):
+            return wert.get(lesart, []) or []
+        return wert or []
+
     def erleichterungen_fuer(
         self,
         groessenklasse: str | None,
         hat_partner_verbund: bool,
         vorhandene_rollen: set[str],
         vorhandene_klassen: set[str],
+        lesart: str = "original",
     ) -> list[dict]:
         """Filtert die groessenabhaengigen Erleichterungen fuer eine Organisation.
 
         Rein deklarativ: die Bedingungen stehen im YAML, hier wird nur
         abgeglichen. Ohne erfasste Groessenklasse gibt es nichts zu zeigen. Eine
         Erleichterung, die nur Anbieter von Hochrisiko-Systemen trifft, laeuft
-        fuer einen reinen Betreiber leer und wird ausgelassen.
+        fuer einen reinen Betreiber leer und wird ausgelassen. Der erfasste Kreis
+        und die Verfuegbarkeit einer Erleichterung koennen von der Lesart
+        abhaengen (gilt_fuer_groesse als Dict, gilt_in_lesart).
         """
+        if lesart not in LESARTEN:
+            raise ValueError(f"Unbekannte Lesart: {lesart}")
         if not groessenklasse:
             return []
         # Ein System der Rolle "beides" ist zugleich Anbieter und Betreiber.
@@ -422,7 +496,13 @@ class Regelwerk:
 
         treffer: list[dict] = []
         for e in self.groessenregime.get("erleichterungen", []):
-            if groessenklasse not in e.get("gilt_fuer_groesse", []):
+            gilt_lesart = e.get("gilt_in_lesart")
+            if gilt_lesart and lesart not in gilt_lesart:
+                continue
+            klassen_groesse = self._groesse_fuer_lesart(
+                e.get("gilt_fuer_groesse"), lesart
+            )
+            if groessenklasse not in klassen_groesse:
                 continue
             rollen = e.get("gilt_fuer")
             if rollen and not (set(rollen) & effektive_rollen):
@@ -434,6 +514,43 @@ class Regelwerk:
                 continue
             treffer.append(e)
         return treffer
+
+    def erleichterung_text(self, e: dict, lesart: str = "original") -> str:
+        """Effektiver Regeltext einer Erleichterung fuer die Anzeige.
+
+        Drei Formen: flacher 'text', Dict-Fall ('lesart_original'/'lesart_omnibus')
+        oder Zeiger ('verweist_auf' auf ein Feld einer Querschnittspflicht). Ein
+        Zeiger ohne auffindbares Ziel wird sichtbar gemeldet, nie leer
+        zurueckgegeben, damit eine bewusst offene Stelle (z. B. Q-02.midcap_regel
+        vor dem Folgecommit) auffaellt statt still zu verschwinden.
+        """
+        if lesart not in LESARTEN:
+            raise ValueError(f"Unbekannte Lesart: {lesart}")
+
+        ziel_id = e.get("verweist_auf")
+        if ziel_id:
+            feld = e.get("verweist_auf_feld")
+            ziel = next(
+                (q for q in self.querschnittspflichten if q.get("id") == ziel_id),
+                None,
+            )
+            if ziel is None:
+                return f"[Zeigerziel {ziel_id} nicht gefunden]"
+            if not feld:
+                return f"[Zeiger auf {ziel_id} ohne Feldangabe]"
+            wert = ziel.get(feld)
+            if not wert:
+                return (
+                    f"[Regeltext {ziel_id}.{feld} noch nicht vorhanden, "
+                    "folgt im Folgecommit]"
+                )
+            return wert
+
+        lesart_feld = e.get(f"lesart_{lesart}")
+        if lesart_feld:
+            return lesart_feld
+
+        return e.get("text", "")
 
     # -- Ausgabe -------------------------------------------------------------
 

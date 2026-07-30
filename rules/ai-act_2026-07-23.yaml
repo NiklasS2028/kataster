@@ -1312,10 +1312,31 @@ querschnittspflichten:
 # anknuepfen. Anders als die uebrigen Abschnitte haengt dieses Regime nicht an
 # Systemflags, sondern am Organisationsattribut groessenklasse. Es wird
 # systemuebergreifend ausgewertet, siehe Regelwerk.erleichterungen_fuer.
-# Zwei Bedingungsformen: Listen fuer Zugehoerigkeit (gilt_fuer_groesse,
-# gilt_fuer nach Rolle, nur_bei_klasse), ein Boolean fuer den Negativvorbehalt
-# setzt_kein_partner_verbund_voraus. gilt_fuer und nur_bei_klasse folgen dem
-# Vokabular aus Q-03.
+#
+# Bedingungsformen je Erleichterung:
+#   gilt_fuer_groesse   Liste der Groessenklassen ODER Dict mit den Schluesseln
+#                       original/omnibus (Dict-Fall), wenn sich der erfasste
+#                       Kreis mit der Lesart aendert. Der Auswerter loest den
+#                       Dict gegen die aktive Lesart auf.
+#   gilt_in_lesart      Optional. Beschraenkt die Erleichterung auf bestimmte
+#                       Lesarten, z. B. [omnibus] fuer omnibus-neue Vorschriften.
+#   gilt_fuer           Rollen (Vokabular aus Q-03).
+#   nur_bei_klasse      Risikoklassen (Vokabular aus Q-03).
+#   setzt_kein_partner_verbund_voraus   Boolean, Negativvorbehalt.
+#
+# Regeltext je Erleichterung in einer von drei Formen, aufgeloest in
+# Regelwerk.erleichterung_text:
+#   text                flacher Text, lesartunabhaengig.
+#   lesart_original /   zwei Texte, wenn sich der Inhalt mit der Lesart aendert
+#   lesart_omnibus      (Dict-Fall, gleiches Muster wie in querschnittspflichten).
+#   verweist_auf +      Zeiger auf ein Feld einer Querschnittspflicht statt
+#   verweist_auf_feld   eigenem Text, damit sich Regeltext nicht doppelt und
+#                       still auseinanderdriftet. Ein offenes Ziel wird sichtbar
+#                       gemeldet, nie leer gerendert.
+#
+# Sonderfall: Das Feldpaar fundstelle_original/fundstelle_omnibus tritt nur in
+# hinweis_verhaeltnismaessigkeit auf, einem Block ohne Lesart-Auswertung. Es ist
+# kein drittes Idiom fuer die Erleichterungen.
 
 groessenregime:
   definitionen:
@@ -1344,86 +1365,158 @@ groessenregime:
     (Art. 96 Abs. 1 UAbs. 2).
   geprueft: false
 
+  # Art. 17 Abs. 2 (frueher als G-02 gefuehrt) ist keine groessengebundene
+  # Erleichterung, sondern eine Verhaeltnismaessigkeitsregel fuer ALLE Anbieter
+  # von Hochrisiko-Systemen. Als Erleichterung wuerde das Werkzeug sie grossen
+  # Anbietern und jedem ohne erfasste Groessenklasse vorenthalten. Sie steht
+  # deshalb hier als size-neutraler Hinweis, nicht in erleichterungen.
+  hinweis_verhaeltnismaessigkeit:
+    text: >-
+      Art. 17 Abs. 2 verlangt, dass das Qualitaetsmanagementsystem im Umfang
+      verhaeltnismaessig zur Groesse der Organisation des Anbieters gefuehrt
+      wird. Diese Regel gilt allen Anbietern von Hochrisiko-Systemen, nicht nur
+      KMU oder kleinen Midcaps. Die VO (EU) 2026/1744 nennt KMU und kleine
+      Midcaps in Abs. 2 nur ausdruecklich ("insbesondere"), ohne die Regel auf
+      sie zu beschraenken. Sie ist deshalb keine Erleichterung und wird nicht
+      groessenabhaengig ausgespielt. Sachlicher Ort ist die Anbieterpflicht nach
+      Art. 17, die bislang kein eigener Regelblock abbildet.
+    fundstelle_original: "Art. 17 Abs. 2 KI-VO"
+    fundstelle_omnibus: "Art. 17 Abs. 2 KI-VO i. d. F. der VO (EU) 2026/1744"
+    geprueft: false
+
   erleichterungen:
+    # G-02 entfaellt hier als Erleichterung. Art. 17 Abs. 2 ist size-neutral und
+    # steht jetzt in groessenregime.hinweis_verhaeltnismaessigkeit. Die ID wird
+    # nicht neu vergeben, damit die Luecke erklaert bleibt (Muster wie
+    # anhang_i.entfallen).
     - id: G-01
       gegenstand: "Vereinfachte technische Dokumentation"
-      fundstelle: "Art. 11 Abs. 1 UAbs. 2 KI-VO i. d. F. der VO (EU) 2026/1744"
-      gilt_fuer_groesse: [kmu, kleines_midcap]
+      fundstelle: "Art. 11 Abs. 1 UAbs. 2 KI-VO"
+      gilt_fuer_groesse:
+        original: [kmu]
+        omnibus: [kmu, kleines_midcap]
       gilt_fuer: [anbieter]
       nur_bei_klasse: [hochrisiko]
-      text: >-
-        Anbieter, die KMU oder kleine Midcaps sind, duerfen die technische
-        Dokumentation eines Hochrisiko-Systems in vereinfachter Form fuehren. Die
-        Kommission stellt dafuer ein Formular bereit; wird die Vereinfachung in
-        Anspruch genommen, ist dieses Formular zu verwenden.
-      geprueft: false
-
-    - id: G-02
-      gegenstand: "Qualitaetsmanagement nach Organisationsgroesse"
-      fundstelle: "Art. 17 Abs. 2 KI-VO i. d. F. der VO (EU) 2026/1744"
-      gilt_fuer_groesse: [kmu, kleines_midcap]
-      gilt_fuer: [anbieter]
-      nur_bei_klasse: [hochrisiko]
-      text: >-
-        Das Qualitaetsmanagementsystem ist im Umfang verhaeltnismaessig zur
-        Groesse der Organisation zu fuehren. Die Verordnung nennt KMU und kleine
-        Midcaps ausdruecklich als Faelle, in denen dieser Massstab greift.
+      lesart_original: >-
+        Art. 11 Abs. 1 UAbs. 2 erlaubt KMU einschliesslich Start-ups, die
+        Elemente der technischen Dokumentation nach Anhang IV in vereinfachter
+        Weise bereitzustellen. Die Kommission erstellt dafuer ein vereinfachtes
+        Formular, zugeschnitten auf die Beduerfnisse kleiner Unternehmen und
+        Kleinstunternehmen.
+      lesart_omnibus: >-
+        Art. 1 Nr. 10 der VO (EU) 2026/1744 erstreckt die Vereinfachung auf
+        kleine Midcaps und aendert den Zuschnitt des Formulars. Die Pflicht
+        selbst bestand bereits im Ausgangsrecht; neu sind der erweiterte Kreis
+        und der geaenderte Formularzuschnitt. Fundstelle i. d. F.: Art. 11
+        Abs. 1 UAbs. 2 KI-VO i. d. F. der VO (EU) 2026/1744.
       geprueft: false
 
     - id: G-03
-      gegenstand: "Vorrangiger Zugang zu KI-Reallaboren"
-      fundstelle: "Art. 57 Abs. 3a und Abs. 9 lit. e KI-VO i. d. F. der VO (EU) 2026/1744"
-      gilt_fuer_groesse: [kmu, kleines_midcap]
+      gegenstand: "Vorrangiger Zugang zu nationalen KI-Reallaboren"
+      fundstelle: "Art. 62 Abs. 1 lit. a KI-VO"
+      gilt_fuer_groesse: [kmu]
       text: >-
-        KMU und kleine Midcaps erhalten vorrangigen Zugang zu den KI-Reallaboren,
-        soweit sie die Teilnahmevoraussetzungen erfuellen. Fuer die Zielgruppe
-        dieses Werkzeugs meist von geringem praktischem Gewicht.
+        Die Mitgliedstaaten gewaehren KMU einschliesslich Start-ups mit Sitz
+        oder Zweigniederlassung in der Union vorrangigen Zugang zu den nationalen
+        KI-Reallaboren, soweit sie die Voraussetzungen und Auswahlkriterien
+        erfuellen. Fuer die Zielgruppe dieses Werkzeugs meist von geringem
+        praktischem Gewicht.
+      hinweis: >-
+        Ausgangsrecht, gilt in beiden Lesarten. Erfasst KMU, nicht kleine
+        Midcaps. Ob die VO (EU) 2026/1744 Art. 62 auf kleine Midcaps erstreckt,
+        ist hier nicht belegt und wird deshalb nicht angenommen. Der
+        Omnibus-Zugang fuer kleine Midcaps betrifft allein das Reallabor des
+        KI-Bueros auf Unionsebene, siehe G-08.
       geprueft: false
 
     - id: G-04
       gegenstand: "Vereinfachtes Qualitaetsmanagement, nur ohne Partner- oder Verbundunternehmen"
-      fundstelle: "Art. 63 Abs. 1 KI-VO i. d. F. der VO (EU) 2026/1744"
-      gilt_fuer_groesse: [kmu]
+      fundstelle: "Art. 63 Abs. 1 KI-VO"
+      gilt_fuer_groesse:
+        original: [kmu]
+        omnibus: [kmu]
       gilt_fuer: [anbieter]
       nur_bei_klasse: [hochrisiko]
       setzt_kein_partner_verbund_voraus: true
-      text: >-
-        KMU einschliesslich Start-ups duerfen bestimmte Elemente des
-        Qualitaetsmanagements in vereinfachter Weise einhalten, sofern sie keine
-        Partnerunternehmen oder verbundenen Unternehmen im Sinne der Empfehlung
-        2003/361/EG haben. Anders als die uebrigen Erleichterungen gilt diese nur
-        KMU, nicht kleinen Midcaps.
+      lesart_original: >-
+        Nach Art. 63 Abs. 1 duerfen KLEINSTUNTERNEHMEN bestimmte Elemente des
+        Qualitaetsmanagements nach Art. 17 in vereinfachter Weise einhalten,
+        sofern sie keine Partner- oder verbundenen Unternehmen im Sinne der
+        Empfehlung 2003/361/EG haben. Das Werkzeug kennt keine eigene Klasse
+        Kleinstunternehmen und zeigt die Erleichterung allen KMU. Das ist
+        bewusste Zuvielanzeige: kleine und mittlere Unternehmen sehen den Hinweis
+        und pruefen selbst, ob sie Kleinstunternehmen sind. Eine Zuwenig-Anzeige
+        waere der schwerere Fehler.
+      lesart_omnibus: >-
+        Art. 1 Nr. 26 der VO (EU) 2026/1744 fasst Art. 63 Abs. 1 neu und
+        erstreckt die Vereinfachung von Kleinstunternehmen auf alle KMU
+        einschliesslich Start-ups, weiterhin nur ohne Partner- oder verbundene
+        Unternehmen. In dieser Lesart entfaellt die Zuvielanzeige, weil alle KMU
+        erfasst sind. Kleine Midcaps bleiben aussen vor. Fundstelle i. d. F.:
+        Art. 63 Abs. 1 KI-VO i. d. F. der VO (EU) 2026/1744.
       geprueft: false
 
     - id: G-05
       gegenstand: "Beruecksichtigung bei der Bemessung von Sanktionen"
-      fundstelle: "Art. 99 Abs. 1 KI-VO i. d. F. der VO (EU) 2026/1744"
-      gilt_fuer_groesse: [kmu, kleines_midcap]
-      text: >-
+      fundstelle: "Art. 99 Abs. 1 KI-VO"
+      gilt_fuer_groesse:
+        original: [kmu]
+        omnibus: [kmu, kleines_midcap]
+      lesart_original: >-
         Bei der Festsetzung von Sanktionen beruecksichtigen die Mitgliedstaaten
-        die Interessen von KMU und kleinen Midcaps einschliesslich Start-ups und
-        deren wirtschaftliches Ueberleben. Die Vorschrift richtet sich an die
-        Behoerde, wirkt aber zugunsten des Unternehmens.
+        die Interessen von KMU einschliesslich Start-ups sowie deren
+        wirtschaftliches Ueberleben. Die Vorschrift richtet sich an die Behoerde,
+        wirkt aber zugunsten des Unternehmens.
+      lesart_omnibus: >-
+        Art. 1 Nr. 38 lit. a der VO (EU) 2026/1744 fasst Art. 99 Abs. 1 neu und
+        ergaenzt die kleinen Midcap-Unternehmen: beruecksichtigt werden die
+        Interessen von KMU einschliesslich Start-ups und von kleinen Midcaps
+        sowie deren wirtschaftliches Ueberleben. Fundstelle i. d. F.: Art. 99
+        Abs. 1 KI-VO i. d. F. der VO (EU) 2026/1744.
       geprueft: false
 
     - id: G-06
-      gegenstand: "Gedeckelte Geldbusse"
-      fundstelle: "Art. 99 Abs. 6 und Abs. 6a KI-VO i. d. F. der VO (EU) 2026/1744"
-      gilt_fuer_groesse: [kmu, kleines_midcap]
-      lesart_original: >-
-        Nach Art. 99 Abs. 6 gilt fuer KMU einschliesslich Start-ups bei jeder
-        Geldbusse jeweils der niedrigere der beiden Werte (fester Betrag oder
-        Prozentsatz des Jahresumsatzes) als Obergrenze. Diese Deckelung besteht
-        bereits im Ausgangsrecht, siehe Q-02.
-      lesart_omnibus: >-
-        Art. 1 Nr. 38 lit. c der VO (EU) 2026/1744 fuegt Abs. 6a ein und
-        erweitert dieselbe Deckelung auf kleine Midcaps. KMU verlieren dadurch
-        nichts, die Deckelung nach Abs. 6 bleibt. Neu ist allein, dass auch
-        kleine Midcaps gedeckelt sind.
+      gegenstand: "Gedeckelte Geldbusse (KMU)"
+      fundstelle: "Art. 99 Abs. 6 KI-VO"
+      gilt_fuer_groesse: [kmu]
+      verweist_auf: Q-02
+      verweist_auf_feld: kmu_regel
       hinweis: >-
-        Die verbreitete Verkuerzung, nur kleine Midcaps seien gedeckelt, ist
-        unrichtig: KMU sind bereits durch Abs. 6 gedeckelt, Abs. 6a kommt fuer
-        die Midcaps hinzu.
+        Zeiger auf Q-02, kein eigener Regeltext. Die KMU-Deckelung nach Abs. 6
+        besteht bereits im Ausgangsrecht und gilt in beiden Lesarten.
+      geprueft: false
+
+    - id: G-07
+      gegenstand: "Gedeckelte Geldbusse (kleine Midcaps)"
+      fundstelle: "Art. 99 Abs. 6a KI-VO i. d. F. der VO (EU) 2026/1744"
+      gilt_fuer_groesse: [kleines_midcap]
+      gilt_in_lesart: [omnibus]
+      verweist_auf: Q-02
+      verweist_auf_feld: midcap_regel
+      hinweis: >-
+        Zeiger auf Q-02. Abs. 6a wird durch Art. 1 Nr. 38 lit. c der VO (EU)
+        2026/1744 eingefuegt und gilt daher nur in der Lesart omnibus. Das
+        Zielfeld Q-02.midcap_regel wird erst im Folgecommit angelegt; bis dahin
+        ist der Zeiger bewusst offen. Ein Fehlen faellt auf, eine Dopplung
+        driftet still auseinander.
+      geprueft: false
+
+    - id: G-08
+      gegenstand: "Vorrangiger Zugang zum KI-Reallabor des KI-Bueros auf Unionsebene"
+      fundstelle: "Art. 57 Abs. 3a KI-VO i. d. F. der VO (EU) 2026/1744"
+      gilt_fuer_groesse: [kmu, kleines_midcap]
+      gilt_in_lesart: [omnibus]
+      text: >-
+        Das KI-Buero kann auf Unionsebene ein KI-Reallabor fuer KI-Systeme
+        einrichten, die unter Art. 75 Abs. 1 fallen, und gewaehrt KMU
+        einschliesslich Start-ups sowie kleinen Midcaps vorrangigen Zugang dazu.
+        Omnibus-neu durch Art. 1 Nr. 22 lit. c. Enger als G-03: betrifft nur das
+        Unions-Reallabor des KI-Bueros, nicht die nationalen Reallabore. Fuer die
+        Zielgruppe dieses Werkzeugs meist von geringem praktischem Gewicht.
+      hinweis: >-
+        Der ebenfalls durch Art. 1 Nr. 22 lit. e um kleine Midcaps ergaenzte
+        Zielsatz in Art. 57 Abs. 9 lit. e bleibt ein Programmsatz ohne
+        Anspruchscharakter und ist deshalb hier nicht als Erleichterung gefuehrt.
       geprueft: false
 
 # -----------------------------------------------------------------------------
