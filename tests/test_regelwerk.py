@@ -434,9 +434,12 @@ def test_zeiger_wird_gegen_q02_aufgeloest(regelwerk):
     g07 = next(e for e in regelwerk.groessenregime["erleichterungen"] if e["id"] == "G-07")
     assert regelwerk.erleichterung_text(g06) == q02["kmu_regel"]
     assert regelwerk.erleichterung_text(g07) == q02["midcap_regel"]
-    # Der engere Midcap-Umfang muss im Zieltext stehen, sonst war der Split leer.
-    assert "Abs. 4 und" in q02["midcap_regel"]
-    assert "NICHT" in q02["midcap_regel"]
+    # Beide Dimensionen des Umfangsunterschieds muessen im Zieltext stehen, sonst
+    # ist die Begruendung des Splits nur halb dokumentiert.
+    assert "Dimensionen" in q02["kmu_regel"]
+    assert "nur die Geldbussen nach Abs. 4 und Abs. 5" in q02["midcap_regel"]
+    assert "nicht die nach Abs. 3" in q02["midcap_regel"]
+    assert "Bezugsgroessen" in q02["midcap_regel"]
 
 
 def test_zeiger_geschlossen_kein_offenes_ziel_mehr(regelwerk):
@@ -480,11 +483,29 @@ def test_erleichterungen_ids_und_pruefstand(regelwerk):
     assert all(e["geprueft"] is False for e in eintraege)
 
 
-def test_groessenregime_pruefstand_getrennt_von_regeln(regelwerk):
-    """Der G-Block hat einen eigenen Pruefstand, hier noch nichts verifiziert."""
+def test_groessenregime_pruefstand_zaehlt_alle_einheiten(regelwerk):
+    """Elf Verifikationseinheiten: Definitionen, drei Hinweisbloecke, sieben
+    Erleichterungen. Hier noch nichts verifiziert."""
     g_geprueft, g_gesamt = regelwerk.groessenregime_pruefstand
-    assert g_gesamt == 7
+    assert g_gesamt == 11
     assert g_geprueft == 0
+
+
+def test_geprueft_schalter_zerlegt(regelwerk):
+    """Der frueher geteilte Schalter ist zerlegt: definitionen (je Eintrag),
+    hinweis_zeitpunkt und hinweis_unterstuetzung tragen je ein eigenes geprueft,
+    der Blockschalter groessenregime.geprueft ist entfallen."""
+    g = regelwerk.groessenregime
+    assert "geprueft" not in g  # kein Sammelschalter mehr auf Blockebene
+    assert all("geprueft" in d for d in g["definitionen"])
+    for schluessel in ("hinweis_zeitpunkt", "hinweis_unterstuetzung",
+                       "hinweis_verhaeltnismaessigkeit"):
+        assert isinstance(g[schluessel], dict)
+        assert g[schluessel]["geprueft"] is False
+    # Strukturfehler darf die Zerlegung nicht erzeugen.
+    fehler = [p for p in regelwerk.validieren()
+              if p.schwere == "fehler" and p.ort.startswith("groessenregime/")]
+    assert not fehler
 
 
 def test_anzeigbare_erleichterungen_filtert_ungeprueft(regelwerk):
@@ -505,7 +526,7 @@ def test_freigabestatus_weist_g_block_aus_ohne_zu_blockieren(regelwerk):
     ausgewiesen, nicht verschwiegen und nicht global blockierend."""
     status = regelwerk.freigabestatus()
     assert status["ausspielbar"] == regelwerk.ausspielbar()
-    assert status["groessenregime_pruefstand"] == (0, 7)
+    assert status["groessenregime_pruefstand"] == (0, 11)
     assert status["groessenregime_vollstaendig_geprueft"] is False
     # Die globale Ausspielbarkeit haengt nicht am G-Block.
     assert status["ausspielbar"] == (regelwerk.pruefstand[0] == regelwerk.pruefstand[1])

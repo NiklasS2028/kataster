@@ -134,15 +134,34 @@ class Regelwerk:
 
     @property
     def groessenregime_pruefstand(self) -> tuple[int, int]:
-        """(geprueft, gesamt) ueber die Erleichterungen des G-Blocks.
+        """(geprueft, gesamt) ueber alle Verifikationseinheiten des G-Blocks.
 
-        Eigene Achse neben pruefstand: der G-Block hat seinen eigenen
-        Verifikationsstand und blockiert die uebrigen Exporte nicht.
+        Einheiten: die Definitionen (eine Einheit, verifiziert nur wenn beide
+        Eintraege es sind), die drei Hinweisbloecke mit je eigenem geprueft und
+        jede Erleichterung. Eigene Achse neben pruefstand: der G-Block hat seinen
+        eigenen Verifikationsstand und blockiert die uebrigen Exporte nicht. So
+        bleibt jede Einheit eintragsweise freigebbar.
         """
-        eintraege = self.groessenregime.get("erleichterungen", [])
-        gesamt = len(eintraege)
-        geprueft = sum(1 for e in eintraege if e.get("geprueft") is True)
-        return geprueft, gesamt
+        g = self.groessenregime
+        flags: list[bool] = []
+
+        defs = g.get("definitionen") or []
+        if defs:
+            flags.append(all(d.get("geprueft") is True for d in defs))
+
+        for schluessel in (
+            "hinweis_zeitpunkt",
+            "hinweis_unterstuetzung",
+            "hinweis_verhaeltnismaessigkeit",
+        ):
+            block = g.get(schluessel)
+            if isinstance(block, dict) and "geprueft" in block:
+                flags.append(block["geprueft"] is True)
+
+        for e in g.get("erleichterungen", []):
+            flags.append(e.get("geprueft") is True)
+
+        return sum(flags), len(flags)
 
     def hash(self) -> str:
         """SHA-256 ueber die Quelldatei. Kommt in jedes Nachweis-Dossier."""
@@ -265,6 +284,36 @@ class Regelwerk:
                     probleme.append(
                         Problem("fehler", ort, "Kein Regeltext: weder 'text', 'lesart_*' noch Zeiger.")
                     )
+
+        # Groessenregime: die uebrigen Verifikationseinheiten muessen je ein
+        # eigenes geprueft tragen, damit sie eintragsweise freigebbar sind und
+        # der Pruefstand sie zaehlt. Der frueher geteilte Schalter auf
+        # Blockebene ist damit zerlegt.
+        for d in self.groessenregime.get("definitionen") or []:
+            if "geprueft" not in d:
+                probleme.append(
+                    Problem(
+                        "fehler",
+                        f"groessenregime/definition/{d.get('klasse', '?')}",
+                        "Feld 'geprueft' fehlt.",
+                    )
+                )
+        for schluessel in (
+            "hinweis_zeitpunkt",
+            "hinweis_unterstuetzung",
+            "hinweis_verhaeltnismaessigkeit",
+        ):
+            block = self.groessenregime.get(schluessel)
+            if block is not None and not (
+                isinstance(block, dict) and "geprueft" in block
+            ):
+                probleme.append(
+                    Problem(
+                        "fehler",
+                        f"groessenregime/{schluessel}",
+                        "Verifikationseinheit ohne eigenes 'geprueft'.",
+                    )
+                )
 
         if self.lesarten.get("omnibus", {}).get("amtsblatt") in (None, ""):
             probleme.append(
@@ -670,7 +719,7 @@ if __name__ == "__main__":
     g_geprueft, g_gesamt = rw.groessenregime_pruefstand
     print(f"Regelwerk {rw.version}, Rechtsstand {rw.rechtsstand}")
     print(f"Regeln: {gesamt}, davon verifiziert: {geprueft}")
-    print(f"Groessenregime: {g_gesamt} Erleichterungen, davon verifiziert: {g_geprueft}")
+    print(f"Groessenregime: {g_gesamt} Verifikationseinheiten, davon verifiziert: {g_geprueft}")
     print(f"Hash: {rw.hash()[:16]}...")
     print()
     probleme = rw.validieren()

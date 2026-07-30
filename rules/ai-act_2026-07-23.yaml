@@ -1234,16 +1234,19 @@ querschnittspflichten:
         maximum: "7,5 Mio. EUR oder 1 % des weltweiten Jahresumsatzes"
         fundstelle: "Art. 99 Abs. 5"
     kmu_regel: >-
-      Bei KMU einschliesslich Start-ups gilt fuer jede Geldbusse nach diesem
-      Artikel jeweils der niedrigere der beiden Werte als Obergrenze, also auch
-      fuer die Bussen nach Abs. 3 (verbotene Praktiken), Abs. 4 und Abs. 5.
+      Bei KMU einschliesslich Start-ups gilt fuer JEDE in diesem Artikel
+      genannte Geldbusse als Obergrenze der jeweils niedrigere Betrag aus den in
+      Abs. 3, 4 und 5 genannten Prozentsaetzen oder Summen. Zwei Dimensionen:
+      erfasst sind alle Bussen des Artikels, und die Bezugsgroessen der
+      Obergrenze sind die Werte aus Abs. 3, 4 und 5.
     kmu_fundstelle: "Art. 99 Abs. 6 KI-VO"
     midcap_regel: >-
-      Bei kleinen Midcap-Unternehmen gilt jeweils der niedrigere der beiden
-      Werte als Obergrenze, jedoch nur fuer die Geldbussen nach Abs. 4 und
-      Abs. 5. Anders als die KMU-Deckelung nach Abs. 6 erfasst sie die Bussen
-      nach Abs. 3 (verbotene Praktiken) NICHT. Dieser engere Umfang ist der
-      Grund, warum die Deckelung in G-06 (KMU) und G-07 (Midcap) getrennt ist.
+      Bei kleinen Midcap-Unternehmen ist die Deckelung in BEIDEN Dimensionen
+      enger als bei KMU: erfasst sind nur die Geldbussen nach Abs. 4 und Abs. 5,
+      nicht die nach Abs. 3 (verbotene Praktiken), und als Bezugsgroessen dienen
+      allein die darin, also in Abs. 4 und Abs. 5, genannten Betraege. Dieser
+      doppelte Umfangsunterschied gegenueber der KMU-Deckelung nach Abs. 6 ist
+      der Grund fuer den Split in G-06 (KMU) und G-07 (Midcap).
     midcap_fundstelle: "Art. 99 Abs. 6a KI-VO i. d. F. der VO (EU) 2026/1744"
     geprueft: false
 
@@ -1347,35 +1350,45 @@ querschnittspflichten:
 # kein drittes Idiom fuer die Erleichterungen.
 
 groessenregime:
+  # Definitionen sind EINE Verifikationseinheit: der Pruefstand zaehlt sie als
+  # geprueft, wenn beide Eintraege es sind. Jeder Eintrag traegt sein eigenes
+  # geprueft, weil er eine eigene Fundstelle hat (Nr. 14a bzw. 14b).
   definitionen:
     - klasse: kmu
       bezeichnung: "Kleinst-, kleines oder mittleres Unternehmen (KMU)"
       fundstelle: "Art. 3 Nr. 14a KI-VO i. d. F. der VO (EU) 2026/1744"
       verweist_auf: "Art. 2 des Anhangs der Empfehlung 2003/361/EG"
+      geprueft: false
     - klasse: kleines_midcap
       bezeichnung: "Kleines Unternehmen mit mittlerer Kapitalisierung (kleines Midcap)"
       fundstelle: "Art. 3 Nr. 14b KI-VO i. d. F. der VO (EU) 2026/1744"
       verweist_auf: "Nummer 2 des Anhangs der Empfehlung (EU) 2025/1099"
-  hinweis_zeitpunkt: >-
-    Nach Art. 4 Abs. 2 des Anhangs der Empfehlung 2003/361/EG wechselt
-    die Groessenklasse nicht sofort beim Ueber- oder Unterschreiten der
-    Schwellenwerte. Der Status als Kleinst-, kleines oder mittleres Unternehmen
-    wird erst gewonnen oder verloren, wenn es in zwei aufeinander folgenden
-    Geschaeftsjahren zu einer Ueber- oder Unterschreitung kommt. Eine einmal
-    erfasste Selbstauskunft ist deshalb nicht bei jeder Zahlenschwankung zu
-    aendern.
-  hinweis_unterstuetzung: >-
-    Unabhaengig von den Erleichterungen richten sich weitere Vorschriften an
-    Behoerden und Kommission und begruenden keine Unternehmenspflicht, benennen
-    aber, wo Unterstuetzung zu finden ist: Anleitung und Beratung durch nationale
-    Behoerden (Art. 70 Abs. 8) sowie besondere Beruecksichtigung kleinerer
-    Unternehmen in Verhaltenskodizes (Art. 95 Abs. 4) und in den Leitlinien der
-    Kommission (Art. 96 Abs. 1 UAbs. 2). Alle drei Stellen wurden durch die
-    VO (EU) 2026/1744 (Art. 1 Nr. 29, Nr. 35 und Nr. 36 lit. c) um kleine
-    Midcaps erweitert. Der Hinweis nennt bewusst keine abschliessende
-    Groessenklasse, weil er nur den Fundort der Unterstuetzung benennt und keine
-    Rechtsfolge traegt.
-  geprueft: false
+      geprueft: false
+  hinweis_zeitpunkt:
+    text: >-
+      Nach Art. 4 Abs. 2 des Anhangs der Empfehlung 2003/361/EG wechselt
+      die Groessenklasse nicht sofort beim Ueber- oder Unterschreiten der
+      Schwellenwerte. Der Status als Kleinst-, kleines oder mittleres Unternehmen
+      wird erst gewonnen oder verloren, wenn es in zwei aufeinander folgenden
+      Geschaeftsjahren zu einer Ueber- oder Unterschreitung kommt. Eine einmal
+      erfasste Selbstauskunft ist deshalb nicht bei jeder Zahlenschwankung zu
+      aendern.
+    geprueft: false
+  hinweis_unterstuetzung:
+    text: >-
+      Unabhaengig von den Erleichterungen richten sich weitere Vorschriften an
+      nationale Behoerden, das Buero fuer Kuenstliche Intelligenz und die
+      Kommission und begruenden keine Unternehmenspflicht, benennen aber, wo
+      Unterstuetzung zu finden ist: Anleitung und Beratung durch nationale
+      Behoerden (Art. 70 Abs. 8), Beruecksichtigung kleinerer Unternehmen in
+      Verhaltenskodizes durch das Buero fuer Kuenstliche Intelligenz und die
+      Mitgliedstaaten (Art. 95 Abs. 4) und in den Leitlinien der Kommission
+      (Art. 96 Abs. 1 UAbs. 2). Alle drei Stellen wurden durch die VO (EU)
+      2026/1744 (Art. 1 Nr. 29, Nr. 35 und Nr. 36 lit. c) um kleine Midcaps
+      erweitert. Der Hinweis nennt bewusst keine abschliessende Groessenklasse,
+      weil er nur den Fundort der Unterstuetzung benennt und keine Rechtsfolge
+      traegt.
+    geprueft: false
 
   # Art. 17 Abs. 2 (frueher als G-02 gefuehrt) ist keine groessengebundene
   # Erleichterung, sondern eine Verhaeltnismaessigkeitsregel fuer ALLE Anbieter
@@ -1417,10 +1430,12 @@ groessenregime:
         Kleinstunternehmen.
       lesart_omnibus: >-
         Art. 1 Nr. 10 der VO (EU) 2026/1744 erstreckt die Vereinfachung auf
-        kleine Midcaps und aendert den Zuschnitt des Formulars. Die Pflicht
-        selbst bestand bereits im Ausgangsrecht; neu sind der erweiterte Kreis
-        und der geaenderte Formularzuschnitt. Fundstelle i. d. F.: Art. 11
-        Abs. 1 UAbs. 2 KI-VO i. d. F. der VO (EU) 2026/1744.
+        kleine Midcaps und aendert den Zuschnitt des Formulars. Die Moeglichkeit
+        der vereinfachten Dokumentation bestand bereits im Ausgangsrecht, ebenso
+        die Pflicht, bei Inanspruchnahme das Formular zu verwenden; neu sind
+        allein der erweiterte Kreis und der geaenderte Formularzuschnitt.
+        Fundstelle i. d. F.: Art. 11 Abs. 1 UAbs. 2 KI-VO i. d. F. der VO (EU)
+        2026/1744.
       geprueft: false
 
     - id: G-03
