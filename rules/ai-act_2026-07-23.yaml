@@ -1372,7 +1372,12 @@ groessenregime:
       wird erst gewonnen oder verloren, wenn es in zwei aufeinander folgenden
       Geschaeftsjahren zu einer Ueber- oder Unterschreitung kommt. Eine einmal
       erfasste Selbstauskunft ist deshalb nicht bei jeder Zahlenschwankung zu
-      aendern.
+      aendern. Der Begriff Schwellenwerte ist hier bewusst neutral gewaehlt:
+      Art. 4 Abs. 2 nennt nur Mitarbeiterzahl und Bilanzsumme, waehrend Art. 2
+      des Anhangs zusaetzlich den Umsatz als gleichrangige Alternative zur
+      Bilanzsumme fuehrt. Die neutrale Fassung uebernimmt diese Ungenauigkeit der
+      Empfehlung nicht und ist deshalb nicht praezisierend auf Mitarbeiterzahl
+      und Bilanzsumme zu verengen.
     geprueft: false
   hinweis_unterstuetzung:
     text: >-
