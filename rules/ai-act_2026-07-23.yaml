@@ -1234,9 +1234,17 @@ querschnittspflichten:
         maximum: "7,5 Mio. EUR oder 1 % des weltweiten Jahresumsatzes"
         fundstelle: "Art. 99 Abs. 5"
     kmu_regel: >-
-      Bei KMU einschliesslich Start-ups gilt jeweils der niedrigere der beiden
-      Werte als Obergrenze.
+      Bei KMU einschliesslich Start-ups gilt fuer jede Geldbusse nach diesem
+      Artikel jeweils der niedrigere der beiden Werte als Obergrenze, also auch
+      fuer die Bussen nach Abs. 3 (verbotene Praktiken), Abs. 4 und Abs. 5.
     kmu_fundstelle: "Art. 99 Abs. 6 KI-VO"
+    midcap_regel: >-
+      Bei kleinen Midcap-Unternehmen gilt jeweils der niedrigere der beiden
+      Werte als Obergrenze, jedoch nur fuer die Geldbussen nach Abs. 4 und
+      Abs. 5. Anders als die KMU-Deckelung nach Abs. 6 erfasst sie die Bussen
+      nach Abs. 3 (verbotene Praktiken) NICHT. Dieser engere Umfang ist der
+      Grund, warum die Deckelung in G-06 (KMU) und G-07 (Midcap) getrennt ist.
+    midcap_fundstelle: "Art. 99 Abs. 6a KI-VO i. d. F. der VO (EU) 2026/1744"
     geprueft: false
 
   - id: Q-03

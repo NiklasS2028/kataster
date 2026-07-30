@@ -427,26 +427,39 @@ def test_g02_ist_kein_erleichterungseintrag_mehr(regelwerk):
 
 
 def test_zeiger_wird_gegen_q02_aufgeloest(regelwerk):
-    """G-06 traegt keinen eigenen Regeltext, sondern zeigt auf Q-02.kmu_regel."""
-    g06 = next(e for e in regelwerk.groessenregime["erleichterungen"] if e["id"] == "G-06")
+    """G-06 und G-07 tragen keinen eigenen Regeltext, sondern zeigen auf Q-02.
+    Nach dem Q-02-Folgecommit loesen beide Ziele auf."""
     q02 = next(q for q in regelwerk.querschnittspflichten if q["id"] == "Q-02")
-    assert regelwerk.erleichterung_text(g06) == q02["kmu_regel"]
-
-
-def test_zeiger_ohne_ziel_rendert_sichtbar_statt_leer(regelwerk):
-    """G-07 zeigt auf das noch fehlende Q-02.midcap_regel. Bis zum Folgecommit
-    muss der Platzhalter sichtbar sein, nicht der leere String."""
+    g06 = next(e for e in regelwerk.groessenregime["erleichterungen"] if e["id"] == "G-06")
     g07 = next(e for e in regelwerk.groessenregime["erleichterungen"] if e["id"] == "G-07")
-    text = regelwerk.erleichterung_text(g07)
-    assert text
-    assert "midcap_regel" in text and "Folgecommit" in text
-    # Und die Validierung meldet das offene Ziel als Hinweis, nicht als Fehler.
-    hinweise = [p for p in regelwerk.validieren()
-                if p.schwere == "hinweis" and "midcap_regel" in p.text]
-    assert hinweise
+    assert regelwerk.erleichterung_text(g06) == q02["kmu_regel"]
+    assert regelwerk.erleichterung_text(g07) == q02["midcap_regel"]
+    # Der engere Midcap-Umfang muss im Zieltext stehen, sonst war der Split leer.
+    assert "Abs. 4 und" in q02["midcap_regel"]
+    assert "NICHT" in q02["midcap_regel"]
+
+
+def test_zeiger_geschlossen_kein_offenes_ziel_mehr(regelwerk):
+    """Nach dem Q-02-Folgecommit meldet die Validierung kein offenes Zeigerziel
+    mehr und keinen Fehler im G-Block."""
+    offene = [p for p in regelwerk.validieren()
+              if p.ort.startswith("groessenregime/") and "noch nicht vorhanden" in p.text]
+    assert not offene
     fehler = [p for p in regelwerk.validieren()
               if p.schwere == "fehler" and p.ort.startswith("groessenregime/")]
     assert not fehler
+
+
+def test_zeiger_ohne_ziel_rendert_sichtbar_statt_leer(regelwerk):
+    """Der Resolver darf ein offenes Zeigerziel nie leer rendern, sondern muss es
+    sichtbar machen. Synthetisch geprueft, damit der Schutz unabhaengig vom
+    aktuellen Datenstand bestehen bleibt."""
+    fehlendes_feld = regelwerk.erleichterung_text(
+        {"verweist_auf": "Q-02", "verweist_auf_feld": "gibt_es_nicht"})
+    assert fehlendes_feld and "noch nicht vorhanden" in fehlendes_feld
+    fehlendes_ziel = regelwerk.erleichterung_text(
+        {"verweist_auf": "Q-99", "verweist_auf_feld": "egal"})
+    assert fehlendes_ziel and "nicht gefunden" in fehlendes_ziel
 
 
 def test_erleichterung_text_dict_fall_folgt_lesart(regelwerk):
