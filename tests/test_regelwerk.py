@@ -595,3 +595,22 @@ def test_anzeige_gate_greift_bei_unverifiziertem_zielfeld():
     assert "G-06" not in anzeige_ids    # aus der Anzeige gefallen
     # Ein Nicht-Zeiger daneben bleibt unberuehrt.
     assert "G-05" in anzeige_ids
+
+
+def test_validierung_meldet_fehlenden_zielfeld_pruefstand():
+    """Fehlt am Zeiger-Zielfeld der eigene Pruefstand, meldet die Validierung
+    einen Hinweis, nicht Fehler: der Zeiger fiele sonst still aus der Anzeige,
+    die gefaehrlichste Fehlerklasse. Als Hinweis blockiert er die Ausspielung
+    nicht."""
+    from app.regelwerk import Regelwerk
+    rw = Regelwerk.laden(_RW_PFAD)
+    q02 = next(q for q in rw.querschnittspflichten if q["id"] == "Q-02")
+    del q02["kmu_regel_geprueft"]
+    probleme = rw.validieren()
+    passend = [p for p in probleme
+               if p.schwere == "hinweis" and "keinen eigenen Pruefstand" in p.text
+               and "kmu_regel" in p.text]
+    assert passend, "erwarteter Hinweis fehlt"
+    # Kein Fehler, und die Ausspielung bleibt unberuehrt (Hinweis blockiert nicht).
+    assert not [p for p in probleme if p.schwere == "fehler" and "kmu_regel" in p.text]
+    assert rw.ausspielbar() is True

@@ -1220,6 +1220,16 @@ querschnittspflichten:
   - id: Q-02
     gegenstand: "Bussgeldrahmen"
     fundstelle: "Art. 99 KI-VO"
+    # Zwei Pruefstandsebenen:
+    # - Der entry-level 'geprueft' unten deckt gegenstand, fundstelle und stufen.
+    # - kmu_regel und midcap_regel tragen je einen EIGENEN Schalter nach der
+    #   Konvention '<feld>_geprueft', weil sie als Zeigerziele von G-06/G-07
+    #   unabhaengig vom uebrigen Q-02 ins Dossier gerendert werden und deshalb
+    #   getrennt freigebbar sein muessen.
+    # Wer hier ein Feld ergaenzt: Es ist vom entry-level Schalter gedeckt,
+    # solange es kein Zeigerziel ist. Wird es eins, braucht es ein eigenes
+    # '<feld>_geprueft', sonst faellt der Zeiger still aus der Anzeige (die
+    # Validierung meldet das als Hinweis).
     stufen:
       - verstoss: "Verbotene Praktiken nach Art. 5"
         maximum: "35 Mio. EUR oder 7 % des weltweiten Jahresumsatzes"
@@ -1227,7 +1237,9 @@ querschnittspflichten:
       - verstoss: >-
           Pflichten der Anbieter (Art. 16), Bevollmaechtigten (Art. 22),
           Einfuehrer (Art. 23), Haendler (Art. 24), Betreiber (Art. 26),
-          notifizierten Stellen sowie Transparenzpflichten (Art. 50)
+          Anforderungen und Pflichten fuer notifizierte Stellen (Art. 31,
+          Art. 33 Abs. 1, 3 und 4 sowie Art. 34) sowie Transparenzpflichten
+          (Art. 50)
         maximum: "15 Mio. EUR oder 3 % des weltweiten Jahresumsatzes"
         fundstelle: "Art. 99 Abs. 4"
       - verstoss: "Falsche, unvollstaendige oder irrefuehrende Angaben gegenueber Behoerden"
@@ -1240,13 +1252,10 @@ querschnittspflichten:
       erfasst sind alle Bussen des Artikels, und die Bezugsgroessen der
       Obergrenze sind die Werte aus Abs. 3, 4 und 5.
     kmu_fundstelle: "Art. 99 Abs. 6 KI-VO"
-    # Feldweiser Pruefstand fuer die Zeiger-Zielfelder: Der entry-level geprueft
-    # deckt stufen/gegenstand/fundstelle, kmu_regel und midcap_regel tragen je
-    # ihren eigenen Schalter. So kann ein verifizierter Zeiger (G-06/G-07) nicht
-    # ueber ein unverifiziertes Zielfeld unverifizierten Text ausspielen.
-    # Freigabe der Felder war bereits am 2026-07-30 erteilt (Einheit 2 und 3 der
-    # Gegenueberstellung), konnte wegen des geteilten Q-02-Schalters nur nicht
-    # gesetzt werden. Hier nachgezogen, keine neue Freigabe.
+    # Freigabe der beiden Regel-Felder war bereits am 2026-07-30 erteilt (Einheit
+    # 2 und 3 der Gegenueberstellung), konnte wegen des zuvor geteilten
+    # Q-02-Schalters nur technisch nicht gesetzt werden. Hier nachgezogen, keine
+    # neue Freigabe. Zur Aufteilung der Pruefstandsebenen siehe Kopf von Q-02.
     kmu_regel_geprueft: true
     kmu_regel_geprueft_am: "2026-07-30"
     kmu_regel_geprueft_von: "Niklas Steinhauser"

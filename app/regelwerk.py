@@ -276,6 +276,20 @@ class Regelwerk:
                     probleme.append(
                         Problem("hinweis", ort, f"Zeigerziel {ziel_id}.{feld} noch nicht vorhanden (Folgecommit).")
                     )
+                elif f"{feld}_geprueft" not in ziel:
+                    # Zielfeld vorhanden, aber ohne eigenen Pruefstand. Dann faellt
+                    # der Zeiger in anzeigbare_erleichterungen still aus der Anzeige
+                    # (_zeigerziel_geprueft ist False), ohne dass es auffaellt. Als
+                    # Hinweis, nicht Fehler: unfertiger Zustand, kein Strukturdefekt,
+                    # soll die Ausspielung nicht blockieren.
+                    probleme.append(
+                        Problem(
+                            "hinweis",
+                            ort,
+                            f"Zielfeld {ziel_id}.{feld} hat keinen eigenen Pruefstand "
+                            f"'{feld}_geprueft'; der Zeiger faellt sonst still aus der Anzeige.",
+                        )
+                    )
             else:
                 hat_text = bool(
                     e.get("text") or e.get("lesart_original") or e.get("lesart_omnibus")
