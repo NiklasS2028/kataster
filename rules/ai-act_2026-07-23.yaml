@@ -1358,12 +1358,16 @@ groessenregime:
       bezeichnung: "Kleinst-, kleines oder mittleres Unternehmen (KMU)"
       fundstelle: "Art. 3 Nr. 14a KI-VO i. d. F. der VO (EU) 2026/1744"
       verweist_auf: "Art. 2 des Anhangs der Empfehlung 2003/361/EG"
-      geprueft: false
+      geprueft: true
+      geprueft_am: "2026-07-30"
+      geprueft_von: "Niklas Steinhauser"
     - klasse: kleines_midcap
       bezeichnung: "Kleines Unternehmen mit mittlerer Kapitalisierung (kleines Midcap)"
       fundstelle: "Art. 3 Nr. 14b KI-VO i. d. F. der VO (EU) 2026/1744"
       verweist_auf: "Nummer 2 des Anhangs der Empfehlung (EU) 2025/1099"
-      geprueft: false
+      geprueft: true
+      geprueft_am: "2026-07-30"
+      geprueft_von: "Niklas Steinhauser"
   hinweis_zeitpunkt:
     text: >-
       Nach Art. 4 Abs. 2 des Anhangs der Empfehlung 2003/361/EG wechselt
@@ -1378,7 +1382,9 @@ groessenregime:
       Bilanzsumme fuehrt. Die neutrale Fassung uebernimmt diese Ungenauigkeit der
       Empfehlung nicht und ist deshalb nicht praezisierend auf Mitarbeiterzahl
       und Bilanzsumme zu verengen.
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-30"
+    geprueft_von: "Niklas Steinhauser"
   hinweis_unterstuetzung:
     text: >-
       Unabhaengig von den Erleichterungen richten sich weitere Vorschriften an
@@ -1393,7 +1399,9 @@ groessenregime:
       erweitert. Der Hinweis nennt bewusst keine abschliessende Groessenklasse,
       weil er nur den Fundort der Unterstuetzung benennt und keine Rechtsfolge
       traegt.
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-30"
+    geprueft_von: "Niklas Steinhauser"
 
   # Art. 17 Abs. 2 (frueher als G-02 gefuehrt) ist keine groessengebundene
   # Erleichterung, sondern eine Verhaeltnismaessigkeitsregel fuer ALLE Anbieter
@@ -1412,7 +1420,9 @@ groessenregime:
       Art. 17, die bislang kein eigener Regelblock abbildet.
     fundstelle_original: "Art. 17 Abs. 2 KI-VO"
     fundstelle_omnibus: "Art. 17 Abs. 2 KI-VO i. d. F. der VO (EU) 2026/1744"
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-30"
+    geprueft_von: "Niklas Steinhauser"
 
   erleichterungen:
     # G-02 entfaellt hier als Erleichterung. Art. 17 Abs. 2 ist size-neutral und
@@ -1441,7 +1451,9 @@ groessenregime:
         allein der erweiterte Kreis und der geaenderte Formularzuschnitt.
         Fundstelle i. d. F.: Art. 11 Abs. 1 UAbs. 2 KI-VO i. d. F. der VO (EU)
         2026/1744.
-      geprueft: false
+      geprueft: true
+      geprueft_am: "2026-07-30"
+      geprueft_von: "Niklas Steinhauser"
 
     - id: G-03
       gegenstand: "Vorrangiger Zugang zu nationalen KI-Reallaboren"
@@ -1460,7 +1472,9 @@ groessenregime:
         von Art. 60a (Nr. 25) zu Art. 63 Abs. 1 (Nr. 26). Der Omnibus-Zugang fuer
         kleine Midcaps betrifft allein das Reallabor des KI-Bueros auf Unionsebene,
         siehe G-08.
-      geprueft: false
+      geprueft: true
+      geprueft_am: "2026-07-30"
+      geprueft_von: "Niklas Steinhauser"
 
     - id: G-04
       gegenstand: "Vereinfachtes Qualitaetsmanagement, nur ohne Partner- oder Verbundunternehmen"
@@ -1492,7 +1506,9 @@ groessenregime:
         Unternehmen. In dieser Lesart entfaellt die Zuvielanzeige, weil alle KMU
         erfasst sind. Kleine Midcaps bleiben aussen vor. Fundstelle i. d. F.:
         Art. 63 Abs. 1 KI-VO i. d. F. der VO (EU) 2026/1744.
-      geprueft: false
+      geprueft: true
+      geprueft_am: "2026-07-30"
+      geprueft_von: "Niklas Steinhauser"
 
     - id: G-05
       gegenstand: "Beruecksichtigung bei der Bemessung von Sanktionen"
@@ -1511,7 +1527,9 @@ groessenregime:
         Interessen von KMU einschliesslich Start-ups und von kleinen Midcaps
         sowie deren wirtschaftliches Ueberleben. Fundstelle i. d. F.: Art. 99
         Abs. 1 KI-VO i. d. F. der VO (EU) 2026/1744.
-      geprueft: false
+      geprueft: true
+      geprueft_am: "2026-07-30"
+      geprueft_von: "Niklas Steinhauser"
 
     - id: G-06
       gegenstand: "Gedeckelte Geldbusse (KMU)"
@@ -1522,7 +1540,9 @@ groessenregime:
       hinweis: >-
         Zeiger auf Q-02, kein eigener Regeltext. Die KMU-Deckelung nach Abs. 6
         besteht bereits im Ausgangsrecht und gilt in beiden Lesarten.
-      geprueft: false
+      geprueft: true
+      geprueft_am: "2026-07-30"
+      geprueft_von: "Niklas Steinhauser"
 
     - id: G-07
       gegenstand: "Gedeckelte Geldbusse (kleine Midcaps)"
@@ -1536,7 +1556,9 @@ groessenregime:
         Art. 1 Nr. 38 lit. c der VO (EU) 2026/1744 eingefuegt und gilt daher nur
         in der Lesart omnibus (gilt_in_lesart). Der engere Umfang gegenueber der
         KMU-Deckelung, nur Abs. 4 und Abs. 5, nicht Abs. 3, steht im Zielfeld.
-      geprueft: false
+      geprueft: true
+      geprueft_am: "2026-07-30"
+      geprueft_von: "Niklas Steinhauser"
 
     - id: G-08
       gegenstand: "Vorrangiger Zugang zum KI-Reallabor des KI-Bueros auf Unionsebene"
@@ -1554,7 +1576,9 @@ groessenregime:
         Der ebenfalls durch Art. 1 Nr. 22 lit. e um kleine Midcaps ergaenzte
         Zielsatz in Art. 57 Abs. 9 lit. e bleibt ein Programmsatz ohne
         Anspruchscharakter und ist deshalb hier nicht als Erleichterung gefuehrt.
-      geprueft: false
+      geprueft: true
+      geprueft_am: "2026-07-30"
+      geprueft_von: "Niklas Steinhauser"
 
 # -----------------------------------------------------------------------------
 # SCHULUNGSMATRIX

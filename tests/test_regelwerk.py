@@ -475,20 +475,20 @@ def test_erleichterung_text_dict_fall_folgt_lesart(regelwerk):
 
 
 def test_erleichterungen_ids_und_pruefstand(regelwerk):
-    """Die sieben Eintraege sind vorhanden (G-02 entfaellt) und alle noch
-    unverifiziert."""
+    """Die sieben Eintraege sind vorhanden (G-02 entfaellt) und nach der Freigabe
+    vom 2026-07-30 verifiziert."""
     eintraege = regelwerk.groessenregime["erleichterungen"]
     assert {e["id"] for e in eintraege} == {
         "G-01", "G-03", "G-04", "G-05", "G-06", "G-07", "G-08"}
-    assert all(e["geprueft"] is False for e in eintraege)
+    assert all(e["geprueft"] is True for e in eintraege)
 
 
 def test_groessenregime_pruefstand_zaehlt_alle_einheiten(regelwerk):
     """Elf Verifikationseinheiten: Definitionen, drei Hinweisbloecke, sieben
-    Erleichterungen. Hier noch nichts verifiziert."""
+    Erleichterungen. Nach der Freigabe vom 2026-07-30 alle verifiziert."""
     g_geprueft, g_gesamt = regelwerk.groessenregime_pruefstand
     assert g_gesamt == 11
-    assert g_geprueft == 0
+    assert g_geprueft == 11
 
 
 def test_geprueft_schalter_zerlegt(regelwerk):
@@ -501,24 +501,26 @@ def test_geprueft_schalter_zerlegt(regelwerk):
     for schluessel in ("hinweis_zeitpunkt", "hinweis_unterstuetzung",
                        "hinweis_verhaeltnismaessigkeit"):
         assert isinstance(g[schluessel], dict)
-        assert g[schluessel]["geprueft"] is False
+        # Eigener Schalter je Einheit. Wert je nach Freigabestand, hier nur die
+        # Struktur pruefen, damit der Test die Verifikationsrunden ueberlebt.
+        assert isinstance(g[schluessel].get("geprueft"), bool)
     # Strukturfehler darf die Zerlegung nicht erzeugen.
     fehler = [p for p in regelwerk.validieren()
               if p.schwere == "fehler" and p.ort.startswith("groessenregime/")]
     assert not fehler
 
 
-def test_anzeigbare_erleichterungen_filtert_ungeprueft(regelwerk):
-    """Kopplung der Anzeige an den G-Block-Pruefstand: ungeprueft = nicht sichtbar.
-
-    Solange kein G-Eintrag verifiziert ist, liefert die Anzeige leer, obwohl der
-    rohe Filter Treffer haette. So gelangt keine ungepruefte Rechtsformulierung
-    ins Dossier, waehrend die uebrigen Exporte unberuehrt bleiben."""
+def test_anzeigbare_erleichterungen_nur_geprueft(regelwerk):
+    """Kopplung der Anzeige an den G-Block-Pruefstand: die Anzeige gibt nur
+    verifizierte Erleichterungen aus. Ein ungeprueft gebliebener Eintrag fiele
+    heraus; nach der Freigabe vom 2026-07-30 sind alle strukturell passenden
+    freigegeben, die Anzeige deckt daher den rohen Filter."""
     roh = regelwerk.erleichterungen_fuer("kmu", False, {"anbieter"}, {"hochrisiko"})
     anzeige = regelwerk.anzeigbare_erleichterungen(
         "kmu", False, {"anbieter"}, {"hochrisiko"})
-    assert roh  # strukturell gibt es Treffer
-    assert anzeige == []  # aber keiner ist verifiziert
+    assert all(e.get("geprueft") is True for e in anzeige)
+    assert {e["id"] for e in anzeige} <= {e["id"] for e in roh}
+    assert {e["id"] for e in anzeige} == {e["id"] for e in roh}
 
 
 def test_freigabestatus_weist_g_block_aus_ohne_zu_blockieren(regelwerk):
@@ -526,7 +528,7 @@ def test_freigabestatus_weist_g_block_aus_ohne_zu_blockieren(regelwerk):
     ausgewiesen, nicht verschwiegen und nicht global blockierend."""
     status = regelwerk.freigabestatus()
     assert status["ausspielbar"] == regelwerk.ausspielbar()
-    assert status["groessenregime_pruefstand"] == (0, 11)
-    assert status["groessenregime_vollstaendig_geprueft"] is False
+    assert status["groessenregime_pruefstand"] == (11, 11)
+    assert status["groessenregime_vollstaendig_geprueft"] is True
     # Die globale Ausspielbarkeit haengt nicht am G-Block.
     assert status["ausspielbar"] == (regelwerk.pruefstand[0] == regelwerk.pruefstand[1])
