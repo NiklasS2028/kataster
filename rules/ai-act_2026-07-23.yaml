@@ -1357,7 +1357,7 @@ groessenregime:
       fundstelle: "Art. 3 Nr. 14b KI-VO i. d. F. der VO (EU) 2026/1744"
       verweist_auf: "Nummer 2 des Anhangs der Empfehlung (EU) 2025/1099"
   hinweis_zeitpunkt: >-
-    Nach Nummer 4 des Anhangs der Empfehlung 2003/361/EG (Art. 4 Abs. 2) wechselt
+    Nach Art. 4 Abs. 2 des Anhangs der Empfehlung 2003/361/EG wechselt
     die Groessenklasse nicht sofort beim Ueber- oder Unterschreiten der
     Schwellenwerte. Der Status als Kleinst-, kleines oder mittleres Unternehmen
     wird erst gewonnen oder verloren, wenn es in zwei aufeinander folgenden
@@ -1368,9 +1368,13 @@ groessenregime:
     Unabhaengig von den Erleichterungen richten sich weitere Vorschriften an
     Behoerden und Kommission und begruenden keine Unternehmenspflicht, benennen
     aber, wo Unterstuetzung zu finden ist: Anleitung und Beratung durch nationale
-    Behoerden (Art. 70 Abs. 8), Beruecksichtigung von KMU und Start-ups in
-    Verhaltenskodizes (Art. 95 Abs. 4) und in den Leitlinien der Kommission
-    (Art. 96 Abs. 1 UAbs. 2).
+    Behoerden (Art. 70 Abs. 8) sowie besondere Beruecksichtigung kleinerer
+    Unternehmen in Verhaltenskodizes (Art. 95 Abs. 4) und in den Leitlinien der
+    Kommission (Art. 96 Abs. 1 UAbs. 2). Alle drei Stellen wurden durch die
+    VO (EU) 2026/1744 (Art. 1 Nr. 29, Nr. 35 und Nr. 36 lit. c) um kleine
+    Midcaps erweitert. Der Hinweis nennt bewusst keine abschliessende
+    Groessenklasse, weil er nur den Fundort der Unterstuetzung benennt und keine
+    Rechtsfolge traegt.
   geprueft: false
 
   # Art. 17 Abs. 2 (frueher als G-02 gefuehrt) ist keine groessengebundene
@@ -1431,15 +1435,21 @@ groessenregime:
         praktischem Gewicht.
       hinweis: >-
         Ausgangsrecht, gilt in beiden Lesarten. Erfasst KMU, nicht kleine
-        Midcaps. Ob die VO (EU) 2026/1744 Art. 62 auf kleine Midcaps erstreckt,
-        ist hier nicht belegt und wird deshalb nicht angenommen. Der
-        Omnibus-Zugang fuer kleine Midcaps betrifft allein das Reallabor des
-        KI-Bueros auf Unionsebene, siehe G-08.
+        Midcaps. Art. 62 wird durch die VO (EU) 2026/1744 nicht geaendert: Art. 1
+        enthaelt 43 Aenderungsbefehle, keiner betrifft Art. 62, die Reihe springt
+        von Art. 60a (Nr. 25) zu Art. 63 Abs. 1 (Nr. 26). Der Omnibus-Zugang fuer
+        kleine Midcaps betrifft allein das Reallabor des KI-Bueros auf Unionsebene,
+        siehe G-08.
       geprueft: false
 
     - id: G-04
       gegenstand: "Vereinfachtes Qualitaetsmanagement, nur ohne Partner- oder Verbundunternehmen"
       fundstelle: "Art. 63 Abs. 1 KI-VO"
+      # Dict-Form trotz identischer Listen bewusst: G-04 ist ein Dict-Fall wie
+      # G-01/G-05 (Scope-Aenderung Kleinstunternehmen -> alle KMU), der reale
+      # Unterschied liegt unterhalb der Groessenklassen und ist im Feld nicht
+      # darstellbar. Nicht zu flach [kmu] zusammenziehen, sonst geht die
+      # Gleichstellung mit den uebrigen Dict-Faellen verloren.
       gilt_fuer_groesse:
         original: [kmu]
         omnibus: [kmu]
