@@ -465,3 +465,34 @@ def test_erleichterungen_ids_und_pruefstand(regelwerk):
     assert {e["id"] for e in eintraege} == {
         "G-01", "G-03", "G-04", "G-05", "G-06", "G-07", "G-08"}
     assert all(e["geprueft"] is False for e in eintraege)
+
+
+def test_groessenregime_pruefstand_getrennt_von_regeln(regelwerk):
+    """Der G-Block hat einen eigenen Pruefstand, hier noch nichts verifiziert."""
+    g_geprueft, g_gesamt = regelwerk.groessenregime_pruefstand
+    assert g_gesamt == 7
+    assert g_geprueft == 0
+
+
+def test_anzeigbare_erleichterungen_filtert_ungeprueft(regelwerk):
+    """Kopplung der Anzeige an den G-Block-Pruefstand: ungeprueft = nicht sichtbar.
+
+    Solange kein G-Eintrag verifiziert ist, liefert die Anzeige leer, obwohl der
+    rohe Filter Treffer haette. So gelangt keine ungepruefte Rechtsformulierung
+    ins Dossier, waehrend die uebrigen Exporte unberuehrt bleiben."""
+    roh = regelwerk.erleichterungen_fuer("kmu", False, {"anbieter"}, {"hochrisiko"})
+    anzeige = regelwerk.anzeigbare_erleichterungen(
+        "kmu", False, {"anbieter"}, {"hochrisiko"})
+    assert roh  # strukturell gibt es Treffer
+    assert anzeige == []  # aber keiner ist verifiziert
+
+
+def test_freigabestatus_weist_g_block_aus_ohne_zu_blockieren(regelwerk):
+    """ausspielbar bleibt an den Regeln haengen; der G-Block wird getrennt
+    ausgewiesen, nicht verschwiegen und nicht global blockierend."""
+    status = regelwerk.freigabestatus()
+    assert status["ausspielbar"] == regelwerk.ausspielbar()
+    assert status["groessenregime_pruefstand"] == (0, 7)
+    assert status["groessenregime_vollstaendig_geprueft"] is False
+    # Die globale Ausspielbarkeit haengt nicht am G-Block.
+    assert status["ausspielbar"] == (regelwerk.pruefstand[0] == regelwerk.pruefstand[1])

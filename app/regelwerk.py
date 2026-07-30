@@ -132,6 +132,18 @@ class Regelwerk:
         geprueft = sum(1 for r in self.regeln if r.get("geprueft") is True)
         return geprueft, gesamt
 
+    @property
+    def groessenregime_pruefstand(self) -> tuple[int, int]:
+        """(geprueft, gesamt) ueber die Erleichterungen des G-Blocks.
+
+        Eigene Achse neben pruefstand: der G-Block hat seinen eigenen
+        Verifikationsstand und blockiert die uebrigen Exporte nicht.
+        """
+        eintraege = self.groessenregime.get("erleichterungen", [])
+        gesamt = len(eintraege)
+        geprueft = sum(1 for e in eintraege if e.get("geprueft") is True)
+        return geprueft, gesamt
+
     def hash(self) -> str:
         """SHA-256 ueber die Quelldatei. Kommt in jedes Nachweis-Dossier."""
         if not self.quelldatei:
@@ -266,8 +278,31 @@ class Regelwerk:
         return probleme
 
     def ausspielbar(self) -> bool:
-        """True nur, wenn kein Fehler und keine ungeprueften Regeln vorliegen."""
+        """True nur, wenn kein Fehler und keine ungeprueften Regeln vorliegen.
+
+        Bezieht sich auf den globalen Export der Regeln. Der G-Block hat einen
+        eigenen Pruefstand und geht hier bewusst NICHT ein: ein unverifizierter
+        G-Block soll nicht die 28 verifizierten Regeln mit anhalten. Fuer den
+        Zustand des G-Blocks siehe freigabestatus und groessenregime_pruefstand.
+        """
         return not any(p.schwere in ("fehler", "warnung") for p in self.validieren())
+
+    def freigabestatus(self) -> dict[str, Any]:
+        """Weist aus, was ausgespielt werden darf, ohne global zu blockieren.
+
+        ausspielbar deckt den globalen Regel-Export. Der G-Block wird getrennt
+        ausgewiesen: seine Erleichterungen erscheinen erst im Dossier, wenn sie
+        einzeln verifiziert sind (siehe anzeigbare_erleichterungen). So bleibt
+        sichtbar, dass der G-Block noch ungeprueft ist, statt es zu verschweigen
+        oder alles anzuhalten.
+        """
+        g_geprueft, g_gesamt = self.groessenregime_pruefstand
+        return {
+            "ausspielbar": self.ausspielbar(),
+            "regeln_pruefstand": self.pruefstand,
+            "groessenregime_pruefstand": (g_geprueft, g_gesamt),
+            "groessenregime_vollstaendig_geprueft": g_gesamt > 0 and g_geprueft == g_gesamt,
+        }
 
     # -- Einstufung ----------------------------------------------------------
 
@@ -478,6 +513,10 @@ class Regelwerk:
     ) -> list[dict]:
         """Filtert die groessenabhaengigen Erleichterungen fuer eine Organisation.
 
+        Roher Struktur- und Lesart-Filter OHNE Pruefstand-Kopplung. Fuer die
+        Anzeige im Dossier anzeigbare_erleichterungen verwenden, das zusaetzlich
+        ungepruefte Eintraege ausschliesst.
+
         Rein deklarativ: die Bedingungen stehen im YAML, hier wird nur
         abgeglichen. Ohne erfasste Groessenklasse gibt es nichts zu zeigen. Eine
         Erleichterung, die nur Anbieter von Hochrisiko-Systemen trifft, laeuft
@@ -552,6 +591,34 @@ class Regelwerk:
 
         return e.get("text", "")
 
+    def anzeigbare_erleichterungen(
+        self,
+        groessenklasse: str | None,
+        hat_partner_verbund: bool,
+        vorhandene_rollen: set[str],
+        vorhandene_klassen: set[str],
+        lesart: str = "original",
+    ) -> list[dict]:
+        """Nur die fuer die Anzeige freigegebenen Erleichterungen.
+
+        Koppelt die Dossier-Anzeige an den eigenen Pruefstand des G-Blocks: ein
+        Eintrag mit geprueft: false erscheint nicht, unabhaengig von ausspielbar().
+        So geraten keine ungeprueften Rechtsformulierungen in ein Nachweis-
+        dokument, waehrend die uebrigen Exporte moeglich bleiben. Das Dossier ruft
+        diese Methode, nicht erleichterungen_fuer.
+        """
+        return [
+            e
+            for e in self.erleichterungen_fuer(
+                groessenklasse,
+                hat_partner_verbund,
+                vorhandene_rollen,
+                vorhandene_klassen,
+                lesart,
+            )
+            if e.get("geprueft") is True
+        ]
+
     # -- Ausgabe -------------------------------------------------------------
 
     def klassentext(self, klasse: str) -> str:
@@ -600,8 +667,10 @@ if __name__ == "__main__":
     pfad = sys.argv[1] if len(sys.argv) > 1 else "rules/ai-act_2026-07-23.yaml"
     rw = Regelwerk.laden(pfad)
     geprueft, gesamt = rw.pruefstand
+    g_geprueft, g_gesamt = rw.groessenregime_pruefstand
     print(f"Regelwerk {rw.version}, Rechtsstand {rw.rechtsstand}")
     print(f"Regeln: {gesamt}, davon verifiziert: {geprueft}")
+    print(f"Groessenregime: {g_gesamt} Erleichterungen, davon verifiziert: {g_geprueft}")
     print(f"Hash: {rw.hash()[:16]}...")
     print()
     probleme = rw.validieren()
