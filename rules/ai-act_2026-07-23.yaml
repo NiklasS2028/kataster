@@ -1240,6 +1240,16 @@ querschnittspflichten:
       erfasst sind alle Bussen des Artikels, und die Bezugsgroessen der
       Obergrenze sind die Werte aus Abs. 3, 4 und 5.
     kmu_fundstelle: "Art. 99 Abs. 6 KI-VO"
+    # Feldweiser Pruefstand fuer die Zeiger-Zielfelder: Der entry-level geprueft
+    # deckt stufen/gegenstand/fundstelle, kmu_regel und midcap_regel tragen je
+    # ihren eigenen Schalter. So kann ein verifizierter Zeiger (G-06/G-07) nicht
+    # ueber ein unverifiziertes Zielfeld unverifizierten Text ausspielen.
+    # Freigabe der Felder war bereits am 2026-07-30 erteilt (Einheit 2 und 3 der
+    # Gegenueberstellung), konnte wegen des geteilten Q-02-Schalters nur nicht
+    # gesetzt werden. Hier nachgezogen, keine neue Freigabe.
+    kmu_regel_geprueft: true
+    kmu_regel_geprueft_am: "2026-07-30"
+    kmu_regel_geprueft_von: "Niklas Steinhauser"
     midcap_regel: >-
       Bei kleinen Midcap-Unternehmen ist die Deckelung in BEIDEN Dimensionen
       enger als bei KMU: erfasst sind nur die Geldbussen nach Abs. 4 und Abs. 5,
@@ -1248,6 +1258,9 @@ querschnittspflichten:
       doppelte Umfangsunterschied gegenueber der KMU-Deckelung nach Abs. 6 ist
       der Grund fuer den Split in G-06 (KMU) und G-07 (Midcap).
     midcap_fundstelle: "Art. 99 Abs. 6a KI-VO i. d. F. der VO (EU) 2026/1744"
+    midcap_regel_geprueft: true
+    midcap_regel_geprueft_am: "2026-07-30"
+    midcap_regel_geprueft_von: "Niklas Steinhauser"
     geprueft: false
 
   - id: Q-03

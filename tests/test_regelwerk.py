@@ -532,3 +532,66 @@ def test_freigabestatus_weist_g_block_aus_ohne_zu_blockieren(regelwerk):
     assert status["groessenregime_vollstaendig_geprueft"] is True
     # Die globale Ausspielbarkeit haengt nicht am G-Block.
     assert status["ausspielbar"] == (regelwerk.pruefstand[0] == regelwerk.pruefstand[1])
+
+
+# -- Zeiger-Kopplung: Zielfeld-Pruefstand -----------------------------------
+
+from pathlib import Path  # noqa: E402
+
+_RW_PFAD = Path(__file__).resolve().parent.parent / "rules" / "ai-act_2026-07-23.yaml"
+
+
+def _q02_feld(regelwerk, feld):
+    q02 = next(q for q in regelwerk.querschnittspflichten if q["id"] == "Q-02")
+    return q02.get(feld)
+
+
+def test_q02_feldweise_flags_nachgezogen(regelwerk):
+    """kmu_regel und midcap_regel tragen je einen eigenen, gesetzten Pruefstand
+    (Nachzug der Freigabe vom 2026-07-30). Der entry-level Q-02-Schalter bleibt
+    false, weil stufen weiter unverifiziert ist."""
+    assert _q02_feld(regelwerk, "kmu_regel_geprueft") is True
+    assert _q02_feld(regelwerk, "kmu_regel_geprueft_am") == "2026-07-30"
+    assert _q02_feld(regelwerk, "kmu_regel_geprueft_von") == "Niklas Steinhauser"
+    assert _q02_feld(regelwerk, "midcap_regel_geprueft") is True
+    assert _q02_feld(regelwerk, "midcap_regel_geprueft_am") == "2026-07-30"
+    assert _q02_feld(regelwerk, "midcap_regel_geprueft_von") == "Niklas Steinhauser"
+    assert _q02_feld(regelwerk, "geprueft") is False
+
+
+def test_zeigerziel_geprueft_bei_nicht_zeiger_immer_true(regelwerk):
+    """Ein Eintrag ohne Zeiger hat kein Zielfeld und ist damit nie durch die
+    Zielfeldpruefung blockiert."""
+    g05 = next(e for e in regelwerk.groessenregime["erleichterungen"] if e["id"] == "G-05")
+    assert regelwerk._zeigerziel_geprueft(g05) is True
+
+
+def test_zeigerziel_geprueft_folgt_dem_zielfeld_flag(regelwerk):
+    """G-06 zeigt auf Q-02.kmu_regel: die Pruefung folgt kmu_regel_geprueft."""
+    g06 = next(e for e in regelwerk.groessenregime["erleichterungen"] if e["id"] == "G-06")
+    assert regelwerk._zeigerziel_geprueft(g06) is True
+    # Synthetisch: fehlendes Zielfeld-Flag ist nicht verifiziert.
+    assert regelwerk._zeigerziel_geprueft(
+        {"verweist_auf": "Q-02", "verweist_auf_feld": "gibt_es_nicht"}) is False
+    assert regelwerk._zeigerziel_geprueft(
+        {"verweist_auf": "Q-99", "verweist_auf_feld": "egal"}) is False
+
+
+def test_anzeige_gate_greift_bei_unverifiziertem_zielfeld():
+    """Kernbefund: ein verifizierter Zeiger darf keinen unverifizierten Zieltext
+    ausspielen. Wird kmu_regel_geprueft zurueckgezogen, faellt G-06 aus der
+    Anzeige, obwohl der G-Eintrag selbst geprueft bleibt und im rohen Filter
+    weiter erscheint."""
+    from app.regelwerk import Regelwerk
+    rw = Regelwerk.laden(_RW_PFAD)
+    q02 = next(q for q in rw.querschnittspflichten if q["id"] == "Q-02")
+    q02["kmu_regel_geprueft"] = False
+
+    roh_ids = {e["id"] for e in rw.erleichterungen_fuer(
+        "kmu", False, {"anbieter"}, {"hochrisiko"})}
+    anzeige_ids = {e["id"] for e in rw.anzeigbare_erleichterungen(
+        "kmu", False, {"anbieter"}, {"hochrisiko"})}
+    assert "G-06" in roh_ids            # im rohen Filter weiter vorhanden
+    assert "G-06" not in anzeige_ids    # aus der Anzeige gefallen
+    # Ein Nicht-Zeiger daneben bleibt unberuehrt.
+    assert "G-05" in anzeige_ids

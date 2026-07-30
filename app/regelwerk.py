@@ -640,6 +640,29 @@ class Regelwerk:
 
         return e.get("text", "")
 
+    def _zeigerziel_geprueft(self, e: dict) -> bool:
+        """True, wenn ein Eintrag kein Zeiger ist oder sein Zielfeld verifiziert ist.
+
+        Der geprueft-Schalter eines Zeiger-Eintrags (G-06/G-07) zertifiziert nur
+        die Verdrahtung, nicht den Wortlaut, der aus dem Zielfeld gerendert wird.
+        Ohne diese Pruefung waere die Anzeige-Kopplung bei Zeigern wirkungslos: ein
+        verifizierter Zeiger koennte unverifizierten Zieltext ausspielen. Der
+        Pruefstand des Zielfelds liegt feldweise als '<feld>_geprueft' vor.
+        """
+        ziel_id = e.get("verweist_auf")
+        if not ziel_id:
+            return True
+        feld = e.get("verweist_auf_feld")
+        if not feld:
+            return False
+        ziel = next(
+            (q for q in self.querschnittspflichten if q.get("id") == ziel_id),
+            None,
+        )
+        if ziel is None:
+            return False
+        return ziel.get(f"{feld}_geprueft") is True
+
     def anzeigbare_erleichterungen(
         self,
         groessenklasse: str | None,
@@ -652,9 +675,12 @@ class Regelwerk:
 
         Koppelt die Dossier-Anzeige an den eigenen Pruefstand des G-Blocks: ein
         Eintrag mit geprueft: false erscheint nicht, unabhaengig von ausspielbar().
-        So geraten keine ungeprueften Rechtsformulierungen in ein Nachweis-
-        dokument, waehrend die uebrigen Exporte moeglich bleiben. Das Dossier ruft
-        diese Methode, nicht erleichterungen_fuer.
+        Bei Zeiger-Eintraegen wird zusaetzlich das Zielfeld mitgeprueft
+        (_zeigerziel_geprueft), sonst spielte ein verifizierter Zeiger ueber ein
+        unverifiziertes Zielfeld unverifizierten Text aus. So geraten keine
+        ungeprueften Rechtsformulierungen in ein Nachweisdokument, waehrend die
+        uebrigen Exporte moeglich bleiben. Das Dossier ruft diese Methode, nicht
+        erleichterungen_fuer.
         """
         return [
             e
@@ -665,7 +691,7 @@ class Regelwerk:
                 vorhandene_klassen,
                 lesart,
             )
-            if e.get("geprueft") is True
+            if e.get("geprueft") is True and self._zeigerziel_geprueft(e)
         ]
 
     # -- Ausgabe -------------------------------------------------------------
