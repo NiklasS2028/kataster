@@ -1502,11 +1502,10 @@ groessenregime:
       verweist_auf: Q-02
       verweist_auf_feld: midcap_regel
       hinweis: >-
-        Zeiger auf Q-02. Abs. 6a wird durch Art. 1 Nr. 38 lit. c der VO (EU)
-        2026/1744 eingefuegt und gilt daher nur in der Lesart omnibus. Das
-        Zielfeld Q-02.midcap_regel wird erst im Folgecommit angelegt; bis dahin
-        ist der Zeiger bewusst offen. Ein Fehlen faellt auf, eine Dopplung
-        driftet still auseinander.
+        Zeiger auf Q-02.midcap_regel, kein eigener Regeltext. Abs. 6a wird durch
+        Art. 1 Nr. 38 lit. c der VO (EU) 2026/1744 eingefuegt und gilt daher nur
+        in der Lesart omnibus (gilt_in_lesart). Der engere Umfang gegenueber der
+        KMU-Deckelung, nur Abs. 4 und Abs. 5, nicht Abs. 3, steht im Zielfeld.
       geprueft: false
 
     - id: G-08
