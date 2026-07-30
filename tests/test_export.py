@@ -207,3 +207,89 @@ def test_dossier_nutzt_deutsche_zahlen(datenbank, regelwerk, arbeitsordner):
     inhalt = (arbeitsordner / "exporte" / "dossier.html").read_text(encoding="utf-8")
     assert "74,70" in inhalt      # 3 x 24,90 monatlich
     assert "74.70" not in inhalt
+
+
+# -- Abschnitt 4: Erleichterungen nach Unternehmensgroesse -------------------
+
+WURZEL = Path(__file__).resolve().parent.parent
+REGELWERK_PFAD = WURZEL / "rules" / "ai-act_2026-07-23.yaml"
+
+
+def _dossier_fuer(datenbank, regelwerk, ordner, groessenklasse,
+                  lesart="original", rolle="anbieter",
+                  flags=None, hat_partner=0):
+    """Organisation mit Groessenklasse plus ein System, erzeugt die Nachweise und
+    gibt den Dossier-Text zurueck."""
+    flags = {"personalauswahl": True} if flags is None else flags
+    datenbank.organisation_speichern(
+        name="Musterbau GmbH", ansprechpartner="A. Weber",
+        groessenklasse=groessenklasse, hat_partner_oder_verbund=hat_partner)
+    sid = datenbank.system_anlegen("Fachsystem", rolle=rolle,
+                                   status="freigegeben", kosten_monat_eur=10.0)
+    for flag, wert in flags.items():
+        datenbank.flag_setzen(sid, flag, wert)
+    einstufung = regelwerk.einstufen(flags, rolle=rolle, lesart=lesart)
+    datenbank.einstufung_speichern(sid, regelwerk.als_dict(einstufung))
+    from app.export import erzeuge_alle
+    erzeuge_alle(datenbank, regelwerk, ordner)
+    return (ordner / "exporte" / "dossier.html").read_text(encoding="utf-8")
+
+
+def test_dossier_erleichterungen_kmu_zeigt_eintraege(datenbank, regelwerk, arbeitsordner):
+    """KMU-Anbieter eines Hochrisiko-Systems: der Abschnitt fuehrt die passenden
+    Erleichterungen, die Klarstellung zur Anzeige und alle drei Zusatzhinweise."""
+    inhalt = _dossier_fuer(datenbank, regelwerk, arbeitsordner, "kmu")
+    assert "4. Erleichterungen nach Unternehmensgroesse" in inhalt
+    assert "Vereinfachte technische Dokumentation" in inhalt          # G-01
+    # Anzeige ist nicht Inanspruchnahme.
+    assert "ersetzt die dafuer jeweils vorgesehenen Schritte nicht" in inhalt
+    # Der dritte, zuvor fehlende Hinweis ist aufgenommen (Befund 1).
+    assert "Wo Unterstuetzung zu finden ist" in inhalt
+    assert "Art. 70 Abs. 8" in inhalt
+    # Grundlagen ist von 4. auf 5. nachgerueckt (Befund 4).
+    assert "5. Grundlagen und Vorbehalt" in inhalt
+    assert "4. Grundlagen und Vorbehalt" not in inhalt
+
+
+def test_dossier_erleichterungen_lesart_original_traegt_vorbehalt(
+        datenbank, regelwerk, arbeitsordner):
+    """Unter Lesart original steht ein sichtbarer Vorbehalt am Blockkopf."""
+    inhalt = _dossier_fuer(datenbank, regelwerk, arbeitsordner, "kmu", lesart="original")
+    assert "vor der VO (EU) 2026/1744 wieder" in inhalt
+    assert "Lesart original" in inhalt
+
+
+def test_dossier_erleichterungen_gross_generischer_hinweis(
+        datenbank, regelwerk, arbeitsordner):
+    """Bei gross trifft nichts zu, und der pauschale Satz ist richtig."""
+    inhalt = _dossier_fuer(datenbank, regelwerk, arbeitsordner, "gross")
+    assert "Keine der geprueften Erleichterungen ist einschlaegig" in inhalt
+    assert "kleinen Midcap-Unternehmens im Ausgangsrecht" not in inhalt
+
+
+def test_dossier_erleichterungen_midcap_original_sonderfall(
+        datenbank, regelwerk, arbeitsordner):
+    """Bei kleines_midcap unter original trifft ebenfalls nichts zu, aber aus
+    anderem Grund als bei gross (Befund 3): den Begriff gab es im Ausgangsrecht
+    nicht. Der pauschale Satz darf hier nicht stehen."""
+    inhalt = _dossier_fuer(datenbank, regelwerk, arbeitsordner,
+                           "kleines_midcap", lesart="original")
+    assert "Art. 3 Nr. 14b" in inhalt
+    assert "im Ausgangsrecht noch nicht gab" in inhalt
+    assert "Keine der geprueften Erleichterungen ist einschlaegig" not in inhalt
+
+
+def test_dossier_erleichterungen_ungepruefte_erscheinen_nicht(datenbank, arbeitsordner):
+    """Kopplung an den G-Block-Pruefstand: ein Eintrag mit geprueft: false erscheint
+    nicht im Dossier, ein daneben geprueft gebliebener schon. Deshalb wird der
+    Abschnitt ueberhaupt aus anzeigbare_erleichterungen gespeist."""
+    from app.regelwerk import Regelwerk
+    rw = Regelwerk.laden(REGELWERK_PFAD)
+    for e in rw.groessenregime["erleichterungen"]:
+        if e["id"] == "G-05":
+            e["geprueft"] = False
+    inhalt = _dossier_fuer(datenbank, rw, arbeitsordner, "kmu")
+    # G-05 ist jetzt ungeprueft und darf nicht erscheinen.
+    assert "Beruecksichtigung bei der Bemessung von Sanktionen" not in inhalt
+    # G-06 ist weiter geprueft und erscheint.
+    assert "Gedeckelte Geldbusse (KMU)" in inhalt

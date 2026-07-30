@@ -56,6 +56,109 @@ def _eur(wert) -> str:
     return f"{float(wert):,.2f}".replace(",", "\u00a0").replace(".", ",").replace("\u00a0", ".")
 
 
+def _erleichterungen_abschnitt(h: list[str], organisation, systeme, regelwerk) -> None:
+    """Abschnitt 4: groessenabhaengige Erleichterungen nach dem G-Block.
+
+    Ohne Signaturaenderung an dossier_html: alle Eingaben werden aus den bereits
+    uebergebenen Objekten abgeleitet. Die Lesart folgt den Einstufungen des uebrigen
+    Dossiers (Abschnitt 3 weist sie je System aus), nicht einem festen Wert. Die
+    Anzeige ist an den eigenen Pruefstand des G-Blocks gekoppelt: es erscheinen nur
+    verifizierte Eintraege (anzeigbare_erleichterungen), ungepruefte nie.
+    """
+    groessenklasse = organisation.get("groessenklasse")
+    hat_partner_verbund = bool(organisation.get("hat_partner_oder_verbund"))
+    vorhandene_rollen = {
+        e.get("rolle") for s in systeme
+        if (e := s.get("einstufung")) and e.get("rolle")
+    }
+    vorhandene_klassen = {
+        e["klasse"] for s in systeme if (e := s.get("einstufung"))
+    }
+    # Lesart aus den Einstufungen, damit der Abschnitt denselben Rechtsstand fuehrt
+    # wie die Einzelnachweise daneben. Bei uneinheitlicher oder fehlender Lesart
+    # faellt der Abschnitt auf den Ausgangsstand zurueck; der loest zugleich den
+    # Vorbehalt unten aus. Ein gemischter Zustand kann derzeit nicht entstehen,
+    # weil die Erfassung nur die Lesart original setzt.
+    lesarten = {
+        e["lesart"] for s in systeme
+        if (e := s.get("einstufung")) and e.get("lesart")
+    }
+    lesart = lesarten.pop() if len(lesarten) == 1 else "original"
+
+    h.append("<h2>4. Erleichterungen nach Unternehmensgroesse</h2>")
+
+    # Anzeige ist nicht Inanspruchnahme. Ein Abschnitt "Erleichterungen" verleitet
+    # sonst zur Lesart, das Unternehmen nehme sie bereits in Anspruch (folgenreich
+    # etwa bei Art. 11 Abs. 1 UAbs. 2 und Art. 63 Abs. 1).
+    h.append("<p>Der Abschnitt weist aus, welche Erleichterungen nach der erfassten "
+             "Groessenklasse in Betracht kommen. Er dokumentiert nicht, dass sie in "
+             "Anspruch genommen werden, und ersetzt die dafuer jeweils vorgesehenen "
+             "Schritte nicht.</p>")
+
+    # Bei Lesart original bildet der Abschnitt einen abgeloesten Rechtsstand ab.
+    # In einem Nachweisdokument braucht das einen sichtbaren Vorbehalt.
+    if lesart == "original":
+        h.append("<p class='hinweis'>Dieser Abschnitt gibt den Rechtsstand vor der "
+                 "VO (EU) 2026/1744 wieder (Lesart original) und bildet nicht das "
+                 "geltende Recht ab. Die durch den Digital-Omnibus eingefuegten "
+                 "Erleichterungen sind hier nicht enthalten.</p>")
+
+    if not groessenklasse:
+        h.append("<p class='hinweis'>Fuer die Organisation ist keine Groessenklasse "
+                 "erfasst. Ohne Groessenklasse lassen sich die groessenabhaengigen "
+                 "Erleichterungen nicht bestimmen.</p>")
+    else:
+        erleichterungen = regelwerk.anzeigbare_erleichterungen(
+            groessenklasse, hat_partner_verbund,
+            vorhandene_rollen, vorhandene_klassen, lesart,
+        )
+        if erleichterungen:
+            h.append("<table><thead><tr><th>Gegenstand</th><th>Fundstelle</th>"
+                     "<th>Regel</th></tr></thead><tbody>")
+            for e in erleichterungen:
+                zelle = escape(regelwerk.erleichterung_text(e, lesart))
+                if e.get("hinweis"):
+                    zelle += f"<br><span class='fund'>{escape(e['hinweis'])}</span>"
+                h.append(f"<tr><td><strong>{_z(e.get('gegenstand'))}</strong></td>"
+                         f"<td class='fund'>{_z(e.get('fundstelle'))}</td>"
+                         f"<td>{zelle}</td></tr>")
+            h.append("</tbody></table>")
+        elif groessenklasse == "kleines_midcap" and lesart == "original":
+            # Kein Treffer aus anderem Grund als bei gross: den Begriff des kleinen
+            # Midcap-Unternehmens gab es im Ausgangsrecht nicht.
+            h.append("<p class='hinweis'>Fuer die erfasste Groessenklasse kleines "
+                     "Midcap greift unter dieser Lesart keine Erleichterung, weil es "
+                     "den Begriff des kleinen Midcap-Unternehmens im Ausgangsrecht "
+                     "noch nicht gab. Er wird erst durch Art. 3 Nr. 14b KI-VO i. d. F. "
+                     "der VO (EU) 2026/1744 eingefuegt.</p>")
+        else:
+            h.append("<p class='hinweis'>Keine der geprueften Erleichterungen ist "
+                     "einschlaegig.</p>")
+
+    # Size-neutrale Zusatzhinweise, je an ihrem eigenen Pruefstand gekoppelt.
+    g = regelwerk.groessenregime
+    zusatz = []
+    zeit = g.get("hinweis_zeitpunkt")
+    if isinstance(zeit, dict) and zeit.get("geprueft") is True:
+        zusatz.append(("Zeitpunkt des Groessenwechsels.", escape(zeit["text"]), None))
+    verh = g.get("hinweis_verhaeltnismaessigkeit")
+    if isinstance(verh, dict) and verh.get("geprueft") is True:
+        fund = verh.get(f"fundstelle_{lesart}") or verh.get("fundstelle_original")
+        zusatz.append(("Verhaeltnismaessigkeit des Qualitaetsmanagements.",
+                       escape(verh["text"]), fund))
+    unter = g.get("hinweis_unterstuetzung")
+    if isinstance(unter, dict) and unter.get("geprueft") is True:
+        zusatz.append(("Wo Unterstuetzung zu finden ist.", escape(unter["text"]), None))
+
+    if zusatz:
+        h.append("<h3>Ergaenzende Hinweise</h3>")
+        for titel, text, fund in zusatz:
+            block = f"<p class='hinweis'><strong>{titel}</strong> {text}"
+            if fund:
+                block += f" <span class='fund'>{escape(fund)}</span>"
+            h.append(block + "</p>")
+
+
 def dossier_html(organisation, systeme, kennzahlen, regelwerk,
                  klassennamen, zeitpunkt: datetime) -> str:
     firma = organisation.get("name") or "[Name des Unternehmens]"
@@ -189,7 +292,9 @@ def dossier_html(organisation, systeme, kennzahlen, regelwerk,
             h.append("<p class='hinweis'>Fuer dieses System kommt die Ausnahme nach "
                      "Art. 6 Abs. 3 in Betracht. Sie ist gesondert zu begruenden.</p>")
 
-    h.append("<h2>4. Grundlagen und Vorbehalt</h2>")
+    _erleichterungen_abschnitt(h, organisation, systeme, regelwerk)
+
+    h.append("<h2>5. Grundlagen und Vorbehalt</h2>")
     h.append("<p>Die Einstufungen beruhen auf einem regelbasierten Abgleich der "
              "erfassten Angaben mit dem hinterlegten Regelwerk. Es findet keine "
              "automatisierte Auslegung statt: Jede Einstufung laesst sich auf eine "
