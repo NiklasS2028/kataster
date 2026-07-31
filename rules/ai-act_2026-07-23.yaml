@@ -139,6 +139,13 @@ lesarten:
       Abs. 2 und 4 (Bestandsschutz, Uebergangsfrist Art. 50 Abs. 2) sowie
       Anhang I (Maschinenverordnung von Abschnitt A nach Abschnitt B). Wer
       diese Lesart nutzen will, muss sie zuvor gegen den Text pruefen.
+    # PHASE-11-VERMERK: Sobald eingearbeitet auf true geht, ist zu entscheiden,
+    # ob beispiel.py auf die Lesart omnibus umgestellt wird. Solange die Sperre
+    # steht, rechnet die Demo bewusst in original (kein Vorgriff auf einen als
+    # unvollstaendig ausgewiesenen Stand). Sichtbar bleiben unter original
+    # dennoch Abschnitt B (lesartunabhaengig) und fuenf der sieben
+    # Erleichterungen (G-01, G-03, G-04, G-05, G-06); nur G-07 und G-08 fehlen,
+    # was der Omnibus-Vorbehalt im Dossier erklaert.
 
   original:
     bezeichnung: "Originalfassung"

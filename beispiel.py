@@ -43,6 +43,14 @@ ORGANISATION = {
     "ansprechpartner": "Andrea Weber, Kaufmaennische Leitung",
     "ist_behoerde": 0,
     "erbringt_oeff_dienste": 0,
+    # Groessenklasse ist Selbstauskunft, nicht berechnet. Die 42 Beschaeftigten
+    # allein begruenden die KMU-Eigenschaft nicht: nach Art. 2 des Anhangs der
+    # Empfehlung 2003/361/EG kommt ein finanzielles Kriterium hinzu (Jahresumsatz
+    # hoechstens 50 Mio. EUR ODER Bilanzsumme hoechstens 43 Mio. EUR). Hier als
+    # kmu gesetzt, damit Dossier-Abschnitt 4 die groessenabhaengigen
+    # Erleichterungen zeigt (unter Lesart original G-01, G-03, G-04, G-05, G-06).
+    "groessenklasse": "kmu",
+    "hat_partner_oder_verbund": 0,
 }
 
 
@@ -152,6 +160,12 @@ SYSTEME = [
         {
             "anhang_i_sicherheitsbauteil": True,
             "anhang_i_dritte_konformitaetsbewertung": True,
+            # Bauteil einer Maschine, und die Maschinenverordnung steht seit
+            # Art. 1 Nr. 41 der VO (EU) 2026/1744 in Anhang I Abschnitt B. Die
+            # Klasse bleibt hochrisiko, aber das Pflichtenregime wechselt
+            # (Art. 2 Abs. 2, Kapitel III nicht unmittelbar), und der
+            # Bestandsschutz nach Art. 111 Abs. 2 wird nicht berechnet.
+            "anhang_i_abschnitt_b": True,
         },
         "anbieter",
         {},
@@ -209,6 +223,36 @@ SYSTEME = [
             "in_betrieb_seit": "2026-02-01",
         },
         {"deepfake": True},
+        "betreiber",
+        {},
+    ),
+    (
+        {
+            "name": "Moodboard-Generator Produktdesign",
+            "anbieter": "Midjourney",
+            "zweck": "Erzeugt abstrakte Bildmotive und Produktvisualisierungen "
+                     "ohne reale Personen fuer Kampagnen und Messestaende",
+            "abteilung": "Marketing",
+            "verantwortlich": "Lena Ruf",
+            "status": "freigegeben",
+            "kosten_monat_eur": 48.00,
+            "av_vertrag": 1,
+            "eu_hosting": 0,
+            "datenkategorien": ["keine"],
+            "in_betrieb_seit": "2026-06-15",
+        },
+        # Gegenprobe zur Abgrenzung nach Art. 5 Abs. 1 lit. ba (V-07). Ein
+        # generatives Bildwerkzeug faellt nicht schon deshalb unter das Verbot,
+        # weil es technisch in der Lage waere, entsprechendes Material zu
+        # erzeugen. Art. 5 Abs. 1a lit. b verlangt fuer die VERWENDUNG, dass der
+        # Betreiber das System zum Zweck einer solchen Erzeugung einsetzt; das
+        # ist hier nicht der Fall, also kein intimdarstellung_ohne_zustimmung und
+        # kein V-07. Eigenstaendig gegenueber dem Firefly-Fall (deepfake -> T-02):
+        # generische Motive ohne reale Personen sind keine Deepfakes, daher greift
+        # auch T-02 nicht. Ergebnis minimal - der Negativfall, nicht ein zweites
+        # T-02. Die Transparenzregel T-05 (Art. 50 Abs. 2) waere eine
+        # Anbieterpflicht und traegt die lit.-b-Betreiberabgrenzung nicht.
+        {},
         "betreiber",
         {},
     ),
