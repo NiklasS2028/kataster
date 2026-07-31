@@ -1311,7 +1311,9 @@ querschnittspflichten:
     midcap_regel_geprueft: true
     midcap_regel_geprueft_am: "2026-07-30"
     midcap_regel_geprueft_von: "Niklas Steinhauser"
-    geprueft: false
+    geprueft: true
+    geprueft_am: "2026-07-31"
+    geprueft_von: "Niklas Steinhauser"
 
   - id: Q-03
     gegenstand: "Betreiberpflichten bei Hochrisiko-Systemen"

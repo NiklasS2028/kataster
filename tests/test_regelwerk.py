@@ -548,15 +548,18 @@ def _q02_feld(regelwerk, feld):
 
 def test_q02_feldweise_flags_nachgezogen(regelwerk):
     """kmu_regel und midcap_regel tragen je einen eigenen, gesetzten Pruefstand
-    (Nachzug der Freigabe vom 2026-07-30). Der entry-level Q-02-Schalter bleibt
-    false, weil stufen weiter unverifiziert ist."""
+    (Nachzug der Freigabe vom 2026-07-30). Der entry-level Q-02-Schalter ist seit
+    der Freigabe vom 2026-07-31 gesetzt und deckt gegenstand, fundstelle, stufen
+    und grundregel."""
     assert _q02_feld(regelwerk, "kmu_regel_geprueft") is True
     assert _q02_feld(regelwerk, "kmu_regel_geprueft_am") == "2026-07-30"
     assert _q02_feld(regelwerk, "kmu_regel_geprueft_von") == "Niklas Steinhauser"
     assert _q02_feld(regelwerk, "midcap_regel_geprueft") is True
     assert _q02_feld(regelwerk, "midcap_regel_geprueft_am") == "2026-07-30"
     assert _q02_feld(regelwerk, "midcap_regel_geprueft_von") == "Niklas Steinhauser"
-    assert _q02_feld(regelwerk, "geprueft") is False
+    assert _q02_feld(regelwerk, "geprueft") is True
+    assert _q02_feld(regelwerk, "geprueft_am") == "2026-07-31"
+    assert _q02_feld(regelwerk, "geprueft_von") == "Niklas Steinhauser"
 
 
 def test_zeigerziel_geprueft_bei_nicht_zeiger_immer_true(regelwerk):
