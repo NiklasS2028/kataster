@@ -1218,8 +1218,24 @@ querschnittspflichten:
     geprueft_von: "Niklas Steinhauser"
 
   - id: Q-02
-    gegenstand: "Bussgeldrahmen"
+    gegenstand: "Bussgeldrahmen: Hoechstbetraege nach Art. 99 Abs. 3 bis 5"
     fundstelle: "Art. 99 KI-VO"
+    # Zuschnitt des Eintrags: Q-02 bildet Art. 99 nicht vollstaendig ab. stufen
+    # deckt Abs. 3, 4 und 5 (Hoechstbetraege), Abs. 1 (Beruecksichtigung bei der
+    # Bemessung) laeuft ueber G-05, Abs. 6 und Abs. 6a (Deckelung) ueber die
+    # Zeiger G-06/G-07 auf kmu_regel/midcap_regel. Der gegenstand nennt daher
+    # ausdruecklich nur die Hoechstbetraege nach Abs. 3 bis 5, damit der Kopf
+    # keine Vollstaendigkeitserwartung weckt, die der Eintrag nicht einloest.
+    # - Abs. 2 ist bewusst nicht abgebildet: reine Mitteilungspflicht der
+    #   Mitgliedstaaten gegenueber der Kommission ueber die Sanktionsregeln
+    #   ("The Member States shall notify the Commission ...", Service Desk
+    #   2026-07-31). Kein Unternehmensadressat, fuer die Zielgruppe des Werkzeugs
+    #   ohne Belang, die Auslassung ist sachlich richtig.
+    # - Abs. 7 (Bemessungskriterien im Einzelfall) ist VORGEMERKT als eigener
+    #   Punkt, nicht Teil dieses Zugs. Die Kriterien wirken im Einzelfall immer,
+    #   waehrend Hoechstbetraege selten ausgeschoepft werden, und sind fuer ein
+    #   Unternehmen praktisch relevanter. Aufnahme braucht eigenes Nachlesen und
+    #   eigene Entscheidung, daher hier nur der Merker.
     # Zwei Pruefstandsebenen:
     # - Der entry-level 'geprueft' unten deckt gegenstand, fundstelle und stufen.
     # - kmu_regel und midcap_regel tragen je einen EIGENEN Schalter nach der
@@ -1244,8 +1260,8 @@ querschnittspflichten:
         fundstelle: "Art. 99 Abs. 4"
       - verstoss: >-
           Falsche, unvollstaendige oder irrefuehrende Angaben gegenueber
-          notifizierten Stellen oder zustaendigen nationalen Behoerden in
-          Beantwortung eines Auskunftsersuchens
+          notifizierten Stellen oder zustaendigen nationalen Behoerden auf deren
+          Auskunftsersuchen
         maximum: "7,5 Mio. EUR oder 1 % des weltweiten Jahresumsatzes (Anwendung der Obergrenze: siehe grundregel)"
         fundstelle: "Art. 99 Abs. 5"
     # grundregel ist vom entry-level 'geprueft' gedeckt, KEIN eigener Schalter.
@@ -1259,15 +1275,16 @@ querschnittspflichten:
     # Wird sie spaeter doch Zeigerziel, meldet die Validierung das fehlende
     # 'grundregel_geprueft' als Hinweis, sie kann also nicht still ausfallen.
     grundregel: >-
-      Bei allen drei Stufen nach Abs. 3, 4 und 5 gilt als Obergrenze der jeweils
-      hoehere der beiden genannten Werte, je nachdem, welcher Betrag hoeher ist:
-      der feste Euro-Betrag oder der Prozentsatz des weltweiten Jahresumsatzes.
-      Der Prozentsatz gilt nur, wenn der Zuwiderhandelnde ein Unternehmen ist;
-      ist er kein Unternehmen, greift allein der feste Betrag. Diese Grundregel
-      ist der Schluessel zur Deckelung nach Abs. 6 und Abs. 6a: kmu_regel und
-      midcap_regel bestimmen als Obergrenze den jeweils NIEDRIGEREN Betrag, was
-      nur vor dem Hintergrund verstaendlich ist, dass hier sonst der hoehere
-      gilt.
+      Bei allen drei Stufen nach Abs. 3, 4 und 5 gilt als Obergrenze der
+      hoehere der beiden genannten Werte, also der groessere aus festem
+      Euro-Betrag und dem Prozentsatz des gesamten weltweiten Jahresumsatzes des
+      vorangegangenen Geschaeftsjahres; im Wortlaut: 'je nachdem, welcher Betrag
+      hoeher ist'. Der Prozentsatz gilt nur, wenn der Zuwiderhandelnde ein
+      Unternehmen ist; ist er kein Unternehmen, greift allein der feste Betrag.
+      Diese Grundregel ist der Schluessel zur Deckelung nach Abs. 6 und Abs. 6a:
+      kmu_regel und midcap_regel bestimmen als Obergrenze den jeweils
+      NIEDRIGEREN Betrag, was nur vor dem Hintergrund verstaendlich ist, dass
+      hier sonst der hoehere gilt.
     kmu_regel: >-
       Bei KMU einschliesslich Start-ups gilt fuer JEDE in diesem Artikel
       genannte Geldbusse als Obergrenze der jeweils niedrigere Betrag aus den in
