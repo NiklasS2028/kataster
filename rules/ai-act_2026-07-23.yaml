@@ -1232,7 +1232,7 @@ querschnittspflichten:
     # Validierung meldet das als Hinweis).
     stufen:
       - verstoss: "Verbotene Praktiken nach Art. 5"
-        maximum: "35 Mio. EUR oder 7 % des weltweiten Jahresumsatzes"
+        maximum: "35 Mio. EUR oder 7 % des weltweiten Jahresumsatzes (Anwendung der Obergrenze: siehe grundregel)"
         fundstelle: "Art. 99 Abs. 3"
       - verstoss: >-
           Pflichten der Anbieter (Art. 16), Bevollmaechtigten (Art. 22),
@@ -1240,11 +1240,34 @@ querschnittspflichten:
           Anforderungen und Pflichten fuer notifizierte Stellen (Art. 31,
           Art. 33 Abs. 1, 3 und 4 sowie Art. 34) sowie Transparenzpflichten
           (Art. 50)
-        maximum: "15 Mio. EUR oder 3 % des weltweiten Jahresumsatzes"
+        maximum: "15 Mio. EUR oder 3 % des weltweiten Jahresumsatzes (Anwendung der Obergrenze: siehe grundregel)"
         fundstelle: "Art. 99 Abs. 4"
-      - verstoss: "Falsche, unvollstaendige oder irrefuehrende Angaben gegenueber Behoerden"
-        maximum: "7,5 Mio. EUR oder 1 % des weltweiten Jahresumsatzes"
+      - verstoss: >-
+          Falsche, unvollstaendige oder irrefuehrende Angaben gegenueber
+          notifizierten Stellen oder zustaendigen nationalen Behoerden in
+          Beantwortung eines Auskunftsersuchens
+        maximum: "7,5 Mio. EUR oder 1 % des weltweiten Jahresumsatzes (Anwendung der Obergrenze: siehe grundregel)"
         fundstelle: "Art. 99 Abs. 5"
+    # grundregel ist vom entry-level 'geprueft' gedeckt, KEIN eigener Schalter.
+    # Nach der Konvention im Kopf braucht ein Feld nur dann ein eigenes
+    # '<feld>_geprueft', wenn es Zeigerziel ist und unabhaengig vom uebrigen Q-02
+    # gerendert wird. Zeigerziele sind allein kmu_regel und midcap_regel (Ziele
+    # von G-06/G-07, die NIEDRIGERE Deckelung). grundregel rahmt dagegen die
+    # stufen selbst, den HOEHEREN Wert, ist keine groessengebundene Erleichterung
+    # und wird von keinem G-Eintrag angesteuert. Sie gehoert damit zur selben
+    # Verifikationseinheit wie stufen und faellt unter den entry-level Schalter.
+    # Wird sie spaeter doch Zeigerziel, meldet die Validierung das fehlende
+    # 'grundregel_geprueft' als Hinweis, sie kann also nicht still ausfallen.
+    grundregel: >-
+      Bei allen drei Stufen nach Abs. 3, 4 und 5 gilt als Obergrenze der jeweils
+      hoehere der beiden genannten Werte, je nachdem, welcher Betrag hoeher ist:
+      der feste Euro-Betrag oder der Prozentsatz des weltweiten Jahresumsatzes.
+      Der Prozentsatz gilt nur, wenn der Zuwiderhandelnde ein Unternehmen ist;
+      ist er kein Unternehmen, greift allein der feste Betrag. Diese Grundregel
+      ist der Schluessel zur Deckelung nach Abs. 6 und Abs. 6a: kmu_regel und
+      midcap_regel bestimmen als Obergrenze den jeweils NIEDRIGEREN Betrag, was
+      nur vor dem Hintergrund verstaendlich ist, dass hier sonst der hoehere
+      gilt.
     kmu_regel: >-
       Bei KMU einschliesslich Start-ups gilt fuer JEDE in diesem Artikel
       genannte Geldbusse als Obergrenze der jeweils niedrigere Betrag aus den in
