@@ -180,6 +180,11 @@ class Regelwerk:
         sperr_flag = self.ausnahmefilter.get("gilt_nicht_bei")
         if sperr_flag:
             namen.append(sperr_flag)
+        # Ebenso das ausloesende Flag des Anhang-I-Abschnitt-B-Pfads. Ohne diese
+        # Zeile feuert die Unbekanntes-Flag-Warnung bei jedem regulaeren Einsatz.
+        abschnitt_b_flag = (self.anhang_i or {}).get("abschnitt_b", {}).get("flag")
+        if abschnitt_b_flag:
+            namen.append(abschnitt_b_flag)
         return sorted(set(namen))
 
     def frist_fuer(self, frist_id: str | None, lesart: str) -> str | None:
@@ -521,10 +526,12 @@ class Regelwerk:
             return
         if not any(t.regel_id in ("P-01", "P-02") for t in einstufung.treffer):
             return
-        if not flags.get("anhang_i_abschnitt_b", False):
-            return
 
         abschnitt = (self.anhang_i or {}).get("abschnitt_b", {})
+        flag = abschnitt.get("flag")
+        if not flag or not flags.get(flag, False):
+            return
+
         einstufung.abschnitt_b_greift = True
         einstufung.abschnitt_b_hinweis = (
             "Das Produkt faellt unter Anhang I Abschnitt B. Die Einstufung als "

@@ -198,6 +198,23 @@ def test_bestandsschutz_nur_bei_hochrisiko(regelwerk):
     assert not e.bestandsschutz_greift
 
 
+def test_abschnitt_b_flag_ist_im_vokabular(regelwerk):
+    """Das ausloesende Flag des Abschnitt-B-Pfads gehoert ins Flag-Vokabular
+    (Registrierung aus der Config, Muster wie das Sperrflag des Ausnahmefilters).
+    Sonst feuert bei bestimmungsgemaessem Gebrauch immer die Unbekanntes-Flag-
+    Warnung und verdeckt echte Warnungen."""
+    assert "anhang_i_abschnitt_b" in regelwerk.flag_namen()
+
+
+def test_abschnitt_b_loest_keine_unbekanntes_flag_warnung_aus(regelwerk):
+    e = regelwerk.einstufen({
+        "anhang_i_sicherheitsbauteil": True,
+        "anhang_i_dritte_konformitaetsbewertung": True,
+        "anhang_i_abschnitt_b": True,
+    }, rolle="anbieter")
+    assert not any("anhang_i_abschnitt_b" in w for w in e.warnungen)
+
+
 def test_abschnitt_b_aendert_pflichtenregime_nicht_die_klasse(regelwerk):
     e = regelwerk.einstufen({
         "anhang_i_sicherheitsbauteil": True,

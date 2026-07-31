@@ -1742,6 +1742,11 @@ anhang_i:
 
   abschnitt_b:
     bezeichnung: "Andere Harmonisierungsrechtsvorschriften der Union"
+    # Ausloesendes Flag ohne eigene Regel, analog zu ausnahmefilter_anhang_iii.
+    # gilt_nicht_bei. flag_namen() liest den Namen von hier, damit das Flag im
+    # Vokabular steht und bei bestimmungsgemaessem Gebrauch keine Warnung
+    # "Flags ohne zugehoerige Regel" ausloest.
+    flag: anhang_i_abschnitt_b
     rechtsfolge: >-
       Nach Art. 2 Abs. 2 gelten nur Art. 6 Abs. 1, Art. 60a und Art. 102 bis
       112. Kapitel III gilt nicht unmittelbar. Art. 57, 58 und 59 gelten nur,
