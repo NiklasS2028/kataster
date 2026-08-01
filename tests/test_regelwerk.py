@@ -634,3 +634,69 @@ def test_validierung_meldet_fehlenden_zielfeld_pruefstand():
     # Kein Fehler, und die Ausspielung bleibt unberuehrt (Hinweis blockiert nicht).
     assert not [p for p in probleme if p.schwere == "fehler" and "kmu_regel" in p.text]
     assert rw.ausspielbar() is True
+
+
+# --- Referenzintegritaet als Familie (Schritt 1) --------------------------
+# validieren() prueft alle Verweise auf Vokabular. Jede Gegenprobe verletzt den
+# geprueften Zustand kuenstlich und verlangt genau einen Fehler bzw. Hinweis;
+# ohne die Gegenprobe waere der Test nicht aussagekraeftig.
+
+def _frisches_regelwerk():
+    from app.regelwerk import Regelwerk
+    return Regelwerk.laden(_RW_PFAD)
+
+
+def _fehler(rw):
+    return [p for p in rw.validieren() if p.schwere == "fehler"]
+
+
+def _hinweise(rw):
+    return [p for p in rw.validieren() if p.schwere == "hinweis"]
+
+
+def test_referenzen_im_ist_stand_sind_intakt(regelwerk):
+    """Der Ausgangsstand traegt keine toten Verweise. Faengt eine versehentliche
+    Verletzung im Regelwerk selbst, nicht nur in den synthetischen Faellen."""
+    assert not _fehler(regelwerk)
+
+
+def test_validierung_meldet_tote_regel_id_in_zuordnung():
+    rw = _frisches_regelwerk()
+    rw.einsatzkontexte["zuordnung"]["V-99"] = ["personal"]
+    assert any("V-99" in p.text and "existiert nicht" in p.text for p in _fehler(rw))
+
+
+def test_validierung_meldet_unbekannten_kontext_in_zuordnung():
+    rw = _frisches_regelwerk()
+    rw.einsatzkontexte["zuordnung"]["V-01"] = ["personel"]
+    assert any("Unbekannter Kontext 'personel'" in p.text for p in _fehler(rw))
+
+
+def test_validierung_meldet_unbekannte_klasse_in_nur_bei_klasse():
+    rw = _frisches_regelwerk()
+    rw.regeln[10]["nur_bei_klasse"] = ["erfunden"]
+    assert any("erfunden" in p.text and "nur_bei_klasse" in p.text for p in _fehler(rw))
+
+
+def test_validierung_meldet_unbekannte_rolle_in_gilt_fuer():
+    rw = _frisches_regelwerk()
+    rw.groessenregime["erleichterungen"][0]["gilt_fuer"] = ["chef"]
+    assert any("Unbekannte Rolle 'chef' in 'gilt_fuer'" in p.text for p in _fehler(rw))
+
+
+def test_zuordnung_rueckrichtung_meldet_kontextlose_regel_als_hinweis(regelwerk):
+    """Eine Regel ohne Kontexteintrag wird immer gestellt. Im Ist-Stand trifft
+    das P-02 (Anhang-I-Pfad). Als Hinweis, nicht Fehler, und die Ausspielung
+    bleibt unberuehrt."""
+    kontextlos = [p for p in _hinweise(regelwerk) if "keinem Kontext" in p.text]
+    assert any("P-02" in p.ort for p in kontextlos)
+    assert regelwerk.ausspielbar() is True
+
+
+def test_validierung_meldet_geprueft_am_vor_rechtsstand():
+    rw = _frisches_regelwerk()
+    rw.regeln[0]["geprueft_am"] = "2020-01-01"
+    passend = [p for p in _hinweise(rw) if "liegt vor dem Rechtsstand" in p.text]
+    assert passend
+    # Hinweis, kein Fehler: legitime Sonderfaelle sind denkbar.
+    assert not any("liegt vor dem Rechtsstand" in p.text for p in _fehler(rw))

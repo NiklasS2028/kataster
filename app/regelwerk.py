@@ -79,6 +79,28 @@ class Problem:
     text: str
 
 
+def geprueft_eintraege(node: Any, pfad: str = ""):
+    """Yield (pfad, container, schluessel) fuer jeden 'geprueft'- oder
+    '<feld>_geprueft'-Schluessel im gesamten Regelwerksbaum.
+
+    Ein rekursiver Walk, damit jeder neu ergaenzte Block mit Pruefstand
+    automatisch erfasst wird, statt je Ebene eine eigene Stelle zu brauchen, die
+    beim naechsten neuen Block wieder vergessen wird. Wird sowohl von validieren()
+    (Datums-Hinweis) als auch von der Suite (Praesenz und Form) genutzt, damit die
+    Walk-Logik nur einmal existiert.
+    """
+    if isinstance(node, dict):
+        for schluessel in node:
+            if schluessel == "geprueft" or schluessel.endswith("_geprueft"):
+                yield pfad or "(root)", node, schluessel
+        for schluessel, wert in node.items():
+            unter = f"{pfad}.{schluessel}" if pfad else schluessel
+            yield from geprueft_eintraege(wert, unter)
+    elif isinstance(node, list):
+        for i, eintrag in enumerate(node):
+            yield from geprueft_eintraege(eintrag, f"{pfad}[{i}]")
+
+
 # ---------------------------------------------------------------------------
 # Regelwerk
 # ---------------------------------------------------------------------------
@@ -227,6 +249,12 @@ class Regelwerk:
                 if rolle not in ROLLEN:
                     probleme.append(Problem("fehler", ort, f"Unbekannte Rolle '{rolle}'."))
 
+            for kl in r.get("nur_bei_klasse", []) or []:
+                if kl not in self.risikoklassen:
+                    probleme.append(
+                        Problem("fehler", ort, f"Unbekannte Risikoklasse '{kl}' in 'nur_bei_klasse'.")
+                    )
+
             if r.get("geprueft") is not True:
                 probleme.append(
                     Problem("warnung", ort, "Fundstelle noch nicht verifiziert.")
@@ -254,6 +282,12 @@ class Regelwerk:
                 if l not in LESARTEN:
                     probleme.append(
                         Problem("fehler", ort, f"Unbekannte Lesart '{l}' in 'gilt_in_lesart'.")
+                    )
+
+            for rolle in e.get("gilt_fuer") or []:
+                if rolle not in ROLLEN:
+                    probleme.append(
+                        Problem("fehler", ort, f"Unbekannte Rolle '{rolle}' in 'gilt_fuer'.")
                     )
 
             gfg = e.get("gilt_fuer_groesse")
@@ -333,6 +367,55 @@ class Regelwerk:
                         "Verifikationseinheit ohne eigenes 'geprueft'.",
                     )
                 )
+
+        # Einsatzkontexte: die Zuordnung Regel-ID -> Kontexte verweist in beide
+        # Richtungen auf Vokabular. Eine tote Regel-ID heisst, dass eine Regel nie
+        # ueber ihren Kontext gefragt wird; eine unbekannte Kontext-ID filtert ins
+        # Leere. Beides ist ein Fehler wie ein toter frist_ref.
+        regel_ids = {r.get("id") for r in self.regeln}
+        kontext_ids = {
+            k.get("id") for k in self.einsatzkontexte.get("definitionen") or []
+        }
+        zuordnung = self.einsatzkontexte.get("zuordnung") or {}
+        for regel_id, kontexte in zuordnung.items():
+            ort = f"einsatzkontexte/zuordnung/{regel_id}"
+            if regel_id not in regel_ids:
+                probleme.append(Problem("fehler", ort, f"Regel-ID '{regel_id}' existiert nicht."))
+            for ktx in kontexte or []:
+                if ktx not in kontext_ids:
+                    probleme.append(Problem("fehler", ort, f"Unbekannter Kontext '{ktx}'."))
+        # Rueckrichtung: eine Regel ohne Kontexteintrag wird immer gestellt. Das
+        # kann gewollt sein (uebersprungene_regeln weist es aus), ist beim
+        # Bearbeiten aber ein moeglicher Fluechtigkeitsfehler. Hinweis, nicht Fehler.
+        for regel_id in sorted(rid for rid in regel_ids - set(zuordnung) if rid):
+            probleme.append(
+                Problem(
+                    "hinweis",
+                    f"einsatzkontexte/zuordnung/{regel_id}",
+                    "Regel ist keinem Kontext zugeordnet und wird immer gestellt.",
+                )
+            )
+
+        # geprueft_am darf nicht vor dem Rechtsstand liegen, gegen den geprueft
+        # wurde - das waere logisch unmoeglich und waere bei der Umbenennung in
+        # Phase 1 fast entstanden. Hinweis, weil legitime Sonderfaelle denkbar
+        # sind. Nur ISO-Strings werden verglichen; abweichende Formen faengt die
+        # Suite ab.
+        rechtsstand = self.meta.get("rechtsstand")
+        if isinstance(rechtsstand, str):
+            for pfad, container, schluessel in geprueft_eintraege(self._daten):
+                if container.get(schluessel) is not True:
+                    continue
+                basis = schluessel[: -len("geprueft")]
+                am = container.get(basis + "geprueft_am")
+                if isinstance(am, str) and am < rechtsstand:
+                    probleme.append(
+                        Problem(
+                            "hinweis",
+                            pfad,
+                            f"geprueft_am {am} liegt vor dem Rechtsstand {rechtsstand}.",
+                        )
+                    )
 
         if self.lesarten.get("omnibus", {}).get("amtsblatt") in (None, ""):
             probleme.append(
