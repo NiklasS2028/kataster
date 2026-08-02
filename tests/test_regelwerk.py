@@ -684,13 +684,23 @@ def test_validierung_meldet_unbekannte_rolle_in_gilt_fuer():
     assert any("Unbekannte Rolle 'chef' in 'gilt_fuer'" in p.text for p in _fehler(rw))
 
 
-def test_zuordnung_rueckrichtung_meldet_kontextlose_regel_als_hinweis(regelwerk):
-    """Eine Regel ohne Kontexteintrag wird immer gestellt. Im Ist-Stand trifft
-    das P-02 (Anhang-I-Pfad). Als Hinweis, nicht Fehler, und die Ausspielung
-    bleibt unberuehrt."""
+def test_ist_stand_keine_regel_ohne_kontext(regelwerk):
+    """Nach der Aufnahme von P-02 in die Kontextzuordnung ist keine Regel mehr
+    kontextlos. Der frueher gemeldete P-02-Fund ist damit geschlossen."""
     kontextlos = [p for p in _hinweise(regelwerk) if "keinem Kontext" in p.text]
-    assert any("P-02" in p.ort for p in kontextlos)
-    assert regelwerk.ausspielbar() is True
+    assert not kontextlos, [p.ort for p in kontextlos]
+
+
+def test_zuordnung_rueckrichtung_meldet_kontextlose_regel_als_hinweis():
+    """Gegenprobe des Rueckrichtungs-Hinweises: nimmt man eine Regel aus der
+    Zuordnung, wird sie als kontextlos gemeldet. Als Hinweis, nicht Fehler, und
+    die Ausspielung bleibt unberuehrt."""
+    rw = _frisches_regelwerk()
+    del rw.einsatzkontexte["zuordnung"]["V-01"]
+    kontextlos = [p for p in _hinweise(rw) if "keinem Kontext" in p.text]
+    assert any("V-01" in p.ort for p in kontextlos)
+    assert not any("keinem Kontext" in p.text for p in _fehler(rw))
+    assert rw.ausspielbar() is True
 
 
 def test_validierung_meldet_geprueft_am_vor_rechtsstand():
