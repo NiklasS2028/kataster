@@ -155,6 +155,133 @@ lesarten:
     geltungsbeginn_allgemein: "2026-08-02"
     status: "in Kraft"
     geprueft: false
+
+# -----------------------------------------------------------------------------
+# OMNIBUS - BEWUSSTE AUSLASSUNGEN
+# -----------------------------------------------------------------------------
+# Ergebnis des Omnibus-Audits: die Aenderungsbefehle aus Art. 1 der VO (EU)
+# 2026/1744, die bewusst NICHT ins Kataster eingearbeitet werden. Eine bewusste
+# Auslassung ist kein Mangel. Zwei Gruende: der Befehl adressiert nicht die
+# Zielgruppe (kategorie_adressat), oder sein Gegenstand liegt ausserhalb des
+# Kataster-Zuschnitts (kategorie_gegenstand). Abgebildete Befehle tragen ihre
+# Omnibus-Nummer im jeweiligen Regelfeld; die noch offenen, unternehmens-
+# bezogenen Befehle stehen als Checkliste im Hinweistext der Lesart omnibus,
+# nicht hier.
+#
+# Als Feld gefuehrt, nicht als Kommentar, damit eine Vollstaendigkeitspruefung
+# die 43 Befehle gegen ihren Status zaehlen kann und kein hier ausgelassener
+# Befehl zugleich in einem Regelfeld als abgebildet auftaucht. geprueft bleibt
+# false, bis der Block gegen den Aenderungstext gelesen ist.
+# -----------------------------------------------------------------------------
+
+omnibus_auslassungen:
+  rechtsakt: "Verordnung (EU) 2026/1744, Artikel 1"
+  festgestellt_am: "2026-08-02"
+  geprueft: false
+  kategorie_adressat:
+    beschreibung: >-
+      Adressat ist nicht die Zielgruppe des Kataster, sondern Kommission,
+      KI-Buero, Mitgliedstaaten, Normungsorganisationen oder die notifizierenden
+      Behoerden. Programm-, Organisations-, Delegations-, Leitlinien- und
+      Benennungssaetze ohne Unternehmenspflicht.
+    befehle:
+      - nr: "1"
+        norm: "Art. 1 Abs. 2 lit. g"
+        grund: >-
+          Zielbestimmung der Verordnung, Auslegungsmassstab ohne Pflicht oder
+          Anspruch.
+      - nr: "14 bis 16"
+        norm: "Art. 28 Abs. 8 und 9, Art. 29 Abs. 4, Art. 30 Abs. 2"
+        grund: >-
+          Benennung notifizierter Stellen durch die notifizierenden Behoerden.
+          Betrifft nicht die Frage, ob ein Produkt einer Drittbewertung
+          unterliegt; die entscheidet sich in Art. 6 Abs. 1 lit. b und Abs. 1c
+          (Nr. 8, abgebildet). Die Zusatzbedingung von P-01 und P-02 bleibt
+          unberuehrt.
+      - nr: "17"
+        norm: "Art. 40 Abs. 2, neuer Unterabsatz"
+        grund: >-
+          Normungsauftrag der Kommission an die Normungsorganisationen; wirkt
+          auf Anbieter nur mittelbar ueber die Konformitaetsvermutung.
+      - nr: "20"
+        norm: "Art. 50 Abs. 7"
+        grund: >-
+          Betrifft das Instrument der Kennzeichnungs-Leitfaeden, nicht die
+          Pflicht. Die materiellen Kennzeichnungspflichten des Art. 50 Abs. 1
+          bis 4 sind unberuehrt und stehen in T-01 bis T-05.
+      - nr: "22 (lit. a, b, d, e, f, g)"
+        norm: "Art. 57 Abs. 1, 3, 5, 9 lit. e, 10, 14"
+        grund: >-
+          Ausgestaltung der KI-Reallabore und Programmsatz in Abs. 9 lit. e. Der
+          vorrangige Zugang als Erleichterung ist abgebildet (lit. c in G-08),
+          der Programmsatz eigens erklaert (G-08.hinweis).
+      - nr: "23"
+        norm: "Art. 58 Abs. 1 Unterabsatz 1"
+        grund: >-
+          Durchfuehrungsrechtsakte der Kommission zur Fuehrung der Reallabore.
+      - nr: "27"
+        norm: "Art. 64 Abs. 3, neu"
+        grund: >-
+          Ressourcenausstattung des KI-Bueros, interner Organisationssatz ohne
+          Aussenwirkung auf Unternehmen.
+      - nr: "28"
+        norm: "Art. 69 Abs. 2"
+        grund: >-
+          Gebuehren fuer die Sachverstaendigen des wissenschaftlichen Gremiums.
+      - nr: "30 bis 34"
+        norm: "Befugnisse des KI-Bueros"
+        grund: >-
+          Richten sich an das KI-Buero und Behoerden, keine Unternehmenspflicht.
+          Gleiche Kategorie wie die im Ausgangsrecht bewusst ausgelassenen
+          Art. 5 lit. d und h und Anhang III Nr. 6 und 7.
+      - nr: "36 (lit. a, b)"
+        norm: "Art. 96 Abs. 1 lit. a und neuer lit. g"
+        grund: >-
+          Leitlinien der Kommission, kein Unternehmensadressat. Die
+          Midcap-Erweiterung in lit. c ist abgebildet, siehe
+          groessenregime.hinweis_unterstuetzung.
+      - nr: "37"
+        norm: "Art. 97"
+        grund: >-
+          Befugnisuebertragung an die Kommission, Delegations-Metanorm ohne
+          materielle Unternehmenspflicht.
+  kategorie_gegenstand:
+    beschreibung: >-
+      Der Gegenstand liegt ausserhalb des Kataster-Zuschnitts: Daten-Governance
+      des Anbieters, GPAI-Modelle, das Verhaeltnis zur DSGVO oder die
+      Registrierungs- und Datenbankebene.
+    befehle:
+      - nr: "2 lit. b"
+        norm: "Art. 2 Abs. 7"
+        grund: >-
+          Unberuehrtheitsklausel zum Datenschutzrecht (Art. 4a und 59
+          ausgenommen), keine eigene KI-VO-Pflicht. Wird erst mittelbar
+          relevant, falls Art. 4a (Nr. 6) aufgenommen wird.
+      - nr: "9 (lit. a, b, c)"
+        norm: "Art. 10 Abs. 1, Abs. 5 gestrichen, Abs. 6"
+        grund: >-
+          Daten-Governance ist Anbieterpflicht und kein Regelblock des Kataster
+          (Betreiber-Zuschnitt). Die Streichung von Abs. 5 hat keinen
+          Fundstellen-Footprint (Negativbefund); lit. a und c sind
+          Folgeaenderungen zur Einfuehrung von Art. 4a.
+      - nr: "21"
+        norm: "Art. 56 Abs. 6"
+        grund: >-
+          GPAI-Modelle nach Kapitel V bildet der Kataster generell nicht ab;
+          zudem ist nur das Leitlinieninstrument betroffen.
+      - nr: "42"
+        norm: "Anhang VIII Abschnitt B Nr. 7 und 9, gestrichen"
+        grund: >-
+          Registrierungsangaben der EU-Datenbank. Anhang VIII ist nicht
+          modelliert, nur als Zeiger in
+          ausnahmefilter_anhang_iii.folgepflichten praesent.
+      - nr: "43"
+        norm: "Anhang XIV, neu"
+        grund: >-
+          Klassifizierungscodes der Behoerden- und Datenbankebene, keine
+          Unternehmenspflicht. Instrumentell als Beleg fuer die
+          Abschnitt-A-Nummerierung genutzt, siehe anhang_i.herkunft.
+
 # -----------------------------------------------------------------------------
 # ANWENDUNGSBEREICH - Ausschlussgruende
 # -----------------------------------------------------------------------------
