@@ -700,3 +700,26 @@ def test_validierung_meldet_geprueft_am_vor_rechtsstand():
     assert passend
     # Hinweis, kein Fehler: legitime Sonderfaelle sind denkbar.
     assert not any("liegt vor dem Rechtsstand" in p.text for p in _fehler(rw))
+
+
+# --- Pruefung 2: Dateiname gegen Rechtsstand (der ausloesende Fehler) ------
+
+def _dateiname_datum(rw):
+    treffer = re.search(r"(\d{4}-\d{2}-\d{2})", rw.quelldatei.name)
+    return treffer.group(1) if treffer else None
+
+
+def test_dateiname_entspricht_rechtsstand(regelwerk):
+    """Das Datum im Dateinamen muss dem ausgewiesenen Rechtsstand entsprechen.
+    ai-act_2026-07-27.yaml bei Rechtsstand 2026-07-23 war der Fehler, der diese
+    ganze Arbeit ausgeloest hat. Die Pruefung liegt zusaetzlich in
+    tools/freigeben.py, damit sie vor jeder Freigabe greift."""
+    assert _dateiname_datum(regelwerk) == regelwerk.rechtsstand
+
+
+def test_gegenprobe_dateiname_rechtsstand_widerspruch():
+    import yaml
+    from app.regelwerk import Regelwerk
+    daten = yaml.safe_load(_RW_PFAD.read_text(encoding="utf-8"))
+    rw = Regelwerk(daten, quelldatei=Path("rules/ai-act_2026-07-27.yaml"))
+    assert _dateiname_datum(rw) != rw.rechtsstand

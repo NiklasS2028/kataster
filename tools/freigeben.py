@@ -28,6 +28,22 @@ REGELWERK = WURZEL / "rules" / "ai-act_2026-07-23.yaml"
 
 VERSION_ZEILE = re.compile(r'^(\s*regelwerk_version:\s*)"([^"]+)"\s*$')
 HISTORIE_ANKER = "  aenderungshistorie:"
+DATEINAME_DATUM = re.compile(r"(\d{4}-\d{2}-\d{2})")
+
+
+def _rechtsstand_stimmt() -> tuple[bool, str | None, str | None]:
+    """(stimmt, datum_im_dateinamen, meta.rechtsstand).
+
+    Genau der Fehler, der diese Arbeit ausgeloest hat: ein Regelwerk mit
+    ai-act_2026-07-27.yaml bei Rechtsstand 2026-07-23. Muss vor jeder Freigabe
+    greifen, nicht nur in der Suite.
+    """
+    import yaml
+    daten = yaml.safe_load(REGELWERK.read_text(encoding="utf-8"))
+    rechtsstand = daten.get("meta", {}).get("rechtsstand")
+    treffer = DATEINAME_DATUM.search(REGELWERK.name)
+    datum = treffer.group(1) if treffer else None
+    return datum == rechtsstand, datum, rechtsstand
 
 
 def _laden() -> list[str]:
@@ -140,7 +156,21 @@ def main() -> int:
     parser.add_argument("--von", help="Wer hat verifiziert")
     parser.add_argument("--pruefen", action="store_true",
                         help="Nur pruefen, nichts aendern")
+    parser.add_argument("--rechtsstand-ignorieren", action="store_true",
+                        help="Widerspruch zwischen Dateiname und Rechtsstand bewusst uebergehen")
     args = parser.parse_args()
+
+    stimmt, datum, rechtsstand = _rechtsstand_stimmt()
+    if not stimmt:
+        print(f"Widerspruch: Der Dateiname nennt den Rechtsstand {datum}, "
+              f"meta.rechtsstand ist {rechtsstand}.")
+        print("Datum im Dateinamen und ausgewiesener Rechtsstand muessen "
+              "uebereinstimmen.")
+        if not args.rechtsstand_ignorieren:
+            print("Abbruch. Mit --rechtsstand-ignorieren bewusst uebergehen.")
+            return 3
+        print("Bewusst uebergangen (--rechtsstand-ignorieren).")
+        print()
 
     if args.pruefen or not args.version:
         return pruefen()
