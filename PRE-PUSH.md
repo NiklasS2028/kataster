@@ -34,8 +34,10 @@ Schriftreferenz auf einen CDN würde es widerlegen.
 - [ ] Verifikationsstand und Versionsnummer widersprechen sich nicht
 - [ ] `VERIFIKATION.md` ist auf dem aktuellen Stand
 - [ ] Änderungshistorie führt den letzten Stand mit Datum und Prüfer
-- [ ] `lesarten.omnibus.amtsblatt` — falls inzwischen veröffentlicht,
-      nachtragen und die Omnibus-Lesart verifizieren
+- [ ] `lesarten.omnibus`: `eingearbeitet`, `geprueft` und die offene
+      Checkliste im `hinweis` geben den wahren Stand wieder; kein Befehl steht
+      zugleich als offen und als abgebildet, und solange `eingearbeitet` false
+      ist, tragen README und Dossier den Omnibus-Vorbehalt
 
 ## Schriften
 
