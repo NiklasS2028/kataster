@@ -13,7 +13,7 @@ Ist eine genannte Ausnahme vollstaendig wiedergegeben?
 
 ## Art. 5
 
-6 Regeln, davon 0 offen
+8 Regeln, davon 0 offen
 
 - [x] **V-01** &middot; `Art. 5 Abs. 1 lit. f KI-VO`  
       Wird das System eingesetzt, um Emotionen von Personen am Arbeitsplatz oder in Bildungseinrichtungen abzuleiten?  
@@ -31,6 +31,14 @@ Ist eine genannte Ausnahme vollstaendig wiedergegeben?
 - [x] **V-06** &middot; `Art. 5 Abs. 1 lit. b KI-VO`  
       Nutzt das System eine Vulnerabilitaet oder Schutzbeduerftigkeit aufgrund von Alter, Behinderung oder einer bestimmten sozialen oder wirtschaftlichen Situation aus - mit dem Ziel oder der Wirkung, Verhalten wesentlich zu veraendern und dadurch erheblichen Schaden zuzufuegen oder mit hinreichender Wahrscheinlichkeit zuzufuegen?  
       _Hinweis:_ Es genuegt die Wirkung; eine Absicht muss nicht nachgewiesen werden.  
+- [x] **V-07** &middot; `Art. 5 Abs. 1 Unterabsatz 1 lit. ba KI-VO`  
+      Setzen Sie ein KI-System gezielt dafuer ein, realistische Bild-, Video-, Ton- oder aehnliche Inhalte zu erzeugen oder zu manipulieren, in denen intime Koerperteile einer bestimmbaren natuerlichen Person dargestellt werden oder eine an eindeutig sexuellen Handlungen beteiligte bestimmbare Person dargestellt wird - ohne dass die betreffende Person dazu eine aus freien Stuecken erfolgende, spezifische, aufgeklaerte, eindeutige und ausdrueckliche Zustimmung erteilt hat?  
+      _Ausnahme im Entwurf:_ Nicht erfasst ist eine Manipulation, die weder die Sichtbarkeit der dargestellten intimen Koerperteile erhoeht noch die Art der dargestellten eindeutig sexuellen Handlungen veraendert (Art. 5 Abs. 1b KI-VO).  
+      _Hinweis:_ Betreiberperspektive. Verboten ist nur der zielgerichtete Einsatz zu solcher Erzeugung oder Manipulation (Art. 5 Abs. 1a lit. b), nicht schon der Einsatz eines generativen Systems, das solche Inhalte technisch erzeugen koennte. Die Anbieterpruefung nach Art. 5 Abs. 1a lit. a ist hier nicht abgebildet.  
+- [x] **V-08** &middot; `Art. 5 Abs. 1 Unterabsatz 1 lit. bb KI-VO`  
+      Setzen Sie ein KI-System gezielt dafuer ein, Material oder Darbietungen im Sinne von Artikel 2 Buchstaben c und e der Richtlinie 2011/93/EU zu erzeugen oder zu manipulieren?  
+      _Ausnahme im Entwurf:_ Gilt nicht, soweit das unrechtmaessige Verhalten nach nationalem Recht als gerechtfertigt gilt.  
+      _Hinweis:_ Der Normtext verweist auf die Richtlinie 2011/93/EU, statt den Tatbestand auszuformulieren; die Prueffrage gibt den Verweis wieder. Fuer die Betreiberperspektive gilt dieselbe Eingrenzung wie bei V-07 (Art. 5 Abs. 1a lit. b).  
 
 ## Art. 50
 
@@ -97,16 +105,101 @@ Ist eine genannte Ausnahme vollstaendig wiedergegeben?
 
 ## Art. 6
 
-1 Regeln, davon 0 offen
+2 Regeln, davon 0 offen
 
 - [x] **P-01** &middot; `Art. 6 Abs. 1 KI-VO i. V. m. Anhang I`  
       Ist das KI-System ein Sicherheitsbauteil eines Produkts, das unter die Harmonisierungsrechtsvorschriften aus Anhang I faellt (u. a. Maschinen, Spielzeug, Aufzuege, Druckgeraete, Funkanlagen, Seilbahnen, persoenliche Schutzausruestung, Medizinprodukte, In-vitro-Diagnostika, Fahrzeuge, Luftfahrzeuge) - oder ist es selbst ein solches Produkt?  
       _Hinweis:_ Beide Bedingungen muessen kumulativ erfuellt sein. Der Ausnahmefilter des Art. 6 Abs. 3 gilt fuer diesen Pfad NICHT - er bezieht sich nur auf Anhang III.  
+- [x] **P-02** &middot; `Art. 6 Abs. 1 KI-VO i. V. m. Art. 3 Nr. 14 und Art. 6 Abs. 1a bis 1c`  
+      Ist das KI-System ein Bestandteil eines Produkts, das unter die Harmonisierungsrechtsvorschriften aus Anhang I faellt (u. a. Maschinen, Spielzeug, Aufzuege, Funkanlagen, Druckgeraete, Seilbahnen, Medizinprodukte, Fahrzeuge, Luftfahrzeuge), und besteht seine Zweckbestimmung darin, Risiken fuer die Gesundheit und Sicherheit von Personen oder Eigentum abzuwenden oder zu mindern - oder wuerde sein Ausfall oder seine Stoerung Gesundheit, Sicherheit oder Eigentum gefaehrden?  
+      _Ausnahme im Entwurf:_ Nach Art. 6 Abs. 1a gelten Systeme nicht als Sicherheitsbauteil, die ausschliesslich fuer nicht sicherheitsrelevante Aspekte (Nutzerunterstuetzung, Leistungsoptimierung, Automatisierung, Benutzerfreundlichkeit, Qualitaetskontrolle) verwendet werden; nach Art. 6 Abs. 1b gilt ein System jedoch als Sicherheitsbauteil, wenn sein Ausfall oder seine Fehlfunktion Gesundheit und Sicherheit gefaehrden wuerde.  
+      _Hinweis:_ Sicherheitsbauteil-Pfad, seit Phase 4 aus P-01 herausgeloest. Die Zweckbestimmung legt der Anbieter fest (Erwaegungsgrund 7); die blosse Integration in ein Anhang-I-Produkt begruendet noch keine Sicherheitsfunktion. Die Zusatzfrage nach der Konformitaetsbewertung durch eine dritte Stelle gilt wie bei P-01.  
 
 ---
 
-Offen: 0 von 25.
+Offen: 0 von 28.
 
 Solange nicht alle Regeln verifiziert sind, meldet
 `Regelwerk.ausspielbar()` falsch, die Fusszeile weist auf den
 Entwurfsstand hin, und das Nachweis-Dossier traegt einen Warnkasten.
+
+
+# Die uebrigen Pruefstaende
+
+Diese Tabelle deckt nur die 28 Fundstellen-Regeln des Blocks `regeln`.
+Ihr Stand fuehrt `Regelwerk.pruefstand` und steuert `ausspielbar()`. Das
+Regelwerk traegt Pruefvermerke aber auch auf anderen Ebenen, jede mit
+eigenem `geprueft`, `geprueft_am`, `geprueft_von`:
+
+- `groessenregime` (G-Block): eigener Stand `groessenregime_pruefstand`
+  und `freigabestatus`, eintragsweise freigebbar, blockiert die 28 Regeln
+  bewusst nicht (Definitionen, drei Hinweisbloecke, Erleichterungen).
+- `lesarten`, `fristen`, `bestandsschutz`, `rollenbestimmung`,
+  `risikoklassen`, `einsatzkontexte`, `querschnittspflichten`, `anhang_i`,
+  `omnibus_auslassungen`: je Block ein eigener Pruefvermerk.
+
+Gesichert werden alle diese Vermerke von `tests/test_pruefstand.py`. Der
+rekursive Walk `geprueft_eintraege()` in `app/regelwerk.py` findet jeden
+`geprueft`- und `<feld>_geprueft`-Schluessel auf jeder Ebene; die Suite
+verlangt fuer jedes gesetzte `geprueft: true` ein gueltiges ISO-Datum in
+`geprueft_am` und einen nicht leeren `geprueft_von`. Weil der Walk
+rekursiv ist, wird ein neu ergaenzter Block mit Pruefstand automatisch
+erfasst, ohne dass je Ebene eine eigene Pruefstelle noetig ist.
+`test_walk_erfasst_alle_ebenen` sichert gegen den stillen Ausfall des
+Walks ab (mindestens 70 Pruefstellen), damit der Integritaetstest nicht
+leer durchlaeuft.
+
+
+# Zweite Runde: Verhaltenspruefung
+
+Das Dokument oben ist die erste Runde: Fundstelle und Wortlaut jeder Regel
+gegen den Normtext. Diese zweite Runde deckte Defekte auf, bei denen die
+Fundstelle stimmte und nur das Verhalten des Werkzeugs ihr nicht folgte.
+
+| Phase | Befund | Commit | Wodurch gefunden |
+| --- | --- | --- | --- |
+| 4 | Ausnahmefilter Art. 6 Abs. 3 war auf die Regel-ID P-01 hart verdrahtet und sperrte nach der Teilung nur eine der beiden Regeln | `f1a229a` | Das Refactoring selbst legte die ID-Bindung frei |
+| 5 | Bestandsschutz knuepfte an F-03 statt an F-05/F-06; Systeme ab 02.08.2026 erhielten zu Unrecht keinen Bestandsschutz | `7b68651` | Tests blieben gruen, obwohl sich die Frist verschob; alle nutzten 2024-05-01 und erreichten die Aenderung nicht |
+| 5 | `anhang_i_abschnitt_b` fehlte in `flag_namen()`; die Selbstdiagnose feuerte im Normalbetrieb | `b49d933` | Die Warnung des Werkzeugs ueber sich selbst, bei einem gewoehnlichen Lauf |
+| 6 | Q-01 beschrieb den Art.-4-Uebergang als neue Massnahmenpflicht; tatsaechlich bestand sie schon, geaendert hat sich ihr Ziel | `14e1905` | Erneutes Nachlesen beim Umbau der Schulungsmatrix |
+| 7 | Art. 99 Abs. 6a erfasst nur kleine Midcaps; die Uebergabe fuehrte die Deckelung faelschlich unter KMU. Mitkorrigiert: Art. 63 Abs. 1 (Vorbehalt Partner/Verbund), Art. 11 Abs. 1 UAbs. 2 (KMU und Midcaps) | `3315836`, `c3ab184` | Nachlesen des Ausgangsrechts neben dem Aenderungsbefehl |
+| 7 | Sammelschalter `groessenregime.geprueft` verhinderte die eintragsweise Freigabe; dazu drei Wortlautbefunde (G-01 "Pflicht" statt Moeglichkeit, Q-02 ohne Dimensionentrennung, `hinweis_unterstuetzung` mit falschem Adressaten) | `104f1fd` | Der Versuch, einen einzelnen Eintrag freizugeben, scheiterte am Schalter |
+| 10 | P-02 war seit Phase 4 ohne Kontextzuordnung und wurde in jedem Kontext gestellt | `fc4b4ca` | Der neu gebaute Rueckrichtungs-Waechter sprang beim ersten Lauf an |
+
+Sechs Signale trugen diese Befunde, keines davon ein Fundstellenabgleich:
+
+1. **Der Umbau legt eine falsche Bindung frei.** Der auf P-01 verdrahtete
+   Ausnahmefilter (Phase 4) und der Sammelschalter des G-Blocks (Phase 7)
+   fielen beide auf, weil eine gewoehnliche Umbau- oder Freigabeoperation
+   auf eine Konstruktion stiess, die enger gebunden war, als die Norm es
+   verlangt.
+2. **Ein gruener Test, der haette rot werden muessen.** Der Bestandsschutz
+   (Phase 5) knuepfte an die falsche Frist; alle Tests nutzten 2024-05-01
+   und erreichten die verschobene Frist nie. Siehe
+   [[Gegenprobe dass ein Test rot werden kann]].
+3. **Eine Selbstdiagnose, die im Normalbetrieb feuert.** Der fehlende
+   Flag-Name (Phase 5) trieb das Werkzeug dazu, bei einem gewoehnlichen
+   Lauf ueber sich selbst zu warnen. Siehe
+   [[Warnung im Normalbetrieb stumpft ab und verdeckt echte]].
+4. **Erneutes Nachlesen des Normtexts beim Umbau.** Der Art.-4-Uebergang
+   (Phase 6) entpuppte sich als bestehende, nur im Ziel geaenderte Pflicht,
+   als die Schulungsmatrix umgebaut und der Text daneben gelesen wurde.
+5. **Das Nachlesen des Ausgangsrechts neben dem Aenderungsbefehl.** Die
+   Midcap-Behauptung, Art. 63 Abs. 1 mit seiner Beschraenkung auf
+   Kleinstunternehmen, Art. 17 Abs. 2 ohne jede Groessenklasse und
+   Art. 99 Abs. 6 als bestehende KMU-Deckelung fielen alle auf, weil neben
+   den Aenderungsbefehl die Fassung davor gelegt wurde. Ein
+   Aenderungsrechtsakt sagt, was neu ist, aber nicht, was vorher galt; ohne
+   beide Fassungen ist nicht erkennbar, ob eine Norm neu entstand oder nur
+   ihr Anwendungsbereich wuchs. Genau diese Unterscheidung traegt inzwischen
+   die Struktur des Regelwerks: `gilt_in_lesart` fuer neu, das Dict fuer
+   erweitert. Anders als die uebrigen fuenf ist dieses Signal auf jede
+   kuenftige Aenderungsverordnung uebertragbar, nicht an dieses Projekt
+   gebunden.
+6. **Ein neu gebauter Waechter, der beim ersten Lauf anschlaegt.** Der
+   Rueckrichtungs-Waechter (Phase 10) fand P-02 ohne Kontextzuordnung,
+   gestellt in jedem Kontext. Siehe [[Negativtest auf Behauptung statt Wort]].
+
+Kein Befund dieser Runde waere durch einen weiteren Fundstellenabgleich
+aufgefallen. Sechs Signale verdienen mehr Vertrauen als die blosse
+Uebereinstimmung von Fundstelle und Norm.
