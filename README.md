@@ -36,6 +36,15 @@ nach Werkzeug, mit Schreibvarianten, zur Prüfung vor der Übernahme.
 Tabelle, Entwurf einer KI-Richtlinie, rollenspezifische Schulungsmatrix und ein
 Nachweis-Dossier mit Zeitstempel, Rechtsstand und Prüfsumme.
 
+**Nach Größe abstufen.** Ein Teil der Pflichten und der Bußgeldrahmen der
+Verordnung (Höchstbeträge nach Art. 99 Abs. 3 bis 5) hängt an der
+Unternehmensgröße. Kataster erfasst die Größenklasse, vom Kleinstunternehmen bis
+zum Konzern und mit Vorbehalt für Partner und verbundene Unternehmen, und weist
+aus, welche Erleichterungen für Kleinunternehmen und kleine Midcaps in Betracht
+kommen. Angezeigt heißt nicht in Anspruch genommen: ein eigener Dossier-Abschnitt
+(Abschnitt 4) hält das je Rechtsstand fest, ohne eine Inanspruchnahme zu
+behaupten.
+
 ![Bestandsblatt eines Hochrisiko-Systems](docs/bilder/bestandsblatt.jpeg)
 
 ---
@@ -95,11 +104,13 @@ welche exakte Regelfassung zu einem Ergebnis geführt hat.
 
 ## Verifikation
 
-Alle 25 Regeln wurden gegen den amtlichen deutschen Text der
-[Verordnung (EU) 2024/1689](https://eur-lex.europa.eu/eli/reg/2024/1689/oj?locale=de)
-geprüft — Fundstelle für Fundstelle, Wortlaut gegen Wortlaut.
+Alle 28 Regeln sind gegen den amtlichen deutschen Text geprüft, Fundstelle für
+Fundstelle, Wortlaut gegen Wortlaut: die 25 Regeln der Originalfassung gegen die
+[Verordnung (EU) 2024/1689](https://eur-lex.europa.eu/eli/reg/2024/1689/oj?locale=de),
+die drei omnibus-neuen (V-07, V-08, P-02) gegen die Fassung nach der
+Änderungsverordnung (EU) 2026/1744.
 
-Der Abgleich hat gefunden:
+Der erste Abgleich der Originalfassung hat gefunden:
 
 | Befund | Anzahl |
 |---|---|
@@ -127,7 +138,8 @@ Regelwerksdatei.
 
 ## Was nicht abgedeckt ist
 
-Bewusste Auslassungen, im Regelwerk als Kommentar dokumentiert:
+Bewusste Auslassungen aus der Originalfassung, im Regelwerk als Kommentar am
+jeweiligen Block dokumentiert:
 
 - **Art. 5 Abs. 1 lit. d und h** — Risikobewertung zu Straftaten,
   biometrische Echtzeit-Fernidentifizierung zu Strafverfolgungszwecken
@@ -142,16 +154,25 @@ muss sie ergänzen.
 Wahlen und Referenden ist nicht auf Behörden beschränkt und kann
 Kommunikationsagenturen und Verbände treffen.
 
-**Der Omnibus ist noch nicht eingearbeitet.** Die Digital-Omnibus-Verordnung
-zur KI — Verordnung (EU) 2026/1744, ABl. L, 2026/1744 vom 24.07.2026 — ist seit
-dem 27.07.2026 in Kraft. Dieses Regelwerk bildet den Stand davor ab und ist
-insoweit **nicht aktuell**: Die geänderten Anwendungsfristen für
-Hochrisiko-Systeme, die beiden neuen Verbotstatbestände, der neu gefasste
-Begriff des Sicherheitsbauteils und die Änderungen an Art. 4 und Art. 111 sind
-nicht abgebildet. Die Metadaten des Änderungsrechtsakts stehen unter
-`lesarten.omnibus`, das Feld `eingearbeitet` ist `false`. Wer Kataster
-produktiv einsetzt, muss diese Änderungen bis zur nächsten verifizierten
-Fassung selbst berücksichtigen.
+**Der Omnibus ist abgebildet, aber noch nicht vollständig eingearbeitet.** Die
+Digital-Omnibus-Verordnung zur KI (Verordnung (EU) 2026/1744, ABl. L, 2026/1744
+vom 24.07.2026) ist seit dem 27.07.2026 in Kraft. Ihre unternehmensrelevanten
+Kernänderungen sind eingearbeitet und je Regel geprüft: die beiden neuen
+Verbotstatbestände (V-07, V-08), der neu gefasste Begriff des
+Sicherheitsbauteils (P-02), der Anhang-I-Abschnitt-B-Pfad und das Größenregime
+mit den Erleichterungen für Kleinunternehmen und kleine Midcaps. Sie werden in
+der Lesart omnibus geführt.
+
+Noch nicht abgeschlossen ist der Omnibus als Ganzes. Sechzehn Änderungsbefehle
+sind bewusste Auslassungen und stehen strukturiert im Block `omnibus_auslassungen`,
+weil ihr Adressat nicht die Zielgruppe ist oder ihr Gegenstand außerhalb des
+Zuschnitts liegt. Acht unternehmensbezogene Befehle aus Art. 1 (Nr. 3, 6, 12,
+18, 19, 24, 25, 38 lit. b) und die geparkte Nr. 13 (Art. 27 Abs. 4) sind noch
+einzeln zu entscheiden. Solange das
+offen ist, steht das Feld `lesarten.omnibus.eingearbeitet` auf `false`; die
+Metadaten des Änderungsrechtsakts und diese Checkliste stehen unter
+`lesarten.omnibus`. Wer Kataster produktiv einsetzt, muss den offenen Teil bis
+zur nächsten verifizierten Fassung selbst berücksichtigen.
 
 ---
 
@@ -162,7 +183,7 @@ pip install -r requirements-dev.txt
 python -m pytest
 ```
 
-107 Prüfungen. Der Kern ist ein parametrisierter Test über alle Regeln — jede
+181 Prüfungen. Der Kern ist ein parametrisierter Test über alle Regeln — jede
 bekommt einen eigenen Testfall mit ihrer ID als Namen. Fällt eine Regel aus dem
 Regelwerk oder ändert sich ihre Klasse, schlägt genau ein Test fehl, und der
 Name sagt welcher.
