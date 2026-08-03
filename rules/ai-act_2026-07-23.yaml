@@ -131,14 +131,32 @@ lesarten:
     eingearbeitet: false
     geprueft: false
     hinweis: >-
-      Der Aenderungsrechtsakt liegt im Amtsblatt vor und ist in Kraft. Seine
-      Auswirkungen sind in dieses Regelwerk noch NICHT eingearbeitet. Betroffen
-      sind mindestens: Art. 5 (zwei neue Verbotstatbestaende lit. ba und bb),
-      Art. 113 Abs. 3 (Fristen Kapitel III), Art. 3 Nr. 14 und Art. 6 Abs. 1a
-      bis 1c (Begriff Sicherheitsbauteil), Art. 4 (KI-Kompetenz), Art. 111
-      Abs. 2 und 4 (Bestandsschutz, Uebergangsfrist Art. 50 Abs. 2) sowie
-      Anhang I (Maschinenverordnung von Abschnitt A nach Abschnitt B). Wer
-      diese Lesart nutzen will, muss sie zuvor gegen den Text pruefen.
+      Der Aenderungsrechtsakt liegt im Amtsblatt vor und ist seit 2026-07-27
+      in Kraft. Zwei Staende sind zu trennen. eingearbeitet (dieser Block:
+      false) meint, dass alle unternehmensbezogenen Aenderungsbefehle aus
+      Art. 1 entschieden und, wo einschlaegig, umgesetzt sind; das ist noch
+      nicht der Fall. geprueft (dieser Block: false) meint, dass die Lesart als
+      Ganzes gegen den amtlichen Text gelesen wurde.
+
+      Bereits abgebildet und je Regel geprueft, gefuehrt in der Lesart omnibus
+      (ueber gilt_in_lesart bzw. das Feldpaar lesart_original/lesart_omnibus):
+      die beiden neuen Verbotstatbestaende lit. ba und bb (V-07, V-08); der neu
+      gefasste Begriff des Sicherheitsbauteils nach Art. 3 Nr. 14 und Art. 6
+      Abs. 1a bis 1c (P-02); Anhang I Abschnitt B (Maschinenverordnung,
+      lesartunabhaengig); das Groessenregime mit den KMU- und
+      Kleine-Midcap-Erleichterungen (u. a. Art. 11 Abs. 1, Art. 17 Abs. 2,
+      Art. 63 Abs. 1, Art. 99 Abs. 6a). Die geaenderten Fristen werden je Lesart
+      im fristen-Block gefuehrt (Feld omnibus).
+
+      Bewusst nicht eingearbeitet: siehe Block omnibus_auslassungen (16
+      Befehle, deren Adressat nicht die Zielgruppe ist oder deren Gegenstand
+      ausserhalb des Kataster-Zuschnitts liegt).
+
+      Noch offen, vor eingearbeitet: true einzeln zu entscheiden
+      (unternehmensbezogene Befehle aus Art. 1): Nr. 3, Nr. 6, Nr. 12, Nr. 18,
+      Nr. 19, Nr. 24, Nr. 25, Nr. 38 lit. b. Geparkt: Nr. 13 (Art. 27 Abs. 4).
+      Solange diese Punkte offen sind, bleibt eingearbeitet false; wer die
+      Lesart omnibus nutzt, muss den offenen Teil zuvor gegen den Text pruefen.
     # PHASE-11-VERMERK: Sobald eingearbeitet auf true geht, ist zu entscheiden,
     # ob beispiel.py auf die Lesart omnibus umgestellt wird. Solange die Sperre
     # steht, rechnet die Demo bewusst in original (kein Vorgriff auf einen als
