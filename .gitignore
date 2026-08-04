@@ -12,3 +12,6 @@ Thumbs.db
 .zeit/laufend.json
 # Uebergabe-Notiz auf Stand nach Phase 5, ueberholt sich mit jedem Commit. In Phase 12 loeschen.
 UEBERGABE-phase6.md
+# Steuerungsdatei der Bachelorarbeit, kein Bestandteil des Kataster. Enthaelt
+# Namen Dritter und persoenliche Angaben. Lokal behalten, nicht versionieren.
+PROJEKT.md
