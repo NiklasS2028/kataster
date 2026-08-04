@@ -62,7 +62,7 @@ python start.py        # http://127.0.0.1:8771
 
 Python 3.11 oder neuer. Zwei Abhängigkeiten: Flask und PyYAML.
 
-Der Musterbestand zeigt einen fiktiven Maschinenbaubetrieb mit elf Systemen —
+Der Musterbestand zeigt einen fiktiven Maschinenbaubetrieb mit zwölf Systemen —
 alle vier Risikoklassen, ein Sicherheitsbauteil nach Anhang I, ein Altsystem
 unter Bestandsschutz, eine dokumentierte Ausnahme und drei Werkzeuge, die erst
 über die anonyme Umfrage aufgetaucht sind.
@@ -157,7 +157,7 @@ Kommunikationsagenturen und Verbände treffen.
 **Der Omnibus ist abgebildet, aber noch nicht vollständig eingearbeitet.** Die
 Digital-Omnibus-Verordnung zur KI (Verordnung (EU) 2026/1744, ABl. L, 2026/1744
 vom 24.07.2026) ist seit dem 27.07.2026 in Kraft. Ihre unternehmensrelevanten
-Kernänderungen sind eingearbeitet und je Regel geprüft: die beiden neuen
+Kernänderungen sind abgebildet und je Regel geprüft: die beiden neuen
 Verbotstatbestände (V-07, V-08), der neu gefasste Begriff des
 Sicherheitsbauteils (P-02), der Anhang-I-Abschnitt-B-Pfad und das Größenregime
 mit den Erleichterungen für Kleinunternehmen und kleine Midcaps. Sie werden in
