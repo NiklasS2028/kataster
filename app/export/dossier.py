@@ -11,6 +11,8 @@ from __future__ import annotations
 from datetime import datetime
 from html import escape
 
+from ..hinweise import als_html
+
 STIL = """
 @page { size: A4; margin: 20mm 18mm 22mm; }
 * { box-sizing: border-box; }
@@ -56,6 +58,59 @@ def _eur(wert) -> str:
     return f"{float(wert):,.2f}".replace(",", "\u00a0").replace(".", ",").replace("\u00a0", ".")
 
 
+def _datum(iso: str | None) -> str:
+    """ISO-Datum als deutsches Datum. Unbrauchbare Werte bleiben, wie sie sind."""
+    try:
+        return datetime.strptime(iso, "%Y-%m-%d").strftime("%d.%m.%Y")
+    except (TypeError, ValueError):
+        return escape(str(iso or ""))
+
+
+def _lesarten(systeme) -> set[str]:
+    """Die Lesarten, in denen die Einstufungen dieses Dossiers gerechnet wurden."""
+    return {
+        e["lesart"] for s in systeme
+        if (e := s.get("einstufung")) and e.get("lesart")
+    }
+
+
+def _rechtsstand_vorbehalt(h: list[str], systeme, regelwerk) -> None:
+    """Vorbehalt zum Verhaeltnis zwischen gerechneter Lesart und geltendem Recht.
+
+    Zwei getrennte Vorbehalte, weil beide Lesarten aus verschiedenen Gruenden vom
+    geltenden Recht abweichen. Die Lesart original bildet den abgeloesten Stand ab,
+    seit die Aenderungsverordnung in Kraft ist. Die Lesart omnibus bildet den neuen
+    Stand ab, solange er nur teilweise eingearbeitet ist; ihre Sperre haengt an
+    lesarten.omnibus.eingearbeitet und ist von der Verifikation der Regeln
+    unabhaengig. ausspielbar() deckt nur letztere und traegt diesen Vorbehalt nicht
+    mit: Sind alle Regeln verifiziert, meldet es true, auch wenn der
+    Aenderungsrechtsakt offen ist. Ohne den Vorbehalt hier truege ein Dossier in
+    Lesart omnibus keinerlei Hinweis darauf, dass die Lesart als unvollstaendig
+    ausgewiesen ist.
+    """
+    omnibus = regelwerk.lesarten.get("omnibus") or {}
+    rechtsakt = escape(omnibus.get("rechtsakt") or "der Aenderungsverordnung")
+    # Ohne Einstufungen gilt der Ausgangsstand, wie im Erleichterungen-Abschnitt.
+    lesarten = _lesarten(systeme) or {"original"}
+
+    if "original" in lesarten and omnibus.get("amtsblatt"):
+        h.append("<div class='warnung'><strong>Rechtsstand.</strong> "
+                 f"Dieses Dokument enthaelt Einstufungen in der Lesart original, "
+                 f"also nach dem Stand vor {rechtsakt}. Der Aenderungsrechtsakt ist seit dem "
+                 f"{_datum(omnibus.get('inkrafttreten'))} in Kraft. Die Einstufungen "
+                 "bilden insoweit nicht das geltende Recht ab.</div>")
+
+    if "omnibus" in lesarten and omnibus.get("eingearbeitet") is not True:
+        h.append("<div class='warnung'><strong>Omnibus-Vorbehalt.</strong> "
+                 f"Dieses Dokument enthaelt Einstufungen in der Lesart omnibus. "
+                 f"{rechtsakt} ist im "
+                 "Regelwerk erst teilweise eingearbeitet: Die unternehmensrelevanten "
+                 "Kernaenderungen sind abgebildet und je Regel geprueft, einzelne "
+                 "Aenderungsbefehle sind noch nicht entschieden. Der offene Teil ist "
+                 "im Regelwerk unter lesarten.omnibus benannt und vor einer "
+                 "Verwendung dieses Dokuments selbst zu pruefen.</div>")
+
+
 def _erleichterungen_abschnitt(h: list[str], organisation, systeme, regelwerk) -> None:
     """Abschnitt 4: groessenabhaengige Erleichterungen nach dem G-Block.
 
@@ -79,10 +134,7 @@ def _erleichterungen_abschnitt(h: list[str], organisation, systeme, regelwerk) -
     # faellt der Abschnitt auf den Ausgangsstand zurueck; der loest zugleich den
     # Vorbehalt unten aus. Ein gemischter Zustand kann derzeit nicht entstehen,
     # weil die Erfassung nur die Lesart original setzt.
-    lesarten = {
-        e["lesart"] for s in systeme
-        if (e := s.get("einstufung")) and e.get("lesart")
-    }
+    lesarten = _lesarten(systeme)
     lesart = lesarten.pop() if len(lesarten) == 1 else "original"
 
     h.append("<h2>4. Erleichterungen nach Unternehmensgroesse</h2>")
@@ -191,6 +243,8 @@ def dossier_html(organisation, systeme, kennzahlen, regelwerk,
                  f"Von {gesamt} Regeln sind {geprueft} gegen den amtlichen Text "
                  "verifiziert. Dieses Dokument ist bis zur vollstaendigen "
                  "Verifikation nicht als Nachweis gegenueber Dritten geeignet.</div>")
+
+    _rechtsstand_vorbehalt(h, systeme, regelwerk)
 
     # Einstufungen, die unter einer aelteren Regelwerksfassung entstanden sind,
     # tragen deren Version und Pruefvermerke. Das ist richtig historisiert -
@@ -302,10 +356,6 @@ def dossier_html(organisation, systeme, kennzahlen, regelwerk,
     h.append("<p>Die Richtigkeit der Angaben zu den einzelnen Systemen verantwortet "
              "das erfassende Unternehmen. Werden Angaben unzutreffend gemacht, ist "
              "auch die daraus abgeleitete Einstufung unzutreffend.</p>")
-    h.append("<div class='fuss'><strong>Kein Rechtsrat.</strong> Kataster ist ein "
-             "Werkzeug zur strukturierten Selbsteinschaetzung und Dokumentation. Es "
-             "trifft keine rechtliche Bewertung, bescheinigt keine Konformitaet und "
-             "ersetzt keine Beratung. Verbindlich sind allein die im Amtsblatt der "
-             "Europaeischen Union veroeffentlichten Texte (Art. 297 AEUV).</div>")
+    h.append(f"<div class='fuss'>{als_html()}</div>")
     h.append("</body></html>")
     return "\n".join(h)

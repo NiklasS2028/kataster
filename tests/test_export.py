@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 
 
-def _bestand(datenbank, regelwerk):
+def _bestand(datenbank, regelwerk, lesart: str = "original"):
     """Legt drei Systeme mit unterschiedlichen Einstufungen an."""
     datenbank.organisation_speichern(name="Musterbau GmbH",
                                      ansprechpartner="A. Weber")
@@ -21,7 +21,7 @@ def _bestand(datenbank, regelwerk):
         for flag, wert in flags.items():
             datenbank.flag_setzen(sid, flag, wert)
         datenbank.einstufung_speichern(
-            sid, regelwerk.als_dict(regelwerk.einstufen(flags)))
+            sid, regelwerk.als_dict(regelwerk.einstufen(flags, lesart=lesart)))
 
 
 def _erzeugen(datenbank, regelwerk, ordner: Path):
@@ -64,6 +64,23 @@ def test_keine_temporaeren_reste(datenbank, regelwerk, arbeitsordner):
     assert not reste
 
 
+def test_jeder_nachweis_traegt_den_vorbehalt(datenbank, regelwerk, arbeitsordner):
+    """Alle vier, nicht drei.
+
+    Der Vorbehalt stand vorher in fuenf Fassungen an sechs Stellen, und
+    inventar.csv trug ihn gar nicht. Seit er aus app/hinweise.py kommt, kann
+    eine Ausgabe nur noch dann ohne ihn dastehen, wenn jemand sie neu baut und
+    ihn vergisst - genau das faengt dieser Test.
+    """
+    from app.hinweise import KERNSTELLE
+    register = _erzeugen(datenbank, regelwerk, arbeitsordner)
+    assert len(register) == 4
+    for eintrag in register:
+        inhalt = Path(eintrag["pfad"]).read_text(encoding="utf-8")
+        assert KERNSTELLE in inhalt, f"{eintrag['dateiname']} ohne Vorbehalt"
+        assert "Kein Rechtsrat" in inhalt, f"{eintrag['dateiname']} ohne Vorbehalt"
+
+
 def test_dossier_ist_eigenstaendig(datenbank, regelwerk, arbeitsordner):
     _erzeugen(datenbank, regelwerk, arbeitsordner)
     inhalt = (arbeitsordner / "exporte" / "dossier.html").read_text(encoding="utf-8")
@@ -78,6 +95,65 @@ def test_dossier_weist_entwurfsstand_aus(datenbank, regelwerk, arbeitsordner):
     if not regelwerk.ausspielbar():
         assert "Entwurfsstand" in inhalt
         assert "nicht als Nachweis" in inhalt
+
+
+# --- Vorbehalt zum Rechtsstand ------------------------------------------------
+#
+# Zwei Gates, die nichts miteinander zu tun haben: ausspielbar() haengt am
+# Verifikationsstand der Regeln, der Omnibus-Vorbehalt an
+# lesarten.omnibus.eingearbeitet. Sind alle Regeln verifiziert, meldet
+# ausspielbar() true - und ohne den zweiten Vorbehalt truege ein Dossier in
+# Lesart omnibus dann keinerlei Hinweis darauf, dass die Lesart im Regelwerk
+# als unvollstaendig ausgewiesen ist. PRE-PUSH.md verlangt diesen Vorbehalt;
+# hier wird er geprueft, statt ihn von Hand abzuhaken.
+
+
+def _dossier(datenbank, regelwerk, ordner: Path, lesart: str, ausgabe=None) -> str:
+    """Dossier ueber den echten Weg erzeugen und den Text zurueckgeben.
+
+    ausgabe erlaubt, mit einem abgewandelten Regelwerk zu exportieren, waehrend
+    die Einstufungen mit dem echten gerechnet wurden.
+    """
+    from app.export import erzeuge_alle
+    _bestand(datenbank, regelwerk, lesart=lesart)
+    erzeuge_alle(datenbank, ausgabe or regelwerk, ordner)
+    return (ordner / "exporte" / "dossier.html").read_text(encoding="utf-8")
+
+
+def _ohne_sperre(regelwerk):
+    """Dasselbe Regelwerk, aber mit eingearbeitetem Omnibus - fuer die Gegenprobe."""
+    import copy
+    from app.regelwerk import Regelwerk
+
+    daten = copy.deepcopy(regelwerk._daten)
+    daten["lesarten"]["omnibus"]["eingearbeitet"] = True
+    return Regelwerk(daten)
+
+
+def test_dossier_in_lesart_omnibus_traegt_den_vorbehalt(
+        datenbank, regelwerk, arbeitsordner):
+    if regelwerk.lesarten["omnibus"].get("eingearbeitet") is True:
+        import pytest
+        pytest.skip("Omnibus ist eingearbeitet, der Vorbehalt entfaellt zu Recht.")
+    inhalt = _dossier(datenbank, regelwerk, arbeitsordner, "omnibus")
+    assert "Omnibus-Vorbehalt" in inhalt
+    assert "teilweise eingearbeitet" in inhalt
+
+
+def test_dossier_in_lesart_original_weist_den_abgeloesten_stand_aus(
+        datenbank, regelwerk, arbeitsordner):
+    inhalt = _dossier(datenbank, regelwerk, arbeitsordner, "original")
+    assert "Rechtsstand." in inhalt
+    assert "nicht das geltende Recht" in inhalt
+    assert "Omnibus-Vorbehalt" not in inhalt
+
+
+def test_vorbehalt_entfaellt_wenn_der_omnibus_eingearbeitet_ist(
+        datenbank, regelwerk, arbeitsordner):
+    """Gegenprobe: Der Vorbehalt haengt am Feld, nicht an einer festen Zeichenkette."""
+    inhalt = _dossier(datenbank, regelwerk, arbeitsordner, "omnibus",
+                      ausgabe=_ohne_sperre(regelwerk))
+    assert "Omnibus-Vorbehalt" not in inhalt
 
 
 def test_richtlinie_fuehrt_freigegebene_systeme(datenbank, regelwerk, arbeitsordner):
@@ -166,9 +242,35 @@ def test_csv_enthaelt_alle_systeme(datenbank, regelwerk, arbeitsordner):
     _erzeugen(datenbank, regelwerk, arbeitsordner)
     zeilen = (arbeitsordner / "exporte" / "inventar.csv").read_text(
         encoding="utf-8").strip().splitlines()
-    assert len(zeilen) == 4
+    # Kopfzeile, drei Systeme, Leerzeile, Hinweis in der ersten Spalte.
+    assert len(zeilen) == 6
     assert zeilen[0].startswith("Lfd.;System;")
     assert "24,90" in zeilen[1]
+
+
+def test_csv_bleibt_maschinenlesbar(datenbank, regelwerk, arbeitsordner):
+    """Der Hinweis darf die Tabelle nicht zerschiessen.
+
+    Kopfzeile bleibt Zeile 1, jede Systemzeile behaelt ihre volle Spaltenzahl,
+    und der Hinweis steht in einem einzelnen Feld statt verteilt ueber die
+    Spalten - sonst liest ihn eine Tabellenkalkulation als Datensatz.
+    """
+    import csv
+    _erzeugen(datenbank, regelwerk, arbeitsordner)
+    with open(arbeitsordner / "exporte" / "inventar.csv", encoding="utf-8",
+              newline="") as f:
+        zeilen = list(csv.reader(f, delimiter=";"))
+
+    kopf = zeilen[0]
+    assert kopf[0] == "Lfd."
+    systeme = [z for z in zeilen[1:] if z and z[0].isdigit()]
+    assert len(systeme) == 3
+    for zeile in systeme:
+        assert len(zeile) == len(kopf)
+
+    letzte = zeilen[-1]
+    assert len(letzte) == 1
+    assert "Art. 297 AEUV" in letzte[0]
 
 
 def test_fragebogen_sagt_folgenlosigkeit_zu(datenbank, regelwerk, arbeitsordner):

@@ -36,8 +36,16 @@ Schriftreferenz auf einen CDN würde es widerlegen.
 - [ ] Änderungshistorie führt den letzten Stand mit Datum und Prüfer
 - [ ] `lesarten.omnibus`: `eingearbeitet`, `geprueft` und die offene
       Checkliste im `hinweis` geben den wahren Stand wieder; kein Befehl steht
-      zugleich als offen und als abgebildet, und solange `eingearbeitet` false
-      ist, tragen README und Dossier den Omnibus-Vorbehalt
+      zugleich als offen und als abgebildet
+- [ ] Solange `eingearbeitet` false ist, trägt die README den Omnibus-Vorbehalt
+
+Den Vorbehalt im Dossier prüft die Suite, nicht diese Liste: Der Haken hing
+zuvor an einer Aussage über den Code, die niemand nachrechnen konnte, und war
+falsch gesetzt, weil das Dossier den Vorbehalt gar nicht kannte. Er hängt jetzt
+an `lesarten.omnibus.eingearbeitet`, und die Tests in `test_export.py`
+(`test_dossier_in_lesart_omnibus_traegt_den_vorbehalt` samt Gegenprobe)
+verlangen ihn. Für die README gibt es keinen solchen Test, deshalb bleibt sie
+als Haken stehen.
 
 ## Schriften
 
