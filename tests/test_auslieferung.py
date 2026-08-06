@@ -79,3 +79,41 @@ def test_datenbestand_wird_ignoriert():
     inhalt = gitignore.read_text(encoding="utf-8")
     for muster in ("*.sqlite", "exporte/", "__pycache__/"):
         assert muster in inhalt, f"{muster} fehlt in .gitignore"
+
+
+# --- Der Vorbehalt an den Stellen ausserhalb des Codes -----------------------
+#
+# Die Ausgaben speisen sich aus app/hinweise.py; das sichert test_export.py.
+# Zwei Orte haengen NICHT an dieser Konstante und koennen deshalb wegdriften:
+# meta.hinweis im Regelwerk (reist unter CC BY eigenstaendig weiter und muss
+# den Vorbehalt selbst mitfuehren) und die README. Beide bleiben Prosa, aber
+# die Aussage muss dieselbe sein. Geprueft wird schmal - die Fundstelle, die
+# die Aussage traegt, und ein Marker fuer die Absage -, damit der Test nicht
+# bei jeder Umformulierung bricht.
+
+
+def _traegt_den_vorbehalt(text: str) -> bool:
+    from app.hinweise import KERNSTELLE, MARKER
+    klein = text.lower()
+    return KERNSTELLE in text and any(m in klein for m in MARKER)
+
+
+def test_regelwerk_fuehrt_den_vorbehalt_selbst():
+    import yaml
+    daten = yaml.safe_load(
+        (WURZEL / "rules" / "ai-act_2026-07-23.yaml").read_text(encoding="utf-8"))
+    hinweis = daten["meta"]["hinweis"]
+    assert _traegt_den_vorbehalt(hinweis), (
+        "meta.hinweis muss den Vorbehalt tragen: Die Datei wird einzeln "
+        "weitergegeben und kann sich nicht auf app/hinweise.py stuetzen.")
+
+
+def test_readme_fuehrt_den_vorbehalt():
+    inhalt = (WURZEL / "README.md").read_text(encoding="utf-8")
+    assert _traegt_den_vorbehalt(inhalt)
+
+
+def test_konstante_und_regelwerk_sagen_dasselbe():
+    """Kein Wortlautvergleich - die YAML ist ASCII, die Konstante nicht."""
+    from app.hinweise import als_text
+    assert _traegt_den_vorbehalt(als_text())

@@ -13,6 +13,8 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from ..hinweise import als_markdown
+
 # Bereichsbezeichnung im Inventar -> Zielgruppe im Regelwerk
 ZIELGRUPPEN = {
     "personal": ["personal", "hr", "human resources"],
@@ -114,5 +116,5 @@ def matrix_text(organisation, systeme, regelwerk, zeitpunkt: datetime) -> str:
 
     t.append("---\n")
     t.append(f"_Erzeugt mit Kataster am {zeitpunkt:%d.%m.%Y um %H:%M} Uhr._  ")
-    t.append("_Keine Rechtsberatung._")
+    t.append(als_markdown())
     return "\n".join(t) + "\n"

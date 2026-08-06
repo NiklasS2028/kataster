@@ -5,6 +5,14 @@ Der Fragebogen ist bewusst anonym und bewusst kurz. Wer befuerchtet, dass eine
 ehrliche Antwort Aerger bringt, antwortet nicht - dann steht am Ende ein
 Verzeichnis, das ordentlich aussieht und nichts wert ist. Die Einleitung sagt
 das ausdruecklich zu, und der Bogen fragt keinen Namen ab.
+
+Ohne den Vorbehalt aus app/hinweise.py, und das ist Absicht: Der Bogen ist ein
+Erhebungsmittel, kein Nachweis. Er trifft keine Einstufung, nennt keine Norm
+und wird niemandem vorgelegt, der daraus eine Rechtsfolge ableiten koennte. Ein
+Hinweis, dass dies keine Rechtsberatung sei, waere an einer Frage nach dem
+benutzten Werkzeug ohne Gegenstand - und er wuerde die Zusage der
+Folgenlosigkeit verwaessern, die den Bogen ueberhaupt beantwortbar macht. Die
+vier Nachweise unter export/ tragen den Vorbehalt ausnahmslos.
 """
 
 from __future__ import annotations

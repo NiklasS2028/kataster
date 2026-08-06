@@ -40,6 +40,20 @@ def test_unbekanntes_system_gibt_404(klient):
     assert klient.get("/system/999").status_code == 404
 
 
+@pytest.mark.parametrize("pfad", ["/", "/nachweise"])
+def test_fusszeile_traegt_den_vorbehalt(klient, pfad):
+    """Dieselbe Quelle wie die Nachweise, hier ueber den Context-Processor.
+
+    Der Text kommt als Markup aus app/hinweise.py; steht er escaped in der
+    Seite, waere das <strong> als Zeichenkette sichtbar.
+    """
+    from app.hinweise import KERNSTELLE
+    html = klient.get(pfad).get_data(as_text=True)
+    assert KERNSTELLE in html
+    assert "<strong>Kein Rechtsrat.</strong>" in html
+    assert "&lt;strong&gt;" not in html
+
+
 def test_system_ohne_namen_wird_abgewiesen(klient):
     assert klient.post("/system/neu", data={"name": "  "}).status_code == 400
 

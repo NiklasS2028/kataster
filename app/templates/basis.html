@@ -31,10 +31,7 @@
 {% block inhalt %}{% endblock %}
 
 <footer class="fussnote">
-  <strong>Kein Rechtsrat.</strong> Kataster ist ein Werkzeug zur strukturierten
-  Selbsteinschätzung und Dokumentation. Es trifft keine rechtliche Bewertung und
-  ersetzt keine Beratung. Verbindlich sind allein die im Amtsblatt der
-  Europäischen Union veröffentlichten Texte (Art. 297 AEUV).
+  {{ kein_rechtsrat }}
   {% if not regelwerk_ausspielbar %}
   <br><br>
   Dieses Regelwerk ist ein Entwurf: {{ pruefstand }} Regeln sind gegen den

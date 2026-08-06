@@ -12,6 +12,9 @@ import os
 from pathlib import Path
 
 from flask import Flask, g, render_template
+from markupsafe import Markup
+
+from .hinweise import als_html
 
 PORT = 8771
 WURZEL = Path(__file__).resolve().parent.parent
@@ -81,6 +84,7 @@ def erzeuge_app(testkonfiguration: dict | None = None) -> Flask:
             "regelwerk_version": rw.version,
             "pruefstand": f"{geprueft}/{gesamt}",
             "regelwerk_ausspielbar": rw.ausspielbar(),
+            "kein_rechtsrat": Markup(als_html()),
             "klassennamen": {
                 s: d.get("bezeichnung", s) for s, d in rw.risikoklassen.items()
             },

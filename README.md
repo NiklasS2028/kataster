@@ -163,16 +163,24 @@ Sicherheitsbauteils (P-02), der Anhang-I-Abschnitt-B-Pfad und das Größenregime
 mit den Erleichterungen für Kleinunternehmen und kleine Midcaps. Sie werden in
 der Lesart omnibus geführt.
 
-Noch nicht abgeschlossen ist der Omnibus als Ganzes. Sechzehn Änderungsbefehle
-sind bewusste Auslassungen und stehen strukturiert im Block `omnibus_auslassungen`,
-weil ihr Adressat nicht die Zielgruppe ist oder ihr Gegenstand außerhalb des
-Zuschnitts liegt. Acht unternehmensbezogene Befehle aus Art. 1 (Nr. 3, 6, 12,
-18, 19, 24, 25, 38 lit. b) und die geparkte Nr. 13 (Art. 27 Abs. 4) sind noch
-einzeln zu entscheiden. Solange das
-offen ist, steht das Feld `lesarten.omnibus.eingearbeitet` auf `false`; die
-Metadaten des Änderungsrechtsakts und diese Checkliste stehen unter
-`lesarten.omnibus`. Wer Kataster produktiv einsetzt, muss den offenen Teil bis
-zur nächsten verifizierten Fassung selbst berücksichtigen.
+Noch nicht abgeschlossen ist der Omnibus als Ganzes. Artikel 1 der
+Änderungsverordnung enthält 43 Änderungsbefehle. Bewusste Auslassungen stehen
+strukturiert im Block `omnibus_auslassungen`: sechzehn Einträge, die 22 dieser
+Befehle abdecken, weil einzelne Einträge zusammenhängende Nummernfolgen bündeln
+(etwa Nr. 30 bis 34). Bei einigen Nummern ist nur ein Teil der Buchstaben
+ausgelassen und der übrige Teil abgebildet, so bei Nr. 22, wo der vorrangige
+Zugang zu den Reallaboren als Erleichterung geführt wird. Ausgelassen wird,
+wessen Adressat nicht die Zielgruppe ist oder wessen Gegenstand außerhalb des
+Zuschnitts liegt.
+
+Acht unternehmensbezogene Befehle aus Art. 1 (Nr. 3, 6, 12, 18, 19, 24, 25,
+38 lit. b) und die geparkte Nr. 13 (Art. 27 Abs. 4) sind noch einzeln zu
+entscheiden. Solange das offen ist, steht das Feld
+`lesarten.omnibus.eingearbeitet` auf `false`; die Metadaten des
+Änderungsrechtsakts und diese Checkliste stehen unter `lesarten.omnibus`. Ein
+in dieser Lesart erzeugtes Nachweis-Dossier trägt den Vorbehalt sichtbar im
+Kopf. Wer Kataster produktiv einsetzt, muss den offenen Teil bis zur nächsten
+verifizierten Fassung selbst berücksichtigen.
 
 ---
 
@@ -183,7 +191,7 @@ pip install -r requirements-dev.txt
 python -m pytest
 ```
 
-181 Prüfungen. Der Kern ist ein parametrisierter Test über alle Regeln — jede
+195 Prüfungen. Der Kern ist ein parametrisierter Test über alle Regeln — jede
 bekommt einen eigenen Testfall mit ihrer ID als Namen. Fällt eine Regel aus dem
 Regelwerk oder ändert sich ihre Klasse, schlägt genau ein Test fehl, und der
 Name sagt welcher.
@@ -192,6 +200,13 @@ Name sagt welcher.
 einlösen muss: keine externen Verweise in CSS und Templates, jede deklarierte
 Schrift lokal eingebunden, jede referenzierte Schriftdatei vorhanden, Lizenzen
 beigelegt, keine Unternehmensdaten im Repository.
+
+Einige Tests prüfen nicht den Code, sondern Aussagen über ihn, die sonst nur
+als abgehakte Checkliste existieren: dass jeder der vier Nachweise den
+Vorbehalt „Kein Rechtsrat" trägt, dass ein Dossier in der Lesart omnibus den
+Omnibus-Vorbehalt ausweist, solange `eingearbeitet` auf `false` steht, und dass
+`tools/verifizieren.py` den handgepflegten Teil von `VERIFIKATION.md` nicht
+überschreibt.
 
 ---
 
@@ -229,6 +244,23 @@ veröffentlichten Texte (Art. 297 AEUV).
 übernimmt oder weiterpflegt, muss die Herkunft nennen. Der Wert dieser Datei
 liegt in der belegten und geprüften Recherche; die Namensnennung hält
 nachvollziehbar, worauf eine übernommene Fassung zurückgeht.
+
+Der Normtext selbst steht unter keiner dieser Lizenzen. Für die Weiterverwendung
+der zitierten Stellen gilt der Beschluss 2011/833/EU; die Quellenangabe steht in
+[LICENSE-REGELWERK.md](LICENSE-REGELWERK.md).
+
+---
+
+## Weiterlesen
+
+- [CONTRIBUTING.md](CONTRIBUTING.md) — wie der Prüfvermerk gesetzt wird, wann
+  eine Änderung ihn zurücksetzt, und warum der Marker „i. d. F." nicht in ein
+  Basisfeld gehört. Wer die Regelwerksdatei anfassen will, fängt hier an.
+- [SECURITY.md](SECURITY.md) — wo die Daten liegen, was das Werkzeug
+  ausdrücklich nicht leistet, und wie sich eine Schwachstelle melden lässt.
+- [VERIFIKATION.md](VERIFIKATION.md) — der Prüfstand jeder einzelnen Regel und
+  die Befunde der zweiten Runde.
+- [PRE-PUSH.md](PRE-PUSH.md) — was vor einer Veröffentlichung abgearbeitet wird.
 
 ---
 

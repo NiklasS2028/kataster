@@ -10,6 +10,8 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from ..hinweise import als_markdown
+
 
 def _liste(systeme, bedingung):
     treffer = [s for s in systeme if bedingung(s)]
@@ -134,6 +136,5 @@ def richtlinie_text(organisation, systeme, regelwerk, klassennamen, zeitpunkt: d
     t.append("\n---\n")
     t.append(f"_Entwurf erzeugt mit Kataster am {zeitpunkt:%d.%m.%Y um %H:%M} Uhr._  ")
     t.append(f"_Regelwerk {regelwerk.version}, Rechtsstand {regelwerk.rechtsstand}._  ")
-    t.append("_Keine Rechtsberatung. Verbindlich sind allein die im Amtsblatt der_")
-    t.append("_Europäischen Union veröffentlichten Texte (Art. 297 AEUV)._")
+    t.append(als_markdown())
     return "\n".join(t) + "\n"

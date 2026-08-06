@@ -10,6 +10,7 @@ import io
 from datetime import datetime
 from pathlib import Path
 
+from ..hinweise import als_csv_zeilen
 from .richtlinie import richtlinie_text
 from .schulungsmatrix import matrix_text
 from .dossier import dossier_html
@@ -54,6 +55,8 @@ def _inventar_csv(systeme: list[dict], klassennamen: dict) -> str:
             "Umfrage" if s["quelle"] == "schatten_gemeldet" else "offiziell",
             s["status"],
         ])
+    for zeile in als_csv_zeilen():
+        schreiber.writerow(zeile)
     return puffer.getvalue()
 
 
