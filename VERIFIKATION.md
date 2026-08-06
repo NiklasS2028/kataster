@@ -34,11 +34,9 @@ Ist eine genannte Ausnahme vollstaendig wiedergegeben?
 - [x] **V-07** &middot; `Art. 5 Abs. 1 Unterabsatz 1 lit. ba KI-VO`  
       Setzen Sie ein KI-System gezielt dafuer ein, realistische Bild-, Video-, Ton- oder aehnliche Inhalte zu erzeugen oder zu manipulieren, in denen intime Koerperteile einer bestimmbaren natuerlichen Person dargestellt werden oder eine an eindeutig sexuellen Handlungen beteiligte bestimmbare Person dargestellt wird - ohne dass die betreffende Person dazu eine aus freien Stuecken erfolgende, spezifische, aufgeklaerte, eindeutige und ausdrueckliche Zustimmung erteilt hat?  
       _Ausnahme im Entwurf:_ Nicht erfasst ist eine Manipulation, die weder die Sichtbarkeit der dargestellten intimen Koerperteile erhoeht noch die Art der dargestellten eindeutig sexuellen Handlungen veraendert (Art. 5 Abs. 1b KI-VO).  
-      _Hinweis:_ Betreiberperspektive. Verboten ist nur der zielgerichtete Einsatz zu solcher Erzeugung oder Manipulation (Art. 5 Abs. 1a lit. b), nicht schon der Einsatz eines generativen Systems, das solche Inhalte technisch erzeugen koennte. Die Anbieterpruefung nach Art. 5 Abs. 1a lit. a ist hier nicht abgebildet.  
 - [x] **V-08** &middot; `Art. 5 Abs. 1 Unterabsatz 1 lit. bb KI-VO`  
       Setzen Sie ein KI-System gezielt dafuer ein, Material oder Darbietungen im Sinne von Artikel 2 Buchstaben c und e der Richtlinie 2011/93/EU zu erzeugen oder zu manipulieren?  
       _Ausnahme im Entwurf:_ Gilt nicht, soweit das unrechtmaessige Verhalten nach nationalem Recht als gerechtfertigt gilt.  
-      _Hinweis:_ Der Normtext verweist auf die Richtlinie 2011/93/EU, statt den Tatbestand auszuformulieren; die Prueffrage gibt den Verweis wieder. Fuer die Betreiberperspektive gilt dieselbe Eingrenzung wie bei V-07 (Art. 5 Abs. 1a lit. b).  
 
 ## Art. 50
 
@@ -108,12 +106,12 @@ Ist eine genannte Ausnahme vollstaendig wiedergegeben?
 2 Regeln, davon 0 offen
 
 - [x] **P-01** &middot; `Art. 6 Abs. 1 KI-VO i. V. m. Anhang I`  
-      Ist das KI-System ein Sicherheitsbauteil eines Produkts, das unter die Harmonisierungsrechtsvorschriften aus Anhang I faellt (u. a. Maschinen, Spielzeug, Aufzuege, Druckgeraete, Funkanlagen, Seilbahnen, persoenliche Schutzausruestung, Medizinprodukte, In-vitro-Diagnostika, Fahrzeuge, Luftfahrzeuge) - oder ist es selbst ein solches Produkt?  
-      _Hinweis:_ Beide Bedingungen muessen kumulativ erfuellt sein. Der Ausnahmefilter des Art. 6 Abs. 3 gilt fuer diesen Pfad NICHT - er bezieht sich nur auf Anhang III.  
+      Ist das KI-System selbst ein Produkt, das unter die Harmonisierungsrechtsvorschriften aus Anhang I faellt (u. a. Maschinen, Spielzeug, Sportboote, Aufzuege, Geraete fuer explosionsgefaehrdete Bereiche, Funkanlagen, Druckgeraete, Seilbahnen, persoenliche Schutzausruestung, Gasverbrauchseinrichtungen, Medizinprodukte, In-vitro-Diagnostika, Fahrzeuge, Schiffsausruestung, Eisenbahn, Luftfahrzeuge)?  
+      _Hinweis:_ Beide Bedingungen muessen kumulativ erfuellt sein. Der Ausnahmefilter des Art. 6 Abs. 3 gilt fuer diesen Pfad NICHT - er bezieht sich nur auf Anhang III. Die Einschraenkung in der Zusatzfrage folgt aus Art. 6 Abs. 1c, der an Art. 6 Abs. 1 lit. b anknuepft und damit beide Alternativen aus lit. a erfasst.  
 - [x] **P-02** &middot; `Art. 6 Abs. 1 KI-VO i. V. m. Art. 3 Nr. 14 und Art. 6 Abs. 1a bis 1c`  
       Ist das KI-System ein Bestandteil eines Produkts, das unter die Harmonisierungsrechtsvorschriften aus Anhang I faellt (u. a. Maschinen, Spielzeug, Aufzuege, Funkanlagen, Druckgeraete, Seilbahnen, Medizinprodukte, Fahrzeuge, Luftfahrzeuge), und besteht seine Zweckbestimmung darin, Risiken fuer die Gesundheit und Sicherheit von Personen oder Eigentum abzuwenden oder zu mindern - oder wuerde sein Ausfall oder seine Stoerung Gesundheit, Sicherheit oder Eigentum gefaehrden?  
-      _Ausnahme im Entwurf:_ Nach Art. 6 Abs. 1a gelten Systeme nicht als Sicherheitsbauteil, die ausschliesslich fuer nicht sicherheitsrelevante Aspekte (Nutzerunterstuetzung, Leistungsoptimierung, Automatisierung, Benutzerfreundlichkeit, Qualitaetskontrolle) verwendet werden; nach Art. 6 Abs. 1b gilt ein System jedoch als Sicherheitsbauteil, wenn sein Ausfall oder seine Fehlfunktion Gesundheit und Sicherheit gefaehrden wuerde.  
-      _Hinweis:_ Sicherheitsbauteil-Pfad, seit Phase 4 aus P-01 herausgeloest. Die Zweckbestimmung legt der Anbieter fest (Erwaegungsgrund 7); die blosse Integration in ein Anhang-I-Produkt begruendet noch keine Sicherheitsfunktion. Die Zusatzfrage nach der Konformitaetsbewertung durch eine dritte Stelle gilt wie bei P-01.  
+      _Ausnahme im Entwurf:_ Nach Art. 6 Abs. 1a gelten KI-Systeme nicht als Sicherheitsbauteil, die ausschliesslich fuer nicht sicherheitsrelevante Aspekte der Nutzerunterstuetzung, Leistungsoptimierung, Leistungseffizienz, Automatisierung, Benutzerfreundlichkeit oder Qualitaetskontrolle verwendet werden. Unbeschadet dessen gilt nach Art. 6 Abs. 1b ein System als Sicherheitsbauteil, wenn sein Ausfall oder seine Fehlfunktion Gesundheit und Sicherheit gefaehrden wuerde.  
+      _Hinweis:_ Nach Art. 43 Abs. 3 Unterabs. 3 sind Hersteller nicht schon deshalb zu einer Konformitaetsbewertung durch Dritte verpflichtet, weil das Produkt ein Hochrisiko-KI-System als Sicherheitsbauteil enthaelt.  
 
 ---
 
@@ -122,6 +120,8 @@ Offen: 0 von 28.
 Solange nicht alle Regeln verifiziert sind, meldet
 `Regelwerk.ausspielbar()` falsch, die Fusszeile weist auf den
 Entwurfsstand hin, und das Nachweis-Dossier traegt einen Warnkasten.
+
+<!-- ENDE GENERIERTER TEIL - alles darunter wird von Hand gepflegt -->
 
 
 # Die uebrigen Pruefstaende
@@ -156,15 +156,21 @@ Das Dokument oben ist die erste Runde: Fundstelle und Wortlaut jeder Regel
 gegen den Normtext. Diese zweite Runde deckte Defekte auf, bei denen die
 Fundstelle stimmte und nur das Verhalten des Werkzeugs ihr nicht folgte.
 
-| Phase | Befund | Commit | Wodurch gefunden |
-| --- | --- | --- | --- |
-| 4 | Ausnahmefilter Art. 6 Abs. 3 war auf die Regel-ID P-01 hart verdrahtet und sperrte nach der Teilung nur eine der beiden Regeln | `f1a229a` | Das Refactoring selbst legte die ID-Bindung frei |
-| 5 | Bestandsschutz knuepfte an F-03 statt an F-05/F-06; Systeme ab 02.08.2026 erhielten zu Unrecht keinen Bestandsschutz | `7b68651` | Tests blieben gruen, obwohl sich die Frist verschob; alle nutzten 2024-05-01 und erreichten die Aenderung nicht |
-| 5 | `anhang_i_abschnitt_b` fehlte in `flag_namen()`; die Selbstdiagnose feuerte im Normalbetrieb | `b49d933` | Die Warnung des Werkzeugs ueber sich selbst, bei einem gewoehnlichen Lauf |
-| 6 | Q-01 beschrieb den Art.-4-Uebergang als neue Massnahmenpflicht; tatsaechlich bestand sie schon, geaendert hat sich ihr Ziel | `14e1905` | Erneutes Nachlesen beim Umbau der Schulungsmatrix |
-| 7 | Art. 99 Abs. 6a erfasst nur kleine Midcaps; die Uebergabe fuehrte die Deckelung faelschlich unter KMU. Mitkorrigiert: Art. 63 Abs. 1 (Vorbehalt Partner/Verbund), Art. 11 Abs. 1 UAbs. 2 (KMU und Midcaps) | `3315836`, `c3ab184` | Nachlesen des Ausgangsrechts neben dem Aenderungsbefehl |
-| 7 | Sammelschalter `groessenregime.geprueft` verhinderte die eintragsweise Freigabe; dazu drei Wortlautbefunde (G-01 "Pflicht" statt Moeglichkeit, Q-02 ohne Dimensionentrennung, `hinweis_unterstuetzung` mit falschem Adressaten) | `104f1fd` | Der Versuch, einen einzelnen Eintrag freizugeben, scheiterte am Schalter |
-| 10 | P-02 war seit Phase 4 ohne Kontextzuordnung und wurde in jedem Kontext gestellt | `fc4b4ca` | Der neu gebaute Rueckrichtungs-Waechter sprang beim ersten Lauf an |
+| Phase | Befund | Wodurch gefunden |
+| --- | --- | --- |
+| 4 | Ausnahmefilter Art. 6 Abs. 3 war auf die Regel-ID P-01 hart verdrahtet und sperrte nach der Teilung nur eine der beiden Regeln | Das Refactoring selbst legte die ID-Bindung frei |
+| 5 | Bestandsschutz knuepfte an F-03 statt an F-05/F-06; Systeme ab 02.08.2026 erhielten zu Unrecht keinen Bestandsschutz | Tests blieben gruen, obwohl sich die Frist verschob; alle nutzten 2024-05-01 und erreichten die Aenderung nicht |
+| 5 | `anhang_i_abschnitt_b` fehlte in `flag_namen()`; die Selbstdiagnose feuerte im Normalbetrieb | Die Warnung des Werkzeugs ueber sich selbst, bei einem gewoehnlichen Lauf |
+| 6 | Q-01 beschrieb den Art.-4-Uebergang als neue Massnahmenpflicht; tatsaechlich bestand sie schon, geaendert hat sich ihr Ziel | Erneutes Nachlesen beim Umbau der Schulungsmatrix |
+| 7 | Art. 99 Abs. 6a erfasst nur kleine Midcaps; die Uebergabe fuehrte die Deckelung faelschlich unter KMU. Mitkorrigiert: Art. 63 Abs. 1 (Vorbehalt Partner/Verbund), Art. 11 Abs. 1 UAbs. 2 (KMU und Midcaps) | Nachlesen des Ausgangsrechts neben dem Aenderungsbefehl |
+| 7 | Sammelschalter `groessenregime.geprueft` verhinderte die eintragsweise Freigabe; dazu drei Wortlautbefunde (G-01 "Pflicht" statt Moeglichkeit, Q-02 ohne Dimensionentrennung, `hinweis_unterstuetzung` mit falschem Adressaten) | Der Versuch, einen einzelnen Eintrag freizugeben, scheiterte am Schalter |
+| 10 | P-02 war seit Phase 4 ohne Kontextzuordnung und wurde in jedem Kontext gestellt | Der neu gebaute Rueckrichtungs-Waechter sprang beim ersten Lauf an |
+
+Die Tabelle fuehrte bis Phase 12 eine Spalte mit dem Commit je Befund. Sie ist
+entfallen: Die Historie wurde umgeschrieben, die Hashes loesten nicht mehr auf,
+und ein Hash, der ins Leere zeigt, behauptet Belegbarkeit, die es nicht gibt.
+Die Spalte "Phase" ordnet jeden Befund zeitlich ein; die Substanz steht im
+Befund und im Signal, nicht in der Kennung eines Commits.
 
 Sechs Signale trugen diese Befunde, keines davon ein Fundstellenabgleich:
 

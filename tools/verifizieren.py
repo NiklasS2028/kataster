@@ -32,6 +32,15 @@ ARBEITSLISTE = WURZEL / "VERIFIKATION.md"
 
 EURLEX = "https://eur-lex.europa.eu/eli/reg/2024/1689/oj?locale=de"
 
+# VERIFIKATION.md ist zur Haelfte erzeugt und zur Haelfte Handarbeit: Der obere
+# Teil kommt aus diesem Werkzeug, der untere (uebrige Pruefstaende, zweite
+# Runde, die sechs Signale) wird von Hand gepflegt und existiert nirgends
+# sonst. Ohne Trennmarke wuerde --arbeitsliste die ganze Datei neu schreiben
+# und den handgepflegten Teil beim ersten Routinelauf loeschen. Findet das
+# Werkzeug eine bestehende Datei ohne Marke, schreibt es nicht - es kann dann
+# nicht wissen, wo das Erzeugte aufhoert.
+ENDMARKE = "<!-- ENDE GENERIERTER TEIL - alles darunter wird von Hand gepflegt -->"
+
 ID_ZEILE = re.compile(r"^(\s*)-\s+id:\s*([A-Za-z]+-\d+)\s*$")
 GEPRUEFT_ZEILE = re.compile(r"^(\s*)geprueft:\s*(true|false)\s*$")
 ZUSATZ_ZEILE = re.compile(r"^\s*geprueft_(am|von):")
@@ -140,9 +149,20 @@ def _gruppe(fundstelle: str) -> str:
     return treffer.group(1) if treffer else fundstelle
 
 
-def arbeitsliste_schreiben() -> None:
+def arbeitsliste_schreiben() -> int:
     regeln = _regeldaten()
     stand = _stand(_laden())
+
+    handgepflegt = "\n"
+    if ARBEITSLISTE.exists():
+        alt = ARBEITSLISTE.read_text(encoding="utf-8")
+        if ENDMARKE not in alt:
+            print(f"{ARBEITSLISTE.name} enthaelt die Endmarke nicht.")
+            print("Ohne sie ist nicht erkennbar, wo der erzeugte Teil aufhoert und")
+            print("der handgepflegte beginnt. Es wird nichts geschrieben.")
+            print(f"Marke von Hand an der Trennstelle einfuegen:\n{ENDMARKE}")
+            return 1
+        handgepflegt = alt.split(ENDMARKE, 1)[1]
 
     gruppen: dict[str, list[dict]] = {}
     for regel in regeln:
@@ -198,9 +218,12 @@ def arbeitsliste_schreiben() -> None:
     t.append("`Regelwerk.ausspielbar()` falsch, die Fusszeile weist auf den")
     t.append("Entwurfsstand hin, und das Nachweis-Dossier traegt einen Warnkasten.")
 
-    ARBEITSLISTE.write_text("\n".join(t) + "\n", encoding="utf-8")
+    t.append(f"\n{ENDMARKE}")
+
+    ARBEITSLISTE.write_text("\n".join(t) + handgepflegt, encoding="utf-8")
     print(f"Arbeitsliste geschrieben: {ARBEITSLISTE.name}")
     print(f"  {offen_gesamt} von {len(regeln)} Regeln offen")
+    return 0
 
 
 def stand_zeigen() -> None:
@@ -232,8 +255,7 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.arbeitsliste:
-        arbeitsliste_schreiben()
-        return 0
+        return arbeitsliste_schreiben()
     if args.stand or not args.kennungen:
         stand_zeigen()
         return 0
